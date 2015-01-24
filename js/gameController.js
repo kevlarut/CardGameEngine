@@ -5,34 +5,33 @@ gameApp.controller('gameController', ['$scope', '$timeout', 'deck', function($sc
 	$scope.activeCard = null;
 	$scope.clickPlayerCallback = null;
 	$scope.instructions = null;
-	$scope.players = {};
+	$scope.players = [];
 	
 	$scope.nextTurn = function() {	
-		var previousPlayer = $scope.players['bottom'];
-		$scope.players['bottom'] = $scope.players['left'];
-		$scope.players['left'] = $scope.players['top'];
-		$scope.players['top'] = $scope.players['right'];		
-		$scope.players['right'] = previousPlayer;
+		var previousPlayer = $scope.players[0];
+		$scope.players.splice(0, 1);
+		$scope.players.push(previousPlayer);
 		
-		$scope.players['top'].hand = $scope.players['top'].hand.concat(deck.draw(2));
+		$scope.players[0].hand = $scope.players[0].hand.concat(deck.draw(2));
 	}
 	
 	$scope.clickCard = function(card, player) {
-		console.log(player.name + ' plays ' + card);
-		player.hand.pop(card);
+		console.log(player.name + ' plays ' + card.title);
+		var index = player.hand.indexOf(card);
+		player.hand.splice(index, 1);
 		$scope.activeCard = card;
 		
-		switch (card) {
+		switch (card.type) {
 			case 'attack':
 				var target = $scope.getTarget(function(target) {
 					$scope.attack(card, target, player);
 				});
 				break;
 			case 'defend':
-				console.log('NotImplemented');
+				$scope.heal(card, player);
 				break;
 			default:
-				console.log('Card "' + card + '" is not implemented.');
+				console.log('Card type "' + card.type + '" is not implemented.');
 				break;
 		}
 	}
@@ -46,23 +45,31 @@ gameApp.controller('gameController', ['$scope', '$timeout', 'deck', function($sc
 		$scope.clickPlayerCallback = callback;
 	}
 	
+	$scope.heal = function(card, player) {
+		console.log(player.name + ' has healed ' + card.damage + ' poitns of damage using the card ' + card.title + '.');	
+		player.hitPoints += card.damage;
+		deck.discard(card);	
+	}
+	
 	$scope.attack = function(card, target, attacker) {		
 		
 		var attackWasBlocked = false;
-		console.log(attacker.name + ' has attacked ' + target.name + ' using the card ' + card + '.');
 		
 		for (var i = 0; i < target.hand.length; i++) {
-			if (target.hand[i] == 'defend') {
-				console.log(target.name + ' defended the attack from ' + attacker.name + ' using the card ' + target.hand[i] + '.');
+			if (target.hand[i].type == 'defend' && target.hand[i].damage >= card.targetDamage) {
 				deck.discard(target.hand[i]);
-				target.hand.pop(i);
+				target.hand.splice(i, 1);
 				attackWasBlocked = true;
 				break;
 			}
 		}
 		
+		if (typeof card.attackerDamage != 'undefined') {
+			attacker.hitPoints -= card.attackerDamage;
+		}
+		
 		if (!attackWasBlocked) {
-			target.hitPoints--;
+			target.hitPoints -= card.targetDamage;
 		}
 		
 		deck.discard(card);
@@ -82,19 +89,15 @@ gameApp.controller('gameController', ['$scope', '$timeout', 'deck', function($sc
 		deck.loadCards();
 		deck.shuffle();
 	
-		var names = ['Johnny Come Lately', 'Hurried Harry', 'Brisk Brittany', 'Lackadaisical Lacie'];
+		var names = ['Lackadaisical Lacie', 'Johnny Come Lately', 'Brisk Brittany', 'Hurried Harry'];
 		for (var i = 1; i <= 4; i++) {
 			var player = {};
 			player.hand = deck.draw(5);
 			player.hitPoints = 5;
 			player.name = names[i-1];
-			$scope.players[i.toString()] = player;
+			$scope.players.push(player);
 		}
-	
-		$scope.players['right'] = $scope.players['1'];
-		$scope.players['bottom'] = $scope.players['2'];
-		$scope.players['left'] = $scope.players['3'];
-		$scope.players['top'] = $scope.players['4'];
+		
 		$scope.nextTurn();
 	}
 	

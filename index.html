@@ -26,50 +26,23 @@
 			{{instructions}}
 		</div>
 		<div class="playArea" ng-show="activeCard">
-			<div class="card" ng-show="activeCard">
-				{{activeCard}}
+			<div ng-class="['card', activeCard.type]" ng-show="activeCard">
+				{{activeCard.title}}
+				<div class="description">{{activeCard.description}}</div>
 			</div>
 			<div class="clear"></div>
 		</div>
 		
-		<div class="hand top" id="topPlayerHand">
-			<div><a href="" ng-click="clickPlayer(players['top'])" class="clickable">{{players['top'].name}}</a><br />
-			Hit points: {{players['top'].hitPoints}}</div>
+		<div class="hand" ng-repeat="player in players">
+			<div><a href="" ng-click="clickPlayer(player)" class="clickable">{{player.name}}</a><br />
+			Hit points: {{player.hitPoints}}</div>
 			
-			<div ng-repeat="card in players['top'].hand track by $index" class="card clickable" ng-click="clickCard(card, players['top'])">
-				{{card}}
+			<div ng-repeat="card in player.hand track by $index" ng-class="['card', 'clickable', card.type]" ng-click="clickCard(card, player)">
+				{{card.title}}
+				<div class="description">{{card.description}}</div>
 			</div>
 			<div class="clear"></div>
 		</div>
-		<div class="hand left" id="leftPlayerHand">
-			<div><a href="" ng-click="clickPlayer(players['left'])" class="clickable">{{players['left'].name}}</a><br />
-			Hit points: {{players['left'].hitPoints}}</div>
-			
-			<div ng-repeat="card in players['left'].hand track by $index" class="card clickable" ng-click="clickCard(card, players['left'])">
-				{{card}}
-			</div>
-			<div class="clear"></div>
-		</div>
-		<div class="hand right" id="rightPlayerHand">
-			<div><a href="" ng-click="clickPlayer(players['right'])" class="clickable">{{players['right'].name}}</a><br />
-			Hit points: {{players['right'].hitPoints}}</div>
-			
-			<div ng-repeat="card in players['right'].hand track by $index" class="card clickable" ng-click="clickCard(card, players['right'])">
-				{{card}}
-			</div>
-			<div class="clear"></div>
-		</div>
-		<div class="hand bottom" id="bottomPlayerHand">
-			<div><a href="" ng-click="clickPlayer(players['bottom'])" class="clickable">{{players['bottom'].name}}</a><br />
-			Hit points: {{players['bottom'].hitPoints}}</div>
-			
-			<div ng-repeat="card in players['bottom'].hand track by $index" class="card clickable" ng-click="clickCard(card, players['bottom'])">
-				{{card}}
-			</div>
-			
-			<div class="clear"></div>
-			
-		</div>		
 		
 	</div>
 

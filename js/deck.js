@@ -11,10 +11,29 @@ gameApp.service('deck', function() {
 	
 	this.loadCards = function() {
 		for (var i = 0; i < 25; i++) {
-			this.cards.push('attack');
+			this.cards.push({
+				type: 'attack',
+				title: 'Attack',
+				description: 'Deal 1 damage to a target player.',
+				targetDamage: 1
+			});
+		}
+		for (var i = 0; i < 10; i++) {
+			this.cards.push({
+				type: 'attack',
+				title: 'Mutual Attack',
+				description: 'Deal 1 damage to a target player, and 1 damage to yourself.',
+				targetDamage: 1,
+				attackerDamage: 1
+			});
 		}
 		for (var i = 0; i < 25; i++) {
-			this.cards.push('defend');
+			this.cards.push({
+				type: 'defend',
+				title: 'Defend',
+				description: 'Block or heal 1 damage.',
+				damage: 1
+			});
 		}
 	}
 	

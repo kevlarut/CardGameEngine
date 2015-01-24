@@ -1,8 +1,16 @@
+body {
+	background: #333;
+}
+
 .hand {
-	background: #ffc;
-	border: 1px solid #000;
+	background: rgba(255,255,255,0.25);		
 	margin: 10px;
-	padding: 20px;
+	color: #fff;
+	padding: 10px;
+}
+
+.hand a {
+	color: #ffc;
 }
 
 .playArea {
@@ -16,14 +24,23 @@
 }
 
 .card {
-	background: #cfc;
-	border: 1px solid black;
+	background: #fff;
+	box-shadow: 5px 5px 10px 0px rgba(0,0,0,0.5);
+	color: #000;
+	font-family: 'helvetica neue', helvetica, arial, sans-serif;
+	font-size: 30px;
+	font-weight: bold;
 	margin: 10px;
 	padding: 20px;
 	width: 100px;
 	border-radius: 10px;
 	float: left;
 	height: 150px;
+}
+
+.card .description {
+	font-size: 15px;
+	font-weight: normal;
 }
 
 .clear {
@@ -36,4 +53,9 @@
 
 .clickable:hover {
 	opacity: 0.9;
+}
+
+.card.attack {
+	background: #c33;
+	color: #fff;
 }
