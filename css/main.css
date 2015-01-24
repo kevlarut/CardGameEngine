@@ -2,13 +2,34 @@ body {
 	background: #333;
 }
 
+.actionButtons {
+	float: right;
+	margin: 10px;
+}
+
+.actionButtons button {
+	background: #fb5;
+	border: none;
+	border-radius: 10px;
+	font-weight: bold;
+	padding: 10px;
+}
+
+.actionButtons button:hover {
+	background: #ff9;
+	cursor: pointer;
+}
+
 .hand {
-	background: rgba(255,255,255,0.25);		
+	background: rgba(255,255,255,0.50);
+	border-radius: 20px;
 	margin: 10px;
 	color: #fff;
 	padding: 10px;
 }
-
+.hand.inactivePlayer {
+	background: rgba(255,255,255,0.25);
+}
 .hand a {
 	color: #ffc;
 }
@@ -38,9 +59,55 @@ body {
 	height: 150px;
 }
 
+.card.clickable:hover {
+	border: 5px solid #fff;
+	margin-bottom: 0;
+	margin-right: 0;
+	transform: translate(-5px, -5px);
+}
+
 .card .description {
 	font-size: 15px;
 	font-weight: normal;
+}
+
+.hand .playerSummary {
+	background: #333;
+	border-radius: 10px;
+	margin: 10px;
+	padding: 20px;
+}
+
+.hand.inactivePlayer .card {
+	border-radius: 5px;
+	box-shadow: 2.5px 2.5px 5px 0px rgba(0,0,0,0.5);
+	font-size: 15px;
+	height: 75px;
+	margin: 5px;
+	padding: 10px;
+	width: 50px;
+}
+.hand.inactivePlayer .card .description {
+	font-size: 7.5px;
+}
+.hand.inactivePlayer .playerSummary {
+	border-radius: 5px;
+	float: left;
+	height: 75px;
+	margin: 5px;
+	padding: 10px;
+	width: 100px;
+}
+.hand.inactivePlayer  .card.clickable:hover {
+	border: 2.5px solid #fff;
+	margin-bottom: 0;
+	margin-right: 0;
+	transform: translate(-2.5px, -2.5px);
+}
+
+.playerSummary.clickable:hover {
+	background: #ffc;
+	color: #333;
 }
 
 .clear {
@@ -49,10 +116,6 @@ body {
 
 .clickable {
 	cursor: pointer;
-}
-
-.clickable:hover {
-	opacity: 0.9;
 }
 
 .card.attack {

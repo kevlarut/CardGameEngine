@@ -19,9 +19,11 @@
 
 	<div ng-controller="gameController">
 		
-		<div>
+		<div class="actionButtons">
 			<button ng-click="nextTurn()">Next turn</button>
 		</div>
+		<div class="clear"></div>
+		
 		<div class="instructions">
 			{{instructions}}
 		</div>
@@ -33,9 +35,11 @@
 			<div class="clear"></div>
 		</div>
 		
-		<div class="hand" ng-repeat="player in players">
-			<div><a href="" ng-click="clickPlayer(player)" class="clickable">{{player.name}}</a><br />
-			Hit points: {{player.hitPoints}}</div>
+		<div ng-repeat="player in players" ng-class="{hand:true, inactivePlayer:!$first}">
+			<div ng-class="{playerSummary: true, clickable: !$first}" ng-click="clickPlayer(player)">
+				<b>{{player.name}}</b><br />
+				Hit points: {{player.hitPoints}}
+			</div>
 			
 			<div ng-repeat="card in player.hand track by $index" ng-class="['card', 'clickable', card.type]" ng-click="clickCard(card, player)">
 				{{card.title}}
