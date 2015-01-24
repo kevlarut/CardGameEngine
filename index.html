@@ -1,0 +1,77 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Card Game</title>
+	
+	<link rel="stylesheet" type="text/css" href="css/main.css" />
+	
+	<script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.5/angular.min.js"></script>
+	
+	<script src="js/gameApp.js"></script>
+	<script src="js/gameController.js"></script>
+	<script src="js/deck.js"></script>
+
+</head>
+<body ng-app="gameApp">
+
+	<div ng-controller="gameController">
+		
+		<div>
+			<button ng-click="nextTurn()">Next turn</button>
+		</div>
+		<div class="instructions">
+			{{instructions}}
+		</div>
+		<div class="playArea" ng-show="activeCard">
+			<div class="card" ng-show="activeCard">
+				{{activeCard}}
+			</div>
+			<div class="clear"></div>
+		</div>
+		
+		<div class="hand top" id="topPlayerHand">
+			<div><a href="" ng-click="clickPlayer(players['top'])" class="clickable">{{players['top'].name}}</a><br />
+			Hit points: {{players['top'].hitPoints}}</div>
+			
+			<div ng-repeat="card in players['top'].hand track by $index" class="card clickable" ng-click="clickCard(card, players['top'])">
+				{{card}}
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="hand left" id="leftPlayerHand">
+			<div><a href="" ng-click="clickPlayer(players['left'])" class="clickable">{{players['left'].name}}</a><br />
+			Hit points: {{players['left'].hitPoints}}</div>
+			
+			<div ng-repeat="card in players['left'].hand track by $index" class="card clickable" ng-click="clickCard(card, players['left'])">
+				{{card}}
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="hand right" id="rightPlayerHand">
+			<div><a href="" ng-click="clickPlayer(players['right'])" class="clickable">{{players['right'].name}}</a><br />
+			Hit points: {{players['right'].hitPoints}}</div>
+			
+			<div ng-repeat="card in players['right'].hand track by $index" class="card clickable" ng-click="clickCard(card, players['right'])">
+				{{card}}
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="hand bottom" id="bottomPlayerHand">
+			<div><a href="" ng-click="clickPlayer(players['bottom'])" class="clickable">{{players['bottom'].name}}</a><br />
+			Hit points: {{players['bottom'].hitPoints}}</div>
+			
+			<div ng-repeat="card in players['bottom'].hand track by $index" class="card clickable" ng-click="clickCard(card, players['bottom'])">
+				{{card}}
+			</div>
+			
+			<div class="clear"></div>
+			
+		</div>		
+		
+	</div>
+
+</body>
+</html>
