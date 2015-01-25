@@ -1,21 +1,7 @@
 var gameApp = angular.module('gameApp');
 
-gameApp.service('playerService', function(deck) {
-
-	this.numberOfPlayers = 4;
-	
-	this.damagePlayer = function(player, damage, modifierCard) {
-	
-		if (modifierCard && modifierCard.effect == 'multiply') {
-			damage *= modifierCard.magnitude;
-		}
-	
-		player.hitPoints -= damage;
-		if (player.hitPoints <= 0) {
-			playerService.killPlayer(player);			
-		}
-	}
-	
+gameApp.service('playerService', function(deck, playerData) {
+		
 	this.discardAllCardsInHand = function(player) {
 		var card = player.hand.pop();
 		while (card) {
@@ -23,12 +9,20 @@ gameApp.service('playerService', function(deck) {
 			card = player.hand.pop();
 		}
 	}
+	
+	this.discardAllEquippedCards = function(player) {
+		var card = player.equippedCards.pop();
+		while (card) {
+			deck.discard(card);
+			card = player.equippedCards.pop();
+		}
+	}
 
 	this.loadPlayers = function() {
 	
 		var names = ['Marathon Mary', 'Johnny Come Lately', 'Edna Endurance', 'Tenacious Terry', 'Lackadaisical Lacie', 'Brisk Brittany', 'Hurried Harry'];
 		var players = [];
-		for (var i = 1; i <= this.numberOfPlayers; i++) {
+		for (var i = 1; i <= playerData.numberOfPlayers; i++) {
 			var player = {};
 			player.equippedCards = [];
 			player.hand = deck.draw(5);
@@ -38,24 +32,5 @@ gameApp.service('playerService', function(deck) {
 		}
 		
 		return players;
-	}
-	
-	this.killPlayer = function(player) {
-		player.isDead = true;
-		$scope.discardAllCardsInHand(player);
-		
-		var alivePlayers = 0;
-		var alivePlayerName = 'Nobody';
-		for (var i = 0; i < $scope.players.length; i++) {
-			if (!$scope.players[i].isDead) {
-				alivePlayers++;
-				alivePlayerName = $scope.players[i].name;
-			}
-		}
-		
-		if (alivePlayers < 2) {
-			alert('Game over! ' + alivePlayerName + ' wins.');
-			$scope.init();
-		}
 	}
 });

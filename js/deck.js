@@ -21,14 +21,14 @@ gameApp.service('deck', function() {
 		this.addCardsToDeck({
 			type: 'defend',
 			title: 'Defend',
-			description: 'Block or heal 1 damage.',
+			description: 'Block 1 attack or heal 1 damage.',
 			damage: 1
 		}, 10);
 		
 		this.addCardsToDeck({
 			type: 'block',
 			title: 'Block',
-			description: 'Block 1 damage.',
+			description: 'Block 1 attack.',
 			damage: 1
 		}, 10);
 		
@@ -49,9 +49,9 @@ gameApp.service('deck', function() {
 		this.addCardsToDeck({
 			type: 'attack',
 			title: 'Mutual Attack',
-			description: 'Deal 1 damage to a target player, and 1 damage to yourself.',
+			description: 'Deal 2 damage to a target player, and 1 damage to yourself.',
 			target: 'single',
-			targetDamage: 1,
+			targetDamage: 2,
 			attackerDamage: 1
 		}, 10);
 		this.addCardsToDeck({
@@ -59,6 +59,13 @@ gameApp.service('deck', function() {
 			title: 'Attack Everyone Else',
 			description: 'Deal 1 damage to everyone but yourself.',
 			target: 'all-save-self',
+			targetDamage: 1
+		}, 10);
+		this.addCardsToDeck({
+			type: 'attack',
+			title: 'Proximity Attack',
+			description: 'Deal 1 damage to each player on your immediate right and left.',
+			target: 'adjacent',
 			targetDamage: 1
 		}, 10);
 		
