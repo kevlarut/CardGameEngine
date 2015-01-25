@@ -19,12 +19,7 @@
 
 	<div ng-controller="gameController">
 		
-		<div class="actionButtons">
-			<button ng-click="nextTurn()">Next turn</button>
-		</div>
-		<div class="clear"></div>
-		
-		<div class="instructions">
+		<div class="instructions" ng-show="instructions">
 			{{instructions}}
 		</div>
 		<div class="playArea" ng-show="activeCard">
@@ -32,13 +27,23 @@
 				{{activeCard.title}}
 				<div class="description">{{activeCard.description}}</div>
 			</div>
+			<button ng-click="cancelActiveCard()">Cancel</button>
+			<button ng-click="discardActiveCard()">Discard</button>
 			<div class="clear"></div>
 		</div>
 		
-		<div ng-repeat="player in players" ng-class="{hand:true, inactivePlayer:!$first}">
+		<div ng-repeat="player in players" ng-class="{hand:true, inactivePlayer:!$first, dead:player.isDead}">
 			<div ng-class="{playerSummary: true, clickable: !$first}" ng-click="clickPlayer(player)">
-				<b>{{player.name}}</b><br />
-				Hit points: {{player.hitPoints}}
+				<div><b>{{player.name}}</b></div>
+				<div>Hit points: {{player.hitPoints}}</div>
+				<div ng-show="$first">Actions remaining: {{actions < 0 ? 0 : actions}}</div>
+		
+				<div class="actionButtons" ng-show="$first">
+					<button ng-click="recycleHand()" ng-show="actions == 2">Recycle hand</button>
+					<button ng-click="nextTurn()">Next turn</button>
+				</div>
+		
+				<div class="clear"></div>
 			</div>
 			
 			<div ng-repeat="card in player.hand track by $index" ng-class="['card', 'clickable', card.type]" ng-click="clickCard(card, player)">

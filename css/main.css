@@ -1,13 +1,22 @@
-body {
+* {
+	font-family: 'helvetica neue', helvetica, arial, sans-serif;
+}
+
+htmll, body {
 	background: #333;
+	margin: 0;
+	padding: 0;
 }
 
-.actionButtons {
-	float: right;
+.instructions {
+	background: #ff0;
+	border-radius: 20px;
+	color: #000;
 	margin: 10px;
+	padding: 20px;
 }
 
-.actionButtons button {
+button {
 	background: #fb5;
 	border: none;
 	border-radius: 10px;
@@ -15,8 +24,8 @@ body {
 	padding: 10px;
 }
 
-.actionButtons button:hover {
-	background: #ff9;
+button:hover {
+	background: #fff;
 	cursor: pointer;
 }
 
@@ -35,21 +44,21 @@ body {
 }
 
 .playArea {
-	background: #ccf;
-	border: 1px solid black;
+	background: #ff0;
+	border-radius: 20px;
 	margin: 10px;
 	padding: 20px;
 	position: absolute;
 	top: 0;
 	right: 0;
+	text-align: center;
 }
 
 .card {
 	background: #fff;
 	box-shadow: 5px 5px 10px 0px rgba(0,0,0,0.5);
 	color: #000;
-	font-family: 'helvetica neue', helvetica, arial, sans-serif;
-	font-size: 30px;
+	font-size: 20px;
 	font-weight: bold;
 	margin: 10px;
 	padding: 20px;
@@ -57,6 +66,11 @@ body {
 	border-radius: 10px;
 	float: left;
 	height: 150px;
+	text-align: left;
+}
+
+.playArea .card {
+	float: none;
 }
 
 .card.clickable:hover {
@@ -69,19 +83,39 @@ body {
 .card .description {
 	font-size: 15px;
 	font-weight: normal;
+	border-top: 2px solid #000;
+	margin-top: 10px;
+	padding-top: 10px;
 }
 
 .hand .playerSummary {
 	background: #333;
 	border-radius: 10px;
 	margin: 10px;
+	min-height: 20px;
 	padding: 20px;
+}
+
+.hand .playerSummary > div {
+	float: left;
+	margin-right: 20px;
+}
+
+.hand .playerSummary > div.actionButtons {
+	float: right;
+	margin-top: -7.5px;
+	margin-right: 0;
+}
+
+.hand.inactivePlayer .playerSummary > div {
+	float: none;
+	margin-right: 0;
 }
 
 .hand.inactivePlayer .card {
 	border-radius: 5px;
 	box-shadow: 2.5px 2.5px 5px 0px rgba(0,0,0,0.5);
-	font-size: 15px;
+	font-size: 10px;
 	height: 75px;
 	margin: 5px;
 	padding: 10px;
@@ -89,7 +123,20 @@ body {
 }
 .hand.inactivePlayer .card .description {
 	font-size: 7.5px;
+	border-top-width: 1px;
+	margin-top: 5px;
+	padding-top: 5px;
 }
+
+.hand.dead {
+	background: #f00;
+	opacity: 50%;
+}
+
+.hand.dead .playerSummary {
+	text-decoration: line-through;
+}
+
 .hand.inactivePlayer .playerSummary {
 	border-radius: 5px;
 	float: left;
@@ -121,4 +168,15 @@ body {
 .card.attack {
 	background: #c33;
 	color: #fff;
+}
+.card.attack .description {
+	border-color: #fff;
+}
+
+.card.modifier {
+	background: #3c3;
+	color: #fff;
+}
+.card.modifier .description {
+	border-color: #fff;
 }
