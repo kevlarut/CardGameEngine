@@ -1,182 +1,152 @@
 * {
-	font-family: 'helvetica neue', helvetica, arial, sans-serif;
-}
+  font-family: 'helvetica neue', helvetica, arial, sans-serif; }
 
-htmll, body {
-	background: #333;
-	margin: 0;
-	padding: 0;
-}
-
-.instructions {
-	background: #ff0;
-	border-radius: 20px;
-	color: #000;
-	margin: 10px;
-	padding: 20px;
-}
+html, body {
+  background: #333;
+  margin: 0;
+  padding: 0; }
 
 button {
-	background: #fb5;
-	border: none;
-	border-radius: 10px;
-	font-weight: bold;
-	padding: 10px;
-}
-
-button:hover {
-	background: #fff;
-	cursor: pointer;
-}
-
-.hand {
-	background: rgba(255,255,255,0.50);
-	border-radius: 20px;
-	margin: 10px;
-	color: #fff;
-	padding: 10px;
-}
-.hand.inactivePlayer {
-	background: rgba(255,255,255,0.25);
-}
-.hand a {
-	color: #ffc;
-}
-
-.playArea {
-	background: #ff0;
-	border-radius: 20px;
-	margin: 10px;
-	padding: 20px;
-	position: absolute;
-	top: 0;
-	right: 0;
-	text-align: center;
-}
+  background: #fb5;
+  border: none;
+  border-radius: 10px;
+  font-weight: bold;
+  padding: 10px; }
+  button:hover {
+    background: #fff;
+    cursor: pointer; }
 
 .card {
-	background: #fff;
-	box-shadow: 5px 5px 10px 0px rgba(0,0,0,0.5);
-	color: #000;
-	font-size: 20px;
-	font-weight: bold;
-	margin: 10px;
-	padding: 20px;
-	width: 100px;
-	border-radius: 10px;
-	float: left;
-	height: 150px;
-	text-align: left;
-}
+  background: #fff;
+  box-shadow: 5px 5px 10px 0px rgba(0, 0, 0, 0.5);
+  color: #000;
+  font-size: 20px;
+  font-weight: bold;
+  margin: 10px;
+  padding: 20px;
+  width: 100px;
+  border-radius: 10px;
+  float: left;
+  height: 150px;
+  text-align: left; }
+  .card.clickable:hover {
+    border: 5px solid #fff;
+    margin-bottom: 0;
+    margin-right: 0;
+    transform: translate(-5px, -5px); }
+  .card .description {
+    font-size: 15px;
+    font-weight: normal;
+    border-top: 2px solid #000;
+    margin-top: 10px;
+    padding-top: 10px; }
+  .card.attack {
+    background: #c33; }
+  .card.draw {
+    background: #ff6; }
+  .card.keep {
+    background: #336; }
+  .card.modifier {
+    background: #3c3; }
+  .card.attack, .card.keep, .card.modifier {
+    color: #fff; }
+    .card.attack .description, .card.keep .description, .card.modifier .description {
+      border-color: #fff; }
 
-.playArea .card {
-	float: none;
-}
+.hand {
+  background: #888;
+  border-radius: 20px;
+  margin: 10px;
+  color: #fff;
+  padding: 10px; }
+  .hand a {
+    color: #ffc; }
+  .hand .equippedCards {
+    float: right; }
+    .hand .equippedCards .card {
+      border: 5px solid #fff;
+      padding: 15px; }
+  .hand .playerSummary {
+    background: #333;
+    border-radius: 10px;
+    margin: 10px;
+    min-height: 20px;
+    padding: 20px; }
+    .hand .playerSummary > div {
+      float: left;
+      margin-right: 20px; }
+      .hand .playerSummary > div.actionButtons {
+        float: right;
+        margin-top: -7.5px;
+        margin-right: 0; }
+  .hand.inactivePlayer {
+    background: rgba(255, 255, 255, 0.25); }
+    .hand.inactivePlayer .equippedCards .card {
+      border-width: 2.5px;
+      padding: 7.5px; }
+    .hand.inactivePlayer .playerSummary {
+      border-radius: 5px;
+      float: left;
+      height: 75px;
+      margin: 5px;
+      padding: 10px;
+      width: 100px; }
+      .hand.inactivePlayer .playerSummary > div {
+        float: none;
+        margin-right: 0; }
+    .hand.inactivePlayer .card {
+      border-radius: 5px;
+      box-shadow: 2.5px 2.5px 5px 0px rgba(0, 0, 0, 0.5);
+      font-size: 10px;
+      height: 75px;
+      margin: 5px;
+      padding: 10px;
+      width: 50px; }
+      .hand.inactivePlayer .card.clickable:hover {
+        border: 2.5px solid #fff;
+        margin-bottom: 0;
+        margin-right: 0;
+        transform: translate(-2.5px, -2.5px); }
+      .hand.inactivePlayer .card .description {
+        font-size: 7.5px;
+        border-top-width: 1px;
+        margin-top: 5px;
+        padding-top: 5px; }
+  .hand.dead {
+    background: #f00;
+    opacity: 50%; }
+    .hand.dead .playerSummary {
+      text-decoration: line-through;
+      height: auto;
+      width: 200px; }
 
-.card.clickable:hover {
-	border: 5px solid #fff;
-	margin-bottom: 0;
-	margin-right: 0;
-	transform: translate(-5px, -5px);
-}
+.instructions {
+  background: #ff0;
+  border-radius: 20px;
+  color: #000;
+  margin: 10px;
+  padding: 20px; }
 
-.card .description {
-	font-size: 15px;
-	font-weight: normal;
-	border-top: 2px solid #000;
-	margin-top: 10px;
-	padding-top: 10px;
-}
-
-.hand .playerSummary {
-	background: #333;
-	border-radius: 10px;
-	margin: 10px;
-	min-height: 20px;
-	padding: 20px;
-}
-
-.hand .playerSummary > div {
-	float: left;
-	margin-right: 20px;
-}
-
-.hand .playerSummary > div.actionButtons {
-	float: right;
-	margin-top: -7.5px;
-	margin-right: 0;
-}
-
-.hand.inactivePlayer .playerSummary > div {
-	float: none;
-	margin-right: 0;
-}
-
-.hand.inactivePlayer .card {
-	border-radius: 5px;
-	box-shadow: 2.5px 2.5px 5px 0px rgba(0,0,0,0.5);
-	font-size: 10px;
-	height: 75px;
-	margin: 5px;
-	padding: 10px;
-	width: 50px;
-}
-.hand.inactivePlayer .card .description {
-	font-size: 7.5px;
-	border-top-width: 1px;
-	margin-top: 5px;
-	padding-top: 5px;
-}
-
-.hand.dead {
-	background: #f00;
-	opacity: 50%;
-}
-
-.hand.dead .playerSummary {
-	text-decoration: line-through;
-}
-
-.hand.inactivePlayer .playerSummary {
-	border-radius: 5px;
-	float: left;
-	height: 75px;
-	margin: 5px;
-	padding: 10px;
-	width: 100px;
-}
-.hand.inactivePlayer  .card.clickable:hover {
-	border: 2.5px solid #fff;
-	margin-bottom: 0;
-	margin-right: 0;
-	transform: translate(-2.5px, -2.5px);
-}
-
-.playerSummary.clickable:hover {
-	background: #ffc;
-	color: #333;
-}
+.playArea {
+  background: #ff0;
+  border-radius: 20px;
+  margin: 10px;
+  padding: 20px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  text-align: center; }
+  .playArea .card {
+    float: none; }
 
 .clear {
-	clear: both;
-}
+  clear: both; }
 
 .clickable {
-	cursor: pointer;
-}
+  cursor: pointer; }
 
-.card.attack {
-	background: #c33;
-	color: #fff;
-}
-.card.attack .description {
-	border-color: #fff;
-}
+.playerSummary.clickable:hover {
+  background: #ffc;
+  color: #333; }
 
-.card.modifier {
-	background: #3c3;
-	color: #fff;
-}
-.card.modifier .description {
-	border-color: #fff;
-}
+/*# sourceMappingURL=main.css.map */

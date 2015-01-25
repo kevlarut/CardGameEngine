@@ -1,6 +1,6 @@
 var gameApp = angular.module('gameApp');
 
-gameApp.controller('gameController', ['$scope', '$timeout', 'deck', function($scope, $timeout, deck) {
+gameApp.controller('gameController', ['$scope', '$timeout', 'deck', 'playerService', function($scope, $timeout, deck, playerService) {
  	
 	$scope.activeCard = null;
 	$scope.clickCardCallback = null;
@@ -9,10 +9,9 @@ gameApp.controller('gameController', ['$scope', '$timeout', 'deck', function($sc
 	$scope.players = [];
 	$scope.handLimit = 8;
 	$scope.actions = 0;
-	$scope.numberOfPlayers = 4;
 	
 	$scope.recycleHand = function() {
-		$scope.discardAllCardsInHand($scope.players[0]);
+		playerService.discardAllCardsInHand($scope.players[0]);
 		$scope.players[0].hand = deck.draw(5);
 		$scope.nextTurn();
 	}
@@ -35,8 +34,23 @@ gameApp.controller('gameController', ['$scope', '$timeout', 'deck', function($sc
 			$scope.players.push(previousPlayer);
 		} while ($scope.players[0].isDead);		
 		
-		$scope.players[0].hand = $scope.players[0].hand.concat(deck.draw(2));
+		var player = $scope.players[0];
+		player.hand = player.hand.concat(deck.draw(2));
 		$scope.actions = 2;
+		
+		for (var i = 0; i < player.equippedCards.length; i++) {
+			var card = player.equippedCards[0];
+			if (isNaN(card.expendedDuration)) {
+				card.expendedDuration = 0;
+			}
+			card.expendedDuration++;
+			console.log('expended: ' + card.expendedDuration + '; duration = ' + card.duration);
+			if (card.expendedDuration >= card.duration) {
+				deck.discard(card);
+				player.equippedCards.splice(i, 1);
+				i--;
+			}
+		}
 	}
 	
 	$scope.cancelActiveCard = function() {
@@ -68,7 +82,30 @@ gameApp.controller('gameController', ['$scope', '$timeout', 'deck', function($sc
 	}
 	
 	$scope.modifyAndPlayCard = function(targetCard, modifierCard, player) {
-		$scope.playCard(targetCard, player, modifierCard);
+		if (targetCard.type == 'modifier') {
+			return false;
+		}
+		else {
+			$scope.playCard(targetCard, player, modifierCard);
+			return true;
+		}
+	}
+	
+	$scope.equipCard = function(card, player) {
+		player.equippedCards.push(card);
+		$scope.clearActiveCard();
+	}
+	
+	$scope.draw = function(card, player, modifierCard) {
+	
+		var cardsToDraw = card.magnitude;
+		
+		if (modifierCard && modifierCard.effect == 'multiply') {
+			cardsToDraw *= modifierCard.magnitude;
+		}
+		
+		player.hand = player.hand.concat(deck.draw(cardsToDraw));
+		$scope.clearActiveCard();
 	}
 	
 	$scope.playCard = function(card, player, modifierCard) {
@@ -97,11 +134,17 @@ gameApp.controller('gameController', ['$scope', '$timeout', 'deck', function($sc
 					break;
 				case 'defend':
 				case 'heal':
-					$scope.heal(card, player);
+					$scope.heal(card, player, modifierCard);
+					break;
+				case 'draw':
+					$scope.draw(card, player, modifierCard);
+					break;
+				case 'keep':
+					$scope.equipCard(card, player);
 					break;
 				case 'modifier':
 					$scope.getTargetCard(function(targetCard) {
-						$scope.modifyAndPlayCard(targetCard, card, player);
+						return $scope.modifyAndPlayCard(targetCard, card, player);
 					});
 					break;
 				default:
@@ -116,47 +159,14 @@ gameApp.controller('gameController', ['$scope', '$timeout', 'deck', function($sc
 	}
 	
 	$scope.clickCard = function(card, player) {
-	
 		if ($scope.clickCardCallback) {
-			$scope.clickCardCallback(card);
-			$scope.clickCardCallback = null;
+			var result = $scope.clickCardCallback(card);
+			if (result) {
+				$scope.clickCardCallback = null;
+			}
 		}
 		else if (!$scope.activeCard) {
 			$scope.playCard(card, player);
-		}
-	}
-	
-	$scope.discardAllCardsInHand = function(player) {
-		var card = player.hand.pop();
-		while (card) {
-			deck.discard(card);
-			card = player.hand.pop();
-		}
-	}
-	
-	$scope.killPlayer = function(player) {
-		player.isDead = true;
-		$scope.discardAllCardsInHand(player);
-		
-		var alivePlayers = 0;
-		var alivePlayerName = 'Nobody';
-		for (var i = 0; i < $scope.players.length; i++) {
-			if (!$scope.players[i].isDead) {
-				alivePlayers++;
-				alivePlayerName = $scope.players[i].name;
-			}
-		}
-		
-		if (alivePlayers < 2) {
-			alert('Game over! ' + alivePlayerName + ' wins.');
-			$scope.init();
-		}
-	}
-	
-	$scope.damagePlayer = function(player, damage) {
-		player.hitPoints -= damage;
-		if (player.hitPoints <= 0) {
-			$scope.killPlayer(player);			
 		}
 	}
 	
@@ -169,9 +179,15 @@ gameApp.controller('gameController', ['$scope', '$timeout', 'deck', function($sc
 		$scope.clickPlayerCallback = callback;
 	}
 	
-	$scope.heal = function(card, player) {
+	$scope.heal = function(card, player, modifierCard) {
+	
+		var magnitude = card.damage;
+		if (modifierCard && modifierCard.effect == 'multiply') {
+			magnitude *= modifierCard.magnitude;
+		}
+	
 		console.log(player.name + ' has healed ' + card.damage + ' poitns of damage using the card ' + card.title + '.');	
-		player.hitPoints += card.damage;
+		player.hitPoints += magnitude;
 		deck.discard(card);
 		$scope.clearActiveCard();
 	}
@@ -182,26 +198,37 @@ gameApp.controller('gameController', ['$scope', '$timeout', 'deck', function($sc
 		
 		if (!modifierCard || modifierCard.effect != 'unblockable')
 		{
-			for (var i = 0; i < target.hand.length; i++) {				
-				if ((target.hand[i].type == 'defend' || target.hand[i].type == 'block') && target.hand[i].damage >= card.targetDamage) {
-					deck.discard(target.hand[i]);
-					target.hand.splice(i, 1);
+			for (var i = 0; i < target.equippedCards.length; i++) {
+				var card = target.equippedCards[0];
+				if (card.effect == 'block') {
 					attackWasBlocked = true;
 					break;
 				}
 			}
-		}
 		
-		if (!attackWasBlocked) {
-			$scope.damagePlayer(target, card.targetDamage);
+			if (!attackWasBlocked) {
+				for (var i = 0; i < target.hand.length; i++) {				
+					if ((target.hand[i].type == 'defend' || target.hand[i].type == 'block') && target.hand[i].damage >= card.targetDamage) {
+						deck.discard(target.hand[i]);
+						target.hand.splice(i, 1);
+						attackWasBlocked = true;
+						break;
+					}
+				}
+			}
+		}
+				
+		if (!attackWasBlocked) {			
+			playerService.damagePlayer(target, card.targetDamage, modifierCard);
 		}
 		
 		if (typeof card.attackerDamage != 'undefined') {
-			$scope.damagePlayer(attacker, card.attackerDamage);
+			playerService.damagePlayer(attacker, card.attackerDamage, modifierCard);
 		}
 		
 		deck.discard(card);
 		$scope.activeCard = null;
+		$scope.instructions = null;
 	}
 	
 	$scope.clickPlayer = function(player) {
@@ -212,21 +239,10 @@ gameApp.controller('gameController', ['$scope', '$timeout', 'deck', function($sc
 		}
 	}
 	
-	$scope.init = function() {
-	
+	$scope.init = function() {	
 		deck.loadCards();
-		deck.shuffle();
-	
-		var names = ['Lackadaisical Lacie', 'Johnny Come Lately', 'Brisk Brittany', 'Hurried Harry'];
-		$scope.players = [];
-		for (var i = 1; i <= $scope.numberOfPlayers; i++) {
-			var player = {};
-			player.hand = deck.draw(5);
-			player.hitPoints = 5;
-			player.name = names[i-1];
-			$scope.players.push(player);
-		}
-		
+		deck.shuffle();	
+		$scope.players = playerService.loadPlayers();		
 		$scope.nextTurn();
 	}
 	

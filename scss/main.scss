@@ -1,0 +1,214 @@
+* {
+	font-family: 'helvetica neue', helvetica, arial, sans-serif;
+}
+
+html, body {
+	background: #333;
+	margin: 0;
+	padding: 0;
+}
+
+button {
+	background: #fb5;
+	border: none;
+	border-radius: 10px;
+	font-weight: bold;
+	padding: 10px;
+	
+	&:hover {
+		background: #fff;
+		cursor: pointer;
+	}
+}
+
+.card {
+	background: #fff;
+	box-shadow: 5px 5px 10px 0px rgba(0,0,0,0.5);
+	color: #000;
+	font-size: 20px;
+	font-weight: bold;
+	margin: 10px;
+	padding: 20px;
+	width: 100px;
+	border-radius: 10px;
+	float: left;
+	height: 150px;
+	text-align: left;
+		
+	&.clickable:hover {
+		border: 5px solid #fff;
+		margin-bottom: 0;
+		margin-right: 0;
+		transform: translate(-5px, -5px);
+	}
+
+	.description {
+		font-size: 15px;
+		font-weight: normal;
+		border-top: 2px solid #000;
+		margin-top: 10px;
+		padding-top: 10px;
+	}
+
+	&.attack {
+		background: #c33;
+	}
+	
+	&.draw {
+		background: #ff6;
+	}
+
+	&.keep {
+		background: #336;
+	}
+	
+	&.modifier {
+		background: #3c3;
+	}
+	
+	&.attack,
+	&.keep,
+	&.modifier {
+		color: #fff;
+		
+		.description {
+			border-color: #fff;
+		}
+	}
+}
+
+.hand {
+	background: #888;
+	border-radius: 20px;
+	margin: 10px;
+	color: #fff;
+	padding: 10px;
+
+	a {
+		color: #ffc;
+	}
+	
+	.equippedCards {
+		float: right;
+		
+		.card {
+			border: 5px solid #fff;
+			padding: 15px;
+		}
+	}
+	
+	.playerSummary {
+		background: #333;
+		border-radius: 10px;
+		margin: 10px;
+		min-height: 20px;
+		padding: 20px;
+		
+		> div {
+			float: left;
+			margin-right: 20px;
+			
+			&.actionButtons {
+				float: right;
+				margin-top: -7.5px;
+				margin-right: 0;
+			}
+		}
+	}
+	
+	&.inactivePlayer {
+		background: rgba(255,255,255,0.25);
+			
+		.equippedCards {			
+			.card {
+				border-width: 2.5px;
+				padding: 7.5px;
+			}
+		}
+		
+		.playerSummary {
+			border-radius: 5px;
+			float: left;
+			height: 75px;
+			margin: 5px;
+			padding: 10px;
+			width: 100px;
+			
+			 > div {
+				float: none;
+				margin-right: 0;
+			}
+		}
+		
+		.card {
+			border-radius: 5px;
+			box-shadow: 2.5px 2.5px 5px 0px rgba(0,0,0,0.5);
+			font-size: 10px;
+			height: 75px;
+			margin: 5px;
+			padding: 10px;
+			width: 50px;
+
+			&.clickable:hover {
+				border: 2.5px solid #fff;
+				margin-bottom: 0;
+				margin-right: 0;
+				transform: translate(-2.5px, -2.5px);
+			}
+		
+			.description {
+				font-size: 7.5px;
+				border-top-width: 1px;
+				margin-top: 5px;
+				padding-top: 5px;
+			}
+		}
+	}
+
+	&.dead {
+		background: #f00;
+		opacity: 50%;
+		
+		.playerSummary {
+			text-decoration: line-through;
+			height: auto;
+			width: 200px;
+		}
+	}
+}
+
+.instructions {
+	background: #ff0;
+	border-radius: 20px;
+	color: #000;
+	margin: 10px;
+	padding: 20px;
+}
+
+.playArea {
+	background: #ff0;
+	border-radius: 20px;
+	margin: 10px;
+	padding: 20px;
+	position: absolute;
+	top: 0;
+	right: 0;
+	text-align: center;
+	
+	.card {
+		float: none;
+	}
+}
+
+.clear {
+	clear: both;
+}
+
+.clickable {
+	cursor: pointer;
+}
+
+.playerSummary.clickable:hover {
+	background: #ffc;
+	color: #333;
+}

@@ -6,70 +6,91 @@ gameApp.service('deck', function() {
 	this.discardPile = [];
 
 	this.discard = function(card) {
+		card.expendedDuration = 0;
 		this.discardPile.push(card);
 	}
 	
+	this.addCardsToDeck = function(card, quantity) {
+		for (var i = 0; i < quantity; i++) {
+			this.cards.push(card);
+		}
+	}
+	
 	this.loadCards = function() {
-		for (var i = 0; i < 10; i++) {
-			this.cards.push({
-				type: 'defend',
-				title: 'Defend',
-				description: 'Block or heal 1 damage.',
-				damage: 1
-			});
-		}
-		for (var i = 0; i < 10; i++) {
-			this.cards.push({
-				type: 'block',
-				title: 'Block',
-				description: 'Block 1 damage.',
-				damage: 1
-			});
-		}
-		for (var i = 0; i < 10; i++) {
-			this.cards.push({
-				type: 'heal',
-				title: 'Heal',
-				description: 'Heal 1 damage.',
-				damage: 1
-			});
-		}
-		for (var i = 0; i < 25; i++) {
-			this.cards.push({
-				type: 'attack',
-				title: 'Attack',
-				description: 'Deal 1 damage to a target player.',
-				target: 'single',
-				targetDamage: 1
-			});
-		}
-		for (var i = 0; i < 10; i++) {
-			this.cards.push({
-				type: 'attack',
-				title: 'Mutual Attack',
-				description: 'Deal 1 damage to a target player, and 1 damage to yourself.',
-				target: 'single',
-				targetDamage: 1,
-				attackerDamage: 1
-			});
-		}
-		for (var i = 0; i < 10; i++) {
-			this.cards.push({
-				type: 'attack',
-				title: 'Attack Everyone Else',
-				description: 'Deal 1 damage to everyone but yourself.',
-				target: 'all-save-self',
-				targetDamage: 1
-			});
-		}
-		for (var i = 0; i < 10; i++) {
-			this.cards.push({
-				type: 'modifier',
-				title: 'Unblock-able',
-				description: 'When played with an attack, that attack cannot be blocked.',
-				effect: 'unblockable'
-			});
-		}
+	
+		this.addCardsToDeck({
+			type: 'defend',
+			title: 'Defend',
+			description: 'Block or heal 1 damage.',
+			damage: 1
+		}, 10);
+		
+		this.addCardsToDeck({
+			type: 'block',
+			title: 'Block',
+			description: 'Block 1 damage.',
+			damage: 1
+		}, 10);
+		
+		this.addCardsToDeck({
+			type: 'heal',
+			title: 'Heal',
+			description: 'Heal 1 damage.',
+			damage: 1
+		}, 10);
+		
+		this.addCardsToDeck({
+			type: 'attack',
+			title: 'Attack',
+			description: 'Deal 1 damage to a target player.',
+			target: 'single',
+			targetDamage: 1
+		}, 25);
+		this.addCardsToDeck({
+			type: 'attack',
+			title: 'Mutual Attack',
+			description: 'Deal 1 damage to a target player, and 1 damage to yourself.',
+			target: 'single',
+			targetDamage: 1,
+			attackerDamage: 1
+		}, 10);
+		this.addCardsToDeck({
+			type: 'attack',
+			title: 'Attack Everyone Else',
+			description: 'Deal 1 damage to everyone but yourself.',
+			target: 'all-save-self',
+			targetDamage: 1
+		}, 10);
+		
+		this.addCardsToDeck({
+			type: 'modifier',
+			title: 'Unblock-able',
+			description: 'When played with an attack, that attack cannot be blocked.',
+			effect: 'unblockable'
+		}, 10);
+		this.addCardsToDeck({
+			type: 'modifier',
+			title: 'Double',
+			description: 'Double the effect of any card.',
+			effect: 'multiply',
+			magnitude: 2
+		}, 10);
+		
+		this.addCardsToDeck({
+			type: 'keep',
+			title: 'Immunity',
+			description: 'You are immune from attacks this round, unless they are Unblockable.',
+			effect: 'block',
+			duration: 1
+		}, 10);
+		
+		this.addCardsToDeck({
+			type: 'draw',
+			title: 'Draw 3',
+			description: 'Draw 3 cards.',
+			effect: 'draw',
+			magnitude: 3
+		}, 10);
 	}
 	
 	this.shuffle = function() {

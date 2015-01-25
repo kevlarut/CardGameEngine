@@ -13,6 +13,7 @@
 	<script src="js/gameApp.js"></script>
 	<script src="js/gameController.js"></script>
 	<script src="js/deck.js"></script>
+	<script src="js/playerService.js"></script>
 
 </head>
 <body ng-app="gameApp">
@@ -50,6 +51,15 @@
 				{{card.title}}
 				<div class="description">{{card.description}}</div>
 			</div>
+			
+			<div class="equippedCards" ng-show="player.equippedCards.length">
+				<div ng-repeat="card in player.equippedCards track by $index" ng-class="['card', card.type]">
+					{{card.title}}
+					<div class="description">{{card.description}}</div>
+				</div>
+				<div class="clear"></div>
+			</div>
+			
 			<div class="clear"></div>
 		</div>
 		
