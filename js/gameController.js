@@ -1,8 +1,8 @@
 var gameApp = angular.module('gameApp');
 
 gameApp.controller('gameController', 
-	['$scope', '$timeout', 'attackService', 'callbacks', 'deck', 'gameService', 'inputService', 'playerData', 'playerService', 'targetingService', 'userInterface', 
-	function($scope, $timeout, attackService, callbacks, deck, gameService, inputService, playerData, playerService, targetingService, userInterface) {
+	['$scope', '$timeout', 'attackService', 'callbacks', 'deckService', 'gameService', 'inputService', 'playerData', 'playerService', 'targetingService', 'userInterface', 
+	function($scope, $timeout, attackService, callbacks, deckService, gameService, inputService, playerData, playerService, targetingService, userInterface) {
  		
 	$scope.attackService = attackService;
 	$scope.gameService = gameService;
@@ -12,8 +12,9 @@ gameApp.controller('gameController',
 	$scope.userInterface = userInterface;
 		
 	$scope.discardActiveCard = function() {
-		if (gameService.activeCard.type != 'oldmaid') {
-			deck.discard(gameService.activeCard);
+		var card = gameService.activeCard;
+		if (card.type != 'oldmaid') {
+			deckService.discard(card);
 			gameService.activeCard = null;
 		}
 	}
@@ -59,7 +60,7 @@ gameApp.controller('gameController',
 		$scope.clearActiveCard();
 	}
 	
-	$scope.draw = function(card, player, modifierCard) {
+	$scope.draw = function(card, player, modifierCard, deckName) {
 	
 		var cardsToDraw = card.magnitude;
 		
@@ -67,7 +68,7 @@ gameApp.controller('gameController',
 			cardsToDraw *= modifierCard.magnitude;
 		}
 		
-		player.hand = player.hand.concat(deck.draw(cardsToDraw));
+		player.hand = player.hand.concat(deckService.draw(deckName, cardsToDraw));
 		$scope.clearActiveCard();
 	}
 	
@@ -77,7 +78,7 @@ gameApp.controller('gameController',
 		player.hand.splice(index, 1);
 		gameService.activeCard = card;
 			
-		if (gameService.actions > 0) {						
+		if (gameService.actions > 0 && gameService.areManaRequirementsMet(card)) {						
 			switch (card.type) {
 				case 'attack':
 					var attackCallback = function(target) {
@@ -102,7 +103,7 @@ gameApp.controller('gameController',
 					$scope.heal(card, player, modifierCard);
 					break;
 				case 'draw':
-					$scope.draw(card, player, modifierCard);
+					$scope.draw(card, player, modifierCard, 'main');
 					break;
 				case 'keep':
 					$scope.equipCard(card, player);
@@ -116,8 +117,10 @@ gameApp.controller('gameController',
 						return $scope.modifyAndPlayCard(targetCard, card, player);
 					});
 					break;
-				case 'victory':
 				case 'oldmaid':
+					break;
+				case 'victory':
+					$scope.playVictoryCard(card, modifierCard, player);
 					break;
 				default:
 					console.log('Card type "' + card.type + '" is not implemented.');
@@ -130,15 +133,30 @@ gameApp.controller('gameController',
 		}
 	}
 	
-	$scope.clickCard = function(card, player) {
-		if (callbacks.clickCardCallback) {
-			var result = callbacks.clickCardCallback(card);
-			if (result) {
-				callbacks.clickCardCallback = null;
-			}
+	$scope.playVictoryCard = function(card, modifierCard, player) {
+		
+		var magnitude = card.magnitude;
+		if (modifierCard && modifierCard.effect == 'multiply') {
+			magnitude *= modifierCard.magnitude;
 		}
-		else if (!gameService.activeCard) {
-			$scope.playCard(card, player);
+		
+		player.victoryPoints += magnitude;
+		$scope.clearActiveCard();
+				
+	}
+	
+	$scope.clickCard = function(card, player) {
+	
+		if (playerService.isThisTheActivePlayer(player)) {	
+			if (callbacks.clickCardCallback) {
+				var result = callbacks.clickCardCallback(card);
+				if (result) {
+					callbacks.clickCardCallback = null;
+				}
+			}
+			else if (!gameService.activeCard) {
+				$scope.playCard(card, player);
+			}
 		}
 	}
 	
@@ -151,7 +169,7 @@ gameApp.controller('gameController',
 	
 		console.log(player.name + ' has healed ' + card.damage + ' poitns of damage using the card ' + card.title + '.');	
 		player.hitPoints += magnitude;
-		deck.discard(card);
+		deckService.discard(card);
 		$scope.clearActiveCard();
 		userInterface.instructions = null;
 	}

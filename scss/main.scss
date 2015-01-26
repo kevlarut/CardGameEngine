@@ -58,6 +58,10 @@ button {
 		background: #ff6;
 	}
 
+	&.oldmaid {
+		background: #333;
+	}
+	
 	&.keep {
 		background: #336;
 	}
@@ -73,7 +77,8 @@ button {
 	&.attack,
 	&.keep,
 	&.mana,
-	&.modifier {
+	&.modifier,
+	&.oldmaid {
 		color: #fff;
 		
 		.description {

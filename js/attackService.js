@@ -1,6 +1,6 @@
 var gameApp = angular.module('gameApp');
 
-gameApp.service('attackService', function(callbacks, deck, gameService, userInterface) {
+gameApp.service('attackService', function(callbacks, deckService, gameService, userInterface) {
 	
 	this.goFishConditionHasBeenMet = false;
 	
@@ -31,8 +31,8 @@ gameApp.service('attackService', function(callbacks, deck, gameService, userInte
 		}
 	}
 	
-	this.endAttack = function(card) {	
-		deck.discard(card);
+	this.endAttack = function(card) {
+		deckService.discard(card);
 		gameService.activeCard = null;
 		userInterface.instructions = null;
 	}
@@ -92,8 +92,9 @@ gameApp.service('attackService', function(callbacks, deck, gameService, userInte
 	
 		if (!blocked) {
 			for (var i = 0; i < target.hand.length; i++) {				
-				if ((target.hand[i].type == 'defend' || target.hand[i].type == 'block')) {
-					deck.discard(target.hand[i]);
+				var card = target.hand[i];
+				if ((card.type == 'defend' || card.type == 'block')) {
+					deckService.discard(card);
 					target.hand.splice(i, 1);
 					blocked = true;
 					break;

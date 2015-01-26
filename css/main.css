@@ -44,15 +44,17 @@ button {
     background: #c33; }
   .card.draw {
     background: #ff6; }
+  .card.oldmaid {
+    background: #333; }
   .card.keep {
     background: #336; }
   .card.mana {
     background: #636; }
   .card.modifier {
     background: #3c3; }
-  .card.attack, .card.keep, .card.mana, .card.modifier {
+  .card.attack, .card.keep, .card.mana, .card.modifier, .card.oldmaid {
     color: #fff; }
-    .card.attack .description, .card.keep .description, .card.mana .description, .card.modifier .description {
+    .card.attack .description, .card.keep .description, .card.mana .description, .card.modifier .description, .card.oldmaid .description {
       border-color: #fff; }
 
 .hand {

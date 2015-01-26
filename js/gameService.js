@@ -1,11 +1,25 @@
 var gameApp = angular.module('gameApp');
 
-gameApp.service('gameService', function(deck, gameData, playerData, playerService, userInterface) {
+gameApp.service('gameService', function(deckRepository, deckService, gameData, playerData, playerService, userInterface) {
 	
 	this.actions = 0;
 	this.activeCard = null;
+	this.game = null;
 	this.mana = 0;
 	this.handLimit = 8;	
+	
+	this.areManaRequirementsMet = function(card) {
+		if (card.cost) {
+			return this.mana >= card.cost;
+		}
+		else {
+			return true;
+		}
+	}
+	
+	this.isHandRecyclingAllowed = function() {
+		return this.game.allowHandRecycling && this.actions == 2;
+	}
 	
 	this.damagePlayer = function(player, damage, modifierCard) {
 	
@@ -15,8 +29,16 @@ gameApp.service('gameService', function(deck, gameData, playerData, playerServic
 	
 		player.hitPoints -= damage;
 		if (player.hitPoints <= 0) {
-			console.log('Player ' + player.name + ' has ' + player.hitPoints + ' hit points.  This player is now dead.');
 			this.killPlayer(player);			
+		}
+		else {
+			var draw = this.game.drawUponTakingDamage;
+			if (draw) {
+				for (var i = 0; i < draw.length; i++) {
+					var directive = draw[i];
+					player.hand = player.hand.concat(deckService.draw(directive.deck, directive.quantity));
+				}
+			}
 		}
 	}	
 	
@@ -85,7 +107,7 @@ gameApp.service('gameService', function(deck, gameData, playerData, playerServic
 		userInterface.instructions = null;
 	
 		var player = playerData.players[0];
-		player.hand = player.hand.concat(deck.draw(2));
+		player.hand = player.hand.concat(deckService.draw('main', 2));
 		this.actions = 2;
 		this.mana = 0;
 		
@@ -97,11 +119,21 @@ gameApp.service('gameService', function(deck, gameData, playerData, playerServic
 			card.expendedDuration++;
 			console.log('expended: ' + card.expendedDuration + '; duration = ' + card.duration);
 			if (card.expendedDuration >= card.duration) {
-				deck.discard(card);
+				deckService.discard(card);
 				player.equippedCards.splice(i, 1);
 				i--;
 			}
 		}
+	}
+	
+	this.makeInitialDraw = function() {
+		var cards = [];
+		var initialDraw = this.game.initialDraw;
+		for (var i = 0; i < initialDraw.length; i++) {
+			var directive = initialDraw[i];
+			cards = cards.concat(deckService.draw(directive.deck, directive.quantity));
+		}
+		return cards;
 	}
 	
 	this.nextTurn = function() {
@@ -115,18 +147,25 @@ gameApp.service('gameService', function(deck, gameData, playerData, playerServic
 	
 	this.recycleHand = function() {
 		playerService.discardAllCardsInHand(playerData.players[0]);
-		playerData.players[0].hand = deck.draw(5);
+		playerData.players[0].hand = this.makeInitialDraw();
 		this.nextTurn();
 	}
 	
-	this.startNewGame = function() {	
+	this.startNewGame = function() {		
+	
+		this.game = gameData['mudslinger'];
+		var game = this.game;
 		
-		//var game = gameData['generic'];	
-		var game = gameData['mudslinger'];	
-		
-		deck.loadCards(game.decks[0]);		
-		deck.shuffle();	
-		playerData.players = playerService.loadPlayers();
+		for (var i = 0; i < game.decks.length; i++) {
+			var deck = deckService.createDeck(game.decks[i]);
+			deckService.shuffle(deck);
+			deckRepository.decks[deck.id] = deck;
+		}
+		playerData.players = playerService.loadPlayers(game);
+		for (var i = 0; i < playerData.players.length; i++) {
+			var player = playerData.players[i];
+			player.hand = this.makeInitialDraw();
+		}
 		this.beginNewTurn();
 	}
 	

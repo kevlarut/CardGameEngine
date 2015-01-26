@@ -14,7 +14,8 @@
 	<script src="js/gameController.js"></script>
 	<script src="js/attackService.js"></script>
 	<script src="js/callbacks.js"></script>
-	<script src="js/deck.js"></script>
+	<script src="js/deckRepository.js"></script>
+	<script src="js/deckService.js"></script>
 	<script src="js/gameData.js"></script>
 	<script src="js/gameService.js"></script>
 	<script src="js/inputService.js"></script>
@@ -51,11 +52,12 @@
 			<div ng-class="{playerSummary: true, clickable: !$first}" ng-click="clickPlayer(player)">
 				<div><b>{{player.name}}</b></div>
 				<div ng-show="!player.isDead">Hit points: {{player.hitPoints}}</div>
+				<div ng-show="!player.isDead">Victory pts.: {{player.victoryPoints}}</div>
 				<div ng-show="$first">Actions remaining: {{gameService.actions < 0 ? 0 : gameService.actions}}</div>
 				<div ng-show="$first">Mana: {{gameService.mana}}</div>
 		
 				<div class="actionButtons" ng-show="$first">
-					<button ng-click="gameService.recycleHand()" ng-show="gameService.actions == 2">Recycle hand</button>
+					<button ng-click="gameService.recycleHand()" ng-show="gameService.isHandRecyclingAllowed()">Recycle hand</button>
 					<button ng-click="gameService.nextTurn()">Next turn</button>
 				</div>
 		
