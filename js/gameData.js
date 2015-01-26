@@ -7,6 +7,7 @@ gameApp.service('gameData', function() {
 		allowHandRecycling: true,
 		initialHitPoints: 3,
 		initialDraw: [{deck: 'main', quantity: 5}],
+		drawUponNewTurn: [{deck: 'main', quantity: 2}],
 		decks: [{
 			id: 'main',
 			cards: [
@@ -96,7 +97,8 @@ gameApp.service('gameData', function() {
 		name: 'Mudslinger',
 		allowHandRecycling: false,
 		initialHitPoints: 3,
-		initialDraw: [{deck: 'scandals', quantity: 1}, {deck: 'main', quantity: 5}],
+		initialDraw: [{deck: 'scandals', quantity: 1}, {deck: 'main', quantity: 4}],
+		drawUponNewTurn: [{deck: 'main', quantity: 1}],
 		drawUponTakingDamage: [{deck: 'scandals', quantity: 1}],
 		decks: [{
 			id: 'main',

@@ -99,15 +99,19 @@ gameApp.service('gameService', function(deckRepository, deckService, gameData, p
 			playerData.players.push(previousPlayer);
 		} while (playerData.players[0].isDead);	
 		
+		userInterface.instructions = null;
 		return true;
 	}
 	
 	this.beginNewTurn = function() {
 	
-		userInterface.instructions = null;
-	
 		var player = playerData.players[0];
-		player.hand = player.hand.concat(deckService.draw('main', 2));
+		
+		for (var i = 0; i < this.game.drawUponNewTurn.length; i++) {
+			var draw = this.game.drawUponNewTurn[i];
+			player.hand = player.hand.concat(deckService.draw(draw.deck, draw.quantity));	
+		}
+		
 		this.actions = 2;
 		this.mana = 0;
 		

@@ -62,6 +62,7 @@ gameApp.service('attackService', function(callbacks, deckService, gameService, u
 							if (!attackService.goFishConditionHasBeenMet) {
 								attackService.endAttack(card);
 							}
+							userInterface.shouldShowTextInput = false;
 						}
 					}
 					break;

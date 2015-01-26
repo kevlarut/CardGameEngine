@@ -29,55 +29,63 @@
 
 	<div ng-controller="gameController">
 		
-		<div class="instructions" ng-show="userInterface.instructions">
-			{{userInterface.instructions}}
-			
-			<div ng-show="userInterface.shouldShowTextInput" class="inputContainer">
-				<input ng-model="inputService.textInput" />
-				<button ng-click="inputService.handleTextInput(attackService)">Go</button>
-			</div>
-			
-		</div>
-		<div class="playArea" ng-show="gameService.activeCard">
-			<div ng-class="['card', gameService.activeCard.type]" ng-show="gameService.activeCard">
-				{{gameService.activeCard.title}}
-				<div class="description">{{gameService.activeCard.description}}</div>
-			</div>
-			<button ng-click="cancelActiveCard()">Cancel</button>
-			<button ng-click="discardActiveCard()" ng-show="gameService.activeCard.type != 'oldmaid'">Discard</button>
-			<div class="clear"></div>
+		<div class="selectGame" ng-show="!gameService.game">
+			<p>Select which game you want to play.</p>
 		</div>
 		
-		<div ng-repeat="player in playerData.players" ng-class="{hand:true, inactivePlayer:!$first, dead:player.isDead}">
-			<div ng-class="{playerSummary: true, clickable: !$first}" ng-click="clickPlayer(player)">
-				<div><b>{{player.name}}</b></div>
-				<div ng-show="!player.isDead">Hit points: {{player.hitPoints}}</div>
-				<div ng-show="!player.isDead">Victory pts.: {{player.victoryPoints}}</div>
-				<div ng-show="$first">Actions remaining: {{gameService.actions < 0 ? 0 : gameService.actions}}</div>
-				<div ng-show="$first">Mana: {{gameService.mana}}</div>
-		
-				<div class="actionButtons" ng-show="$first">
-					<button ng-click="gameService.recycleHand()" ng-show="gameService.isHandRecyclingAllowed()">Recycle hand</button>
-					<button ng-click="gameService.nextTurn()">Next turn</button>
+		<div class="game" ng-show="gameService.game">
+			
+			<div class="instructions" ng-show="userInterface.instructions">
+				{{userInterface.instructions}}
+				
+				<div ng-show="userInterface.shouldShowTextInput" class="inputContainer">
+					<input ng-model="inputService.textInput" />
+					<button ng-click="inputService.handleTextInput(attackService)">Go</button>
 				</div>
-		
+				
+			</div>
+			<div class="playArea" ng-show="gameService.activeCard">
+				<div ng-class="['card', gameService.activeCard.type]" ng-show="gameService.activeCard">
+					{{gameService.activeCard.title}}
+					<div class="description">{{gameService.activeCard.description}}</div>
+				</div>
+				<button ng-click="cancelActiveCard()">Cancel</button>
+				<button ng-click="discardActiveCard()" ng-show="gameService.activeCard.type != 'oldmaid'">Discard</button>
 				<div class="clear"></div>
 			</div>
 			
-			<div ng-repeat="card in player.hand track by $index" ng-class="['card', 'clickable', card.type]" ng-click="clickCard(card, player)">
-				{{card.title}}
-				<div class="description">{{card.description}}</div>
-			</div>
+			<div ng-repeat="player in playerData.players" ng-class="{hand:true, inactivePlayer:!$first, dead:player.isDead}">
+				<div ng-class="{playerSummary: true, clickable: !$first}" ng-click="clickPlayer(player)">
+					<div><b>{{player.name}}</b></div>
+					<div ng-show="!player.isDead">Hit points: {{player.hitPoints}}</div>
+					<div ng-show="!player.isDead">Victory pts.: {{player.victoryPoints}}</div>
+					<div ng-show="$first">Actions remaining: {{gameService.actions < 0 ? 0 : gameService.actions}}</div>
+					<div ng-show="$first">Mana: {{gameService.mana}}</div>
 			
-			<div class="equippedCards" ng-show="player.equippedCards.length">
-				<div ng-repeat="card in player.equippedCards track by $index" ng-class="['card', card.type]">
+					<div class="actionButtons" ng-show="$first">
+						<button ng-click="gameService.recycleHand()" ng-show="gameService.isHandRecyclingAllowed()">Recycle hand</button>
+						<button ng-click="gameService.nextTurn()">Next turn</button>
+					</div>
+			
+					<div class="clear"></div>
+				</div>
+				
+				<div ng-repeat="card in player.hand track by $index" ng-class="['card', 'clickable', card.type]" ng-click="clickCard(card, player)">
 					{{card.title}}
 					<div class="description">{{card.description}}</div>
 				</div>
+				
+				<div class="equippedCards" ng-show="player.equippedCards.length">
+					<div ng-repeat="card in player.equippedCards track by $index" ng-class="['card', card.type]">
+						{{card.title}}
+						<div class="description">{{card.description}}</div>
+					</div>
+					<div class="clear"></div>
+				</div>
+				
 				<div class="clear"></div>
 			</div>
-			
-			<div class="clear"></div>
+		
 		</div>
 		
 	</div>
