@@ -62,12 +62,17 @@ button {
 		background: #336;
 	}
 	
+	&.mana {
+		background: #636;
+	}
+	
 	&.modifier {
 		background: #3c3;
 	}
 	
 	&.attack,
 	&.keep,
+	&.mana,
 	&.modifier {
 		color: #fff;
 		
@@ -183,6 +188,15 @@ button {
 	color: #000;
 	margin: 10px;
 	padding: 20px;
+	
+	.inputContainer {
+		margin-top: 10px;
+		
+		input {
+			font-size: 1.1em;
+			padding: 5px;
+		}
+	}
 }
 
 .playArea {

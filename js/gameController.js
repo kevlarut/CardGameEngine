@@ -1,32 +1,34 @@
 var gameApp = angular.module('gameApp');
 
 gameApp.controller('gameController', 
-	['$scope', '$timeout', 'attackService', 'callbacks', 'deck', 'gameService', 'playerData', 'playerService', 'targetingService', 'userInterface', 
-	function($scope, $timeout, attackService, callbacks, deck, gameService, playerData, playerService, targetingService, userInterface) {
+	['$scope', '$timeout', 'attackService', 'callbacks', 'deck', 'gameService', 'inputService', 'playerData', 'playerService', 'targetingService', 'userInterface', 
+	function($scope, $timeout, attackService, callbacks, deck, gameService, inputService, playerData, playerService, targetingService, userInterface) {
  		
+	$scope.attackService = attackService;
 	$scope.gameService = gameService;
+	$scope.inputService = inputService;
 	$scope.playerData = playerData;
 	$scope.playerService = playerService;
 	$scope.userInterface = userInterface;
-	
-	$scope.activeCard = null;
-	
+		
 	$scope.discardActiveCard = function() {
-		deck.discard($scope.activeCard);
-		$scope.activeCard = null;
+		if (gameService.activeCard.type != 'oldmaid') {
+			deck.discard(gameService.activeCard);
+			gameService.activeCard = null;
+		}
 	}
 		
 	$scope.cancelActiveCard = function() {
-		if ($scope.activeCard.type != 'modifier') {
+		if (gameService.activeCard.type != 'modifier') {
 			gameService.actions++;
 		}
-		playerData.players[0].hand.push($scope.activeCard);
+		playerData.players[0].hand.push(gameService.activeCard);
 		$scope.clearActiveCard();
 		userInterface.instructions = null;
 	}
 	
 	$scope.clearActiveCard = function() {
-		$scope.activeCard = null;
+		gameService.activeCard = null;
 		callbacks.clickPlayerCallback = null;
 	}
 		
@@ -42,6 +44,18 @@ gameApp.controller('gameController',
 	
 	$scope.equipCard = function(card, player) {
 		player.equippedCards.push(card);
+		$scope.clearActiveCard();
+	}
+	
+	$scope.accumulateMana = function(card, modifierCard) {
+	
+		var manaEarned = card.magnitude;
+		
+		if (modifierCard && modifierCard.effect == 'multiply') {
+			manaEarned *= modifierCard.magnitude;
+		}
+		
+		gameService.mana += manaEarned;
 		$scope.clearActiveCard();
 	}
 	
@@ -61,15 +75,13 @@ gameApp.controller('gameController',
 		
 		var index = player.hand.indexOf(card);
 		player.hand.splice(index, 1);
-		$scope.activeCard = card;
+		gameService.activeCard = card;
 			
-		if (gameService.actions > 0) {
-			console.log(player.name + ' plays ' + card.title);
-						
+		if (gameService.actions > 0) {						
 			switch (card.type) {
 				case 'attack':
 					var attackCallback = function(target) {
-						$scope.attack(card, target, player, modifierCard);
+						attackService.attack(card, target, player, modifierCard);
 					};
 					if (card.target == 'single') {					
 						userInterface.instructions ='Click on a player to target.';
@@ -95,11 +107,17 @@ gameApp.controller('gameController',
 				case 'keep':
 					$scope.equipCard(card, player);
 					break;
+				case 'mana':
+					$scope.accumulateMana(card, modifierCard);
+					break;
 				case 'modifier':				
 					userInterface.instructions ='Click on the card you want to modify and play.';
 					targetingService.getTargetCard(function(targetCard) {
 						return $scope.modifyAndPlayCard(targetCard, card, player);
 					});
+					break;
+				case 'victory':
+				case 'oldmaid':
 					break;
 				default:
 					console.log('Card type "' + card.type + '" is not implemented.');
@@ -107,7 +125,7 @@ gameApp.controller('gameController',
 			}
 		}
 			
-		if (card.type != 'modifier') {
+		if (card.type != 'modifier' && card.type != 'mana') {
 			gameService.actions--;
 		}
 	}
@@ -119,7 +137,7 @@ gameApp.controller('gameController',
 				callbacks.clickCardCallback = null;
 			}
 		}
-		else if (!$scope.activeCard) {
+		else if (!gameService.activeCard) {
 			$scope.playCard(card, player);
 		}
 	}
@@ -135,33 +153,6 @@ gameApp.controller('gameController',
 		player.hitPoints += magnitude;
 		deck.discard(card);
 		$scope.clearActiveCard();
-		userInterface.instructions = null;
-	}
-	
-	$scope.attack = function(card, target, attacker, modifierCard) {		
-		
-		var attackWasBlockedByAttacker = false;
-		var attackWasBlockedByTarget = false;
-		
-		if (!modifierCard || modifierCard.effect != 'unblockable')
-		{
-			var attackWasBlockedByTarget = attackService.spendCardToBlockAttackIfPossible(target);	
-			
-			if (typeof card.attackerDamage != 'undefined' && !attackWasBlockedByAttacker) {
-				var attackWasBlockedByAttacker = attackService.spendCardToBlockAttackIfPossible(attacker);	
-			}		
-		}
-				
-		if (!attackWasBlockedByTarget) {			
-			gameService.damagePlayer(target, card.targetDamage, modifierCard);
-		}
-		
-		if (typeof card.attackerDamage != 'undefined' && !attackWasBlockedByAttacker) {
-			gameService.damagePlayer(attacker, card.attackerDamage, modifierCard);
-		}
-		
-		deck.discard(card);
-		$scope.activeCard = null;
 		userInterface.instructions = null;
 	}
 	

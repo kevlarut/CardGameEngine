@@ -8,14 +8,16 @@
 	
 	<script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.5/angular.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.5/angular.min.js"></script>	
 	
 	<script src="js/gameApp.js"></script>
 	<script src="js/gameController.js"></script>
 	<script src="js/attackService.js"></script>
 	<script src="js/callbacks.js"></script>
 	<script src="js/deck.js"></script>
+	<script src="js/gameData.js"></script>
 	<script src="js/gameService.js"></script>
+	<script src="js/inputService.js"></script>
 	<script src="js/playerData.js"></script>
 	<script src="js/playerService.js"></script>
 	<script src="js/targetingService.js"></script>
@@ -28,14 +30,20 @@
 		
 		<div class="instructions" ng-show="userInterface.instructions">
 			{{userInterface.instructions}}
+			
+			<div ng-show="userInterface.shouldShowTextInput" class="inputContainer">
+				<input ng-model="inputService.textInput" />
+				<button ng-click="inputService.handleTextInput(attackService)">Go</button>
+			</div>
+			
 		</div>
-		<div class="playArea" ng-show="activeCard">
-			<div ng-class="['card', activeCard.type]" ng-show="activeCard">
-				{{activeCard.title}}
-				<div class="description">{{activeCard.description}}</div>
+		<div class="playArea" ng-show="gameService.activeCard">
+			<div ng-class="['card', gameService.activeCard.type]" ng-show="gameService.activeCard">
+				{{gameService.activeCard.title}}
+				<div class="description">{{gameService.activeCard.description}}</div>
 			</div>
 			<button ng-click="cancelActiveCard()">Cancel</button>
-			<button ng-click="discardActiveCard()">Discard</button>
+			<button ng-click="discardActiveCard()" ng-show="gameService.activeCard.type != 'oldmaid'">Discard</button>
 			<div class="clear"></div>
 		</div>
 		
@@ -44,6 +52,7 @@
 				<div><b>{{player.name}}</b></div>
 				<div ng-show="!player.isDead">Hit points: {{player.hitPoints}}</div>
 				<div ng-show="$first">Actions remaining: {{gameService.actions < 0 ? 0 : gameService.actions}}</div>
+				<div ng-show="$first">Mana: {{gameService.mana}}</div>
 		
 				<div class="actionButtons" ng-show="$first">
 					<button ng-click="gameService.recycleHand()" ng-show="gameService.actions == 2">Recycle hand</button>

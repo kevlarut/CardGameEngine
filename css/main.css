@@ -46,11 +46,13 @@ button {
     background: #ff6; }
   .card.keep {
     background: #336; }
+  .card.mana {
+    background: #636; }
   .card.modifier {
     background: #3c3; }
-  .card.attack, .card.keep, .card.modifier {
+  .card.attack, .card.keep, .card.mana, .card.modifier {
     color: #fff; }
-    .card.attack .description, .card.keep .description, .card.modifier .description {
+    .card.attack .description, .card.keep .description, .card.mana .description, .card.modifier .description {
       border-color: #fff; }
 
 .hand {
@@ -126,6 +128,11 @@ button {
   color: #000;
   margin: 10px;
   padding: 20px; }
+  .instructions .inputContainer {
+    margin-top: 10px; }
+    .instructions .inputContainer input {
+      font-size: 1.1em;
+      padding: 5px; }
 
 .playArea {
   background: #ff0;

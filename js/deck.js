@@ -10,94 +10,19 @@ gameApp.service('deck', function() {
 		this.discardPile.push(card);
 	}
 	
-	this.addCardsToDeck = function(card, quantity) {
+	this.addCardsToDeck = function(card) {
+		var quantity = card.quantity;
+		delete card.quantity;
 		for (var i = 0; i < quantity; i++) {
 			this.cards.push(card);
 		}
 	}
 	
-	this.loadCards = function() {
-	
-		this.addCardsToDeck({
-			type: 'defend',
-			title: 'Defend',
-			description: 'Block 1 attack or heal 1 damage.',
-			damage: 1
-		}, 10);
-		
-		this.addCardsToDeck({
-			type: 'block',
-			title: 'Block',
-			description: 'Block 1 attack.',
-			damage: 1
-		}, 10);
-		
-		this.addCardsToDeck({
-			type: 'heal',
-			title: 'Heal',
-			description: 'Heal 1 damage.',
-			damage: 1
-		}, 10);
-		
-		this.addCardsToDeck({
-			type: 'attack',
-			title: 'Attack',
-			description: 'Deal 1 damage to a target player.',
-			target: 'single',
-			targetDamage: 1
-		}, 25);
-		this.addCardsToDeck({
-			type: 'attack',
-			title: 'Mutual Attack',
-			description: 'Deal 2 damage to a target player, and 1 damage to yourself.',
-			target: 'single',
-			targetDamage: 2,
-			attackerDamage: 1
-		}, 10);
-		this.addCardsToDeck({
-			type: 'attack',
-			title: 'Attack Everyone Else',
-			description: 'Deal 1 damage to everyone but yourself.',
-			target: 'all-save-self',
-			targetDamage: 1
-		}, 10);
-		this.addCardsToDeck({
-			type: 'attack',
-			title: 'Proximity Attack',
-			description: 'Deal 1 damage to each player on your immediate right and left.',
-			target: 'adjacent',
-			targetDamage: 1
-		}, 10);
-		
-		this.addCardsToDeck({
-			type: 'modifier',
-			title: 'Unblock-able',
-			description: 'When played with an attack, that attack cannot be blocked.',
-			effect: 'unblockable'
-		}, 10);
-		this.addCardsToDeck({
-			type: 'modifier',
-			title: 'Double',
-			description: 'Double the effect of any card.',
-			effect: 'multiply',
-			magnitude: 2
-		}, 10);
-		
-		this.addCardsToDeck({
-			type: 'keep',
-			title: 'Immunity',
-			description: 'You are immune from attacks this round, unless they are Unblockable.',
-			effect: 'block',
-			duration: 1
-		}, 10);
-		
-		this.addCardsToDeck({
-			type: 'draw',
-			title: 'Draw 3',
-			description: 'Draw 3 cards.',
-			effect: 'draw',
-			magnitude: 3
-		}, 10);
+	this.loadCards = function(gameDeckData) {	
+		for (var i = 0; i < gameDeckData.cards.length; i++) {
+			var card = gameDeckData.cards[i];
+			this.addCardsToDeck(card);
+		}
 	}
 	
 	this.shuffle = function() {

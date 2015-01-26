@@ -4,5 +4,6 @@ gameApp.service('callbacks', function(deck) {
 	
 	this.clickCardCallback = null;
 	this.clickPlayerCallback = null;
+	this.textInputCallback = null;
 	
 });

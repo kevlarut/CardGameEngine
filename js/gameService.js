@@ -1,8 +1,10 @@
 var gameApp = angular.module('gameApp');
 
-gameApp.service('gameService', function(deck, playerData, playerService, userInterface) {
+gameApp.service('gameService', function(deck, gameData, playerData, playerService, userInterface) {
 	
 	this.actions = 0;
+	this.activeCard = null;
+	this.mana = 0;
 	this.handLimit = 8;	
 	
 	this.damagePlayer = function(player, damage, modifierCard) {
@@ -41,22 +43,51 @@ gameApp.service('gameService', function(deck, playerData, playerService, userInt
 		}
 	}
 	
-	this.nextTurn = function() {
+	this.endTurn = function() {
 	
-		if (playerData.players[0].hand.length > this.handLimit) {
-			userInterface.instructions ='You must discard down to ' + this.handLimit + ' cards.  Click on a card to use or discard it.';
-			return;
+		var player = playerData.players[0];
+	
+		if (player.hand.length > this.handLimit) {
+			userInterface.instructions = 'You must discard down to ' + this.handLimit + ' cards.  Click on a card to use or discard it.';
+			return false;
 		}
-	
+		
+		var repulsedCardsInHand = [];
+		for (var i = 0; i < player.hand.length; i++) {
+			var card = player.hand[i];
+			if (card.repulsed) {
+				repulsedCardsInHand.push(card);
+			}
+		}
+		if (repulsedCardsInHand.length > 0) {
+			for (var i = 0; i < player.hand.length; i++) {
+				var card = player.hand[i];
+				for (var j = 0; j < repulsedCardsInHand.length; j++) {				
+					if (card.title == repulsedCardsInHand[j].repulsed) {
+						userInterface.instructions = 'Since you have "' + card.title + '" in your hand, you must discard "' + repulsedCardsInHand[j].title + '"';
+						return false;
+					}
+				}
+			}
+		}
+		
 		do {
 			var previousPlayer = playerData.players[0];
 			playerData.players.splice(0, 1);
 			playerData.players.push(previousPlayer);
-		} while (playerData.players[0].isDead);		
+		} while (playerData.players[0].isDead);	
 		
+		return true;
+	}
+	
+	this.beginNewTurn = function() {
+	
+		userInterface.instructions = null;
+	
 		var player = playerData.players[0];
 		player.hand = player.hand.concat(deck.draw(2));
 		this.actions = 2;
+		this.mana = 0;
 		
 		for (var i = 0; i < player.equippedCards.length; i++) {
 			var card = player.equippedCards[0];
@@ -73,17 +104,30 @@ gameApp.service('gameService', function(deck, playerData, playerService, userInt
 		}
 	}
 	
+	this.nextTurn = function() {
+	
+		if (!this.endTurn()) {
+			return;
+		}
+		
+		this.beginNewTurn();
+	}
+	
 	this.recycleHand = function() {
 		playerService.discardAllCardsInHand(playerData.players[0]);
 		playerData.players[0].hand = deck.draw(5);
 		this.nextTurn();
 	}
 	
-	this.startNewGame = function() {
-		deck.loadCards();
+	this.startNewGame = function() {	
+		
+		//var game = gameData['generic'];	
+		var game = gameData['mudslinger'];	
+		
+		deck.loadCards(game.decks[0]);		
 		deck.shuffle();	
 		playerData.players = playerService.loadPlayers();
-		this.nextTurn();
+		this.beginNewTurn();
 	}
 	
 });
