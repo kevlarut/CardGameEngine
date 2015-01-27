@@ -74,6 +74,10 @@ button {
 		background: #3c3;
 	}
 	
+	&.trap {
+		background: #f90;		
+	}
+	
 	&.attack,
 	&.keep,
 	&.mana,
@@ -83,6 +87,34 @@ button {
 		
 		.description {
 			border-color: #fff;
+		}
+	}
+	
+	.backOfCard {
+		display: none;
+	}
+	
+	&.faceDown {
+		background: #fff;
+		color: #000;		
+		border: 5px solid #000;
+		padding: 15px;
+		
+		.backOfCard {
+			
+			display: block;
+			position: relative;
+			left: 50%;
+			top: 50%;
+			text-align: center;
+			
+			-ms-transform: translateX(-50%) translateY(-50%) rotate(-45deg); /* IE 9 */
+			-webkit-transform: translateX(-50%) translateY(-50%) rotate(-45deg); /* Chrome, Safari, Opera */
+			transform: translateX(-50%) translateY(-50%) rotate(-45deg);
+		}
+		
+		.text {
+			display: none;
 		}
 	}
 }
@@ -128,7 +160,7 @@ button {
 	
 	&.inactivePlayer {
 		background: rgba(255,255,255,0.25);
-			
+						
 		.equippedCards {			
 			.card {
 				border-width: 2.5px;
@@ -149,7 +181,6 @@ button {
 				margin-right: 0;
 			}
 		}
-		
 		.card {
 			border-radius: 5px;
 			box-shadow: 2.5px 2.5px 5px 0px rgba(0,0,0,0.5);
@@ -163,8 +194,14 @@ button {
 				border: 2.5px solid #fff;
 				margin-bottom: 0;
 				margin-right: 0;
+				padding: 7.5px;
 				transform: translate(-2.5px, -2.5px);
 			}
+			
+			&.faceDown {
+				border: 2.5px solid #000;
+				padding: 7.5px;
+			}	
 		
 			.description {
 				font-size: 7.5px;

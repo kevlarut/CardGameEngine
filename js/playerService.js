@@ -18,6 +18,11 @@ gameApp.service('playerService', function(deckService, playerData) {
 		}
 	}
 	
+	this.discardSpecificEquippedCard = function(player, card) {	
+		var index = player.equippedCards.indexOf(card);
+		player.equippedCards.splice(index, 1);
+	}
+	
 	this.isThisTheActivePlayer = function(player) {
 		return player == playerData.players[0];
 	}

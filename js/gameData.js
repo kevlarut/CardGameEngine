@@ -2,10 +2,15 @@ var gameApp = angular.module('gameApp');
 
 gameApp.service('gameData', function() {
 	
+	this.gameKeys = [ 
+		'generic',
+		'mudslinger'
+	] 
+	
 	this.generic = {
 		name: 'Generic Card Game',
 		allowHandRecycling: true,
-		initialHitPoints: 3,
+		initialHitPoints: 5,
 		initialDraw: [{deck: 'main', quantity: 5}],
 		drawUponNewTurn: [{deck: 'main', quantity: 2}],
 		decks: [{
@@ -85,8 +90,21 @@ gameApp.service('gameData', function() {
 					type: 'draw',
 					title: 'Draw 3',
 					description: 'Draw 3 cards.',
-					effect: 'draw',
 					magnitude: 3,
+					quantity: 10
+				},
+				{
+					type: 'trap',
+					title: 'Trap',
+					description: 'Equip face down.  When you are attacked, the attacker takes 1 damage.',
+					effect: 'damage',
+					magnitude: 1,
+					quantity: 10
+				},
+				{
+					type: 'trap',
+					title: 'Decoy Trap',
+					description: 'Equip face down.  When you are attacked, discard.',
 					quantity: 10
 				}
 			]
@@ -96,6 +114,8 @@ gameApp.service('gameData', function() {
 	this.mudslinger = {
 		name: 'Mudslinger',
 		allowHandRecycling: false,
+		enableManaPoints: true,
+		enableVictoryPoints: true,
 		initialHitPoints: 3,
 		initialDraw: [{deck: 'scandals', quantity: 1}, {deck: 'main', quantity: 4}],
 		drawUponNewTurn: [{deck: 'main', quantity: 1}],

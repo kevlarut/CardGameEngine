@@ -52,10 +52,32 @@ button {
     background: #636; }
   .card.modifier {
     background: #3c3; }
+  .card.trap {
+    background: #f90; }
   .card.attack, .card.keep, .card.mana, .card.modifier, .card.oldmaid {
     color: #fff; }
     .card.attack .description, .card.keep .description, .card.mana .description, .card.modifier .description, .card.oldmaid .description {
       border-color: #fff; }
+  .card .backOfCard {
+    display: none; }
+  .card.faceDown {
+    background: #fff;
+    color: #000;
+    border: 5px solid #000;
+    padding: 15px; }
+    .card.faceDown .backOfCard {
+      display: block;
+      position: relative;
+      left: 50%;
+      top: 50%;
+      text-align: center;
+      -ms-transform: translateX(-50%) translateY(-50%) rotate(-45deg);
+      /* IE 9 */
+      -webkit-transform: translateX(-50%) translateY(-50%) rotate(-45deg);
+      /* Chrome, Safari, Opera */
+      transform: translateX(-50%) translateY(-50%) rotate(-45deg); }
+    .card.faceDown .text {
+      display: none; }
 
 .hand {
   background: #888;
@@ -110,7 +132,11 @@ button {
         border: 2.5px solid #fff;
         margin-bottom: 0;
         margin-right: 0;
+        padding: 7.5px;
         transform: translate(-2.5px, -2.5px); }
+      .hand.inactivePlayer .card.faceDown {
+        border: 2.5px solid #000;
+        padding: 7.5px; }
       .hand.inactivePlayer .card .description {
         font-size: 7.5px;
         border-top-width: 1px;

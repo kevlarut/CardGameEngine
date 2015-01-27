@@ -31,6 +31,7 @@
 		
 		<div class="selectGame" ng-show="!gameService.game">
 			<p>Select which game you want to play.</p>
+			<select ng-model='theNameOfTheGame' ng-options="x for x in gameData.gameKeys" ng-change="startNewGame()"></select>
 		</div>
 		
 		<div class="game" ng-show="gameService.game">
@@ -58,9 +59,9 @@
 				<div ng-class="{playerSummary: true, clickable: !$first}" ng-click="clickPlayer(player)">
 					<div><b>{{player.name}}</b></div>
 					<div ng-show="!player.isDead">Hit points: {{player.hitPoints}}</div>
-					<div ng-show="!player.isDead">Victory pts.: {{player.victoryPoints}}</div>
+					<div ng-show="!player.isDead && enableVictoryPoints()">Victory pts.: {{player.victoryPoints}}</div>
 					<div ng-show="$first">Actions remaining: {{gameService.actions < 0 ? 0 : gameService.actions}}</div>
-					<div ng-show="$first">Mana: {{gameService.mana}}</div>
+					<div ng-show="$first && enableManaPoints()">Mana: {{gameService.mana}}</div>
 			
 					<div class="actionButtons" ng-show="$first">
 						<button ng-click="gameService.recycleHand()" ng-show="gameService.isHandRecyclingAllowed()">Recycle hand</button>
@@ -70,15 +71,25 @@
 					<div class="clear"></div>
 				</div>
 				
-				<div ng-repeat="card in player.hand track by $index" ng-class="['card', 'clickable', card.type]" ng-click="clickCard(card, player)">
-					{{card.title}}
-					<div class="description">{{card.description}}</div>
+				<div ng-repeat="card in player.hand track by $index" ng-class="['card', 'clickable', card.type, !$parent.$first ? 'faceDown' : null]" ng-click="clickCard(card, player)">
+					<div class="text">
+						{{card.title}}
+						<div class="description">{{card.description}}</div>
+					</div>
+					<div class="backOfCard">
+						{{gameData[theNameOfTheGame].name}}
+					</div>
 				</div>
 				
 				<div class="equippedCards" ng-show="player.equippedCards.length">
-					<div ng-repeat="card in player.equippedCards track by $index" ng-class="['card', card.type]">
-						{{card.title}}
-						<div class="description">{{card.description}}</div>
+					<div ng-repeat="card in player.equippedCards track by $index" ng-class="['card', card.type, !$parent.$first && card.type != 'keep' ? 'faceDown' : null]">
+						<div class="text">
+							{{card.title}}
+							<div class="description">{{card.description}}</div>
+						</div>
+						<div class="backOfCard">
+							{{gameData[theNameOfTheGame].name}}
+						</div>
 					</div>
 					<div class="clear"></div>
 				</div>

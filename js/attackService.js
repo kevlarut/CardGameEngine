@@ -1,6 +1,6 @@
 var gameApp = angular.module('gameApp');
 
-gameApp.service('attackService', function(callbacks, deckService, gameService, userInterface) {
+gameApp.service('attackService', function(callbacks, deckService, gameService, playerService, userInterface) {
 	
 	this.goFishConditionHasBeenMet = false;
 	
@@ -9,7 +9,10 @@ gameApp.service('attackService', function(callbacks, deckService, gameService, u
 		var attackWasBlockedByAttacker = false;
 		var attackWasBlockedByTarget = false;
 		
-		if (this.haveConditionsHaveBeenMetForThisAttack(card, target, attacker, modifierCard)) {		
+		if (this.haveConditionsHaveBeenMetForThisAttack(card, target, attacker, modifierCard)) {	
+			
+			this.playAllApplicableTrapCards(target, attacker);
+		
 			if (!modifierCard || modifierCard.effect != 'unblockable')
 			{
 				var attackWasBlockedByTarget = this.spendCardToBlockAttackIfPossible(target);	
@@ -18,7 +21,7 @@ gameApp.service('attackService', function(callbacks, deckService, gameService, u
 					var attackWasBlockedByAttacker = this.spendCardToBlockAttackIfPossible(attacker);	
 				}		
 			}
-					
+
 			if (!attackWasBlockedByTarget) {			
 				gameService.damagePlayer(target, card.targetDamage, modifierCard);
 			}
@@ -77,6 +80,25 @@ gameApp.service('attackService', function(callbacks, deckService, gameService, u
 		else {
 			return true;
 		}
+	}
+	
+	this.playAllApplicableTrapCards = function(defender, attacker) {
+		var applicableTrapCards = defender.equippedCards.filter(function(card) {
+			return card.type === 'trap';
+		});
+		console.log('applicableTrapCards.length = ' + applicableTrapCards.length);
+		applicableTrapCards.forEach(function(card) {
+			switch (card.effect) {
+				case 'damage':
+					gameService.damagePlayer(attacker, card.magnitude, null);
+					break;
+				default:
+					console.log('ERROR: Effect type "' + card.effect + '" is not implemented for trap cards.');
+					break;
+			}
+			
+			playerService.discardSpecificEquippedCard(defender, card);
+		});
 	}
 	
 	this.spendCardToBlockAttackIfPossible = function(target) {

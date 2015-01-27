@@ -155,9 +155,9 @@ gameApp.service('gameService', function(deckRepository, deckService, gameData, p
 		this.nextTurn();
 	}
 	
-	this.startNewGame = function() {		
+	this.startNewGame = function(gameKey) {		
 	
-		this.game = gameData['mudslinger'];
+		this.game = gameData[gameKey];
 		var game = this.game;
 		
 		for (var i = 0; i < game.decks.length; i++) {

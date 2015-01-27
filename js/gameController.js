@@ -1,15 +1,17 @@
 var gameApp = angular.module('gameApp');
 
 gameApp.controller('gameController', 
-	['$scope', '$timeout', 'attackService', 'callbacks', 'deckService', 'gameService', 'inputService', 'playerData', 'playerService', 'targetingService', 'userInterface', 
-	function($scope, $timeout, attackService, callbacks, deckService, gameService, inputService, playerData, playerService, targetingService, userInterface) {
+	['$scope', '$timeout', 'attackService', 'callbacks', 'deckService', 'gameData', 'gameService', 'inputService', 'playerData', 'playerService', 'targetingService', 'userInterface', 
+	function($scope, $timeout, attackService, callbacks, deckService, gameData, gameService, inputService, playerData, playerService, targetingService, userInterface) {
  		
 	$scope.attackService = attackService;
+	$scope.gameData = gameData;
 	$scope.gameService = gameService;
 	$scope.inputService = inputService;
 	$scope.playerData = playerData;
 	$scope.playerService = playerService;
 	$scope.userInterface = userInterface;
+	$scope.theNameOfTheGame = null;
 		
 	$scope.discardActiveCard = function() {
 		var card = gameService.activeCard;
@@ -17,6 +19,14 @@ gameApp.controller('gameController',
 			deckService.discard(card);
 			gameService.activeCard = null;
 		}
+	}
+		
+	$scope.enableManaPoints = function() {
+		return gameData[$scope.theNameOfTheGame].enableManaPoints;
+	}	
+	
+	$scope.enableVictoryPoints = function() {
+		return gameData[$scope.theNameOfTheGame].enableVictoryPoints;
 	}
 		
 	$scope.cancelActiveCard = function() {
@@ -106,6 +116,7 @@ gameApp.controller('gameController',
 					$scope.draw(card, player, modifierCard, 'main');
 					break;
 				case 'keep':
+				case 'trap':
 					$scope.equipCard(card, player);
 					break;
 				case 'mana':
@@ -181,7 +192,13 @@ gameApp.controller('gameController',
 			callbacks.clickPlayerCallback = null;
 		}
 	}
-		
-	gameService.startNewGame();	
+	
+	$scope.startNewGame = function() {
+		if ($scope.theNameOfTheGame) {
+			gameService.startNewGame($scope.theNameOfTheGame);	
+		}
+	}
+	
+	$scope.startNewGame();
 	
 }]);
