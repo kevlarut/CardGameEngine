@@ -78,7 +78,15 @@ gameApp.controller('gameController',
 			cardsToDraw *= modifierCard.magnitude;
 		}
 		
-		player.hand = player.hand.concat(deckService.draw(deckName, cardsToDraw));
+		if (typeof card.target != 'undefined' && card.target == 'everyone') {
+			playerData.players.forEach(function(player) {
+				player.hand = player.hand.concat(deckService.draw(deckName, cardsToDraw));				
+			});
+		}
+		else {
+			player.hand = player.hand.concat(deckService.draw(deckName, cardsToDraw));
+		}
+		
 		$scope.clearActiveCard();
 	}
 	
@@ -138,7 +146,11 @@ gameApp.controller('gameController',
 					break;
 			}
 		}
-			
+		
+		if (card.actions) {
+			gameService.actions += card.actions;
+		}
+		
 		if (card.type != 'modifier' && card.type != 'mana') {
 			gameService.actions--;
 		}

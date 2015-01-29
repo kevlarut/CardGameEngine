@@ -106,6 +106,15 @@ gameApp.service('gameData', function() {
 					title: 'Decoy Trap',
 					description: 'Equip face down.  When you are attacked, discard.',
 					quantity: 10
+				},
+				{
+					type: 'draw',
+					title: 'Multi-Draw',
+					description: 'Everyone gets a card.  Choose yours, then rotate leftward.  +1 Action',
+					magnitude: 1,
+					target: 'everyone',
+					quantity: 50,
+					actions: 1
 				}
 			]
 		}]		
