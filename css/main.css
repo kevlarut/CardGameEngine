@@ -24,10 +24,10 @@ button {
   font-weight: bold;
   margin: 10px;
   padding: 20px;
-  width: 100px;
+  width: 125px;
   border-radius: 10px;
   float: left;
-  height: 150px;
+  height: 175px;
   text-align: left; }
   .card.clickable:hover {
     border: 5px solid #fff;
@@ -124,10 +124,10 @@ button {
       border-radius: 5px;
       box-shadow: 2.5px 2.5px 5px 0px rgba(0, 0, 0, 0.5);
       font-size: 10px;
-      height: 75px;
+      height: 87.5px;
       margin: 5px;
       padding: 10px;
-      width: 50px; }
+      width: 62.5px; }
       .hand.inactivePlayer .card.clickable:hover {
         border: 2.5px solid #fff;
         margin-bottom: 0;

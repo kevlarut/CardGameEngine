@@ -14,6 +14,7 @@
 	<script src="js/gameController.js"></script>
 	<script src="js/attackService.js"></script>
 	<script src="js/callbacks.js"></script>
+	<script src="js/cardExecutionService.js"></script>
 	<script src="js/deckRepository.js"></script>
 	<script src="js/deckService.js"></script>
 	<script src="js/gameData.js"></script>
@@ -45,13 +46,13 @@
 				</div>
 				
 			</div>
-			<div class="playArea" ng-show="gameService.activeCard">
-				<div ng-class="['card', gameService.activeCard.type]" ng-show="gameService.activeCard">
-					{{gameService.activeCard.title}}
-					<div class="description">{{gameService.activeCard.description}}</div>
+			<div class="playArea" ng-show="cardExecutionService.card">
+				<div ng-class="['card', cardExecutionService.card.type]" ng-show="cardExecutionService.card">
+					{{cardExecutionService.card.title}}
+					<div class="description">{{cardExecutionService.card.description}}</div>
 				</div>
 				<button ng-click="cancelActiveCard()">Cancel</button>
-				<button ng-click="discardActiveCard()" ng-show="gameService.activeCard.type != 'oldmaid'">Discard</button>
+				<button ng-click="discardActiveCard()" ng-show="cardExecutionService.card.type != 'oldmaid'">Discard</button>
 				<div class="clear"></div>
 			</div>
 			

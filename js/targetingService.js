@@ -2,6 +2,28 @@ var gameApp = angular.module('gameApp');
 
 gameApp.service('targetingService', function(callbacks, playerData) {
 	
+	this.getTargetPlayers = function(targetType, callback) {
+		switch (targetType) {
+			case 'any':
+				this.getTargetPlayer(callback);
+				break;
+			default:
+				console.log('ERROR: targetType ' + targetType + ' is not defined.');
+				break;
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	this.getTargetCard = function(callback) {
 		callbacks.clickCardCallback = callback;
 	}

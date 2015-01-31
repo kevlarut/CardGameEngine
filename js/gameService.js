@@ -3,7 +3,6 @@ var gameApp = angular.module('gameApp');
 gameApp.service('gameService', function(deckRepository, deckService, gameData, playerData, playerService, userInterface) {
 	
 	this.actions = 0;
-	this.activeCard = null;
 	this.game = null;
 	this.mana = 0;
 	this.handLimit = 8;	

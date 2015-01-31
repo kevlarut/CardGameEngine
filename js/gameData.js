@@ -4,7 +4,8 @@ gameApp.service('gameData', function() {
 	
 	this.gameKeys = [ 
 		'generic',
-		'mudslinger'
+		'mudslinger',
+		'nice'
 	] 
 	
 	this.generic = {
@@ -34,8 +35,11 @@ gameApp.service('gameData', function() {
 					type: 'attack',
 					title: 'Attack',
 					description: 'Deal 1 damage to a target player.',
-					target: 'single',
-					targetDamage: 1,
+					effects: [{
+						target: 'any',
+						effect: 'damage',
+						magnitude: 1
+					}],
 					quantity: 25
 				},
 				{
@@ -328,4 +332,28 @@ gameApp.service('gameData', function() {
 			]
 		}]	
 	}
+	
+	this.nice = {
+		name: 'Nice Guys Finish Last',
+		allowHandRecycling: false,
+		initialHitPoints: 5,
+		initialDraw: [{deck: 'main', quantity: 5}],
+		drawUponNewTurn: [{deck: 'main', quantity: 2}],
+		decks: [{
+			id: 'main',
+			cards: [			
+				{
+					type: 'attack',
+					title: 'Attack',
+					effects: [{
+						target: 'any',
+						effect: 'damage',
+						magnitude: 1
+					}],
+					quantity: 52
+				},
+			]
+		}]		
+	}	
+	
 });
