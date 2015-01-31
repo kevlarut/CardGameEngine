@@ -341,7 +341,7 @@ gameApp.service('gameData', function() {
 		drawUponNewTurn: [{deck: 'main', quantity: 2}],
 		decks: [{
 			id: 'main',
-			cards: [			
+			cards: [
 				{
 					type: 'attack',
 					title: 'Attack',
@@ -350,8 +350,33 @@ gameApp.service('gameData', function() {
 						effect: 'damage',
 						magnitude: 1
 					}],
-					quantity: 52
+					quantity: 9
+				},			
+				{
+					type: 'attack',
+					title: 'Mutual Attack',
+					effects: [{
+						target: 'any',
+						effect: 'damage',
+						magnitude: 1
+					},
+					{
+						target: 'self',
+						effect: 'damage',
+						magnitude: 1
+					}],
+					quantity: 8
 				},
+				{
+					type: 'attack',
+					title: 'Attack Everyone',
+					effects: [{
+						target: 'all',
+						effect: 'damage',
+						magnitude: 1
+					}],
+					quantity: 2
+				},	
 			]
 		}]		
 	}	

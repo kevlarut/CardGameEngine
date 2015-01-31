@@ -57,8 +57,10 @@ gameApp.service('deckService', function(deckRepository) {
 				this.shuffle(deck);
 			}
 		
-			var card = deck.cards.pop();
-			drawnCards.push(card);
+			if (deck.cards.length > 0) {
+				var card = deck.cards.pop();
+				drawnCards.push(card);
+			}
 		}
 		
 		return drawnCards;

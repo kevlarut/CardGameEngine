@@ -1,0 +1,133 @@
+@font-face {
+	font-family: 'icomoon';
+	src:url('../fonts/icon.eot?-bik6n8');
+	src:url('../fonts/icon.eot?#iefix-bik6n8') format('embedded-opentype'),
+		url('../fonts/icon.woff?-bik6n8') format('woff'),
+		url('../fonts/icon.ttf?-bik6n8') format('truetype'),
+		url('../fonts/icon.svg?-bik6n8#icomoon') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+	font-family: 'icomoon';
+	speak: none;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+
+	/* Better Font Rendering =========== */
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+.icon-damage:before {
+	content: "\e90a";
+}
+
+.icon-droplet:before {
+	content: "\e90b";
+}
+
+.icon-dice:before {
+	content: "\e915";
+}
+
+.icon-pacman:before {
+	content: "\e916";
+}
+
+.icon-spades:before {
+	content: "\e917";
+}
+
+.icon-clubs:before {
+	content: "\e918";
+}
+
+.icon-diamonds:before {
+	content: "\e919";
+}
+
+.icon-stack:before {
+	content: "\e92e";
+}
+
+.icon-coin-dollar:before {
+	content: "\e93b";
+}
+
+.icon-hammer:before {
+	content: "\e996";
+}
+
+.icon-magic-wand:before {
+	content: "\e997";
+}
+
+.icon-aid-kit:before {
+	content: "\e998";
+}
+
+.icon-trophy:before {
+	content: "\e99e";
+}
+
+.icon-leaf:before {
+	content: "\e9a4";
+}
+
+.icon-rocket:before {
+	content: "\e9a5";
+}
+
+.icon-fire:before {
+	content: "\e9a9";
+}
+
+.icon-lab:before {
+	content: "\e9aa";
+}
+
+.icon-target:before {
+	content: "\e9b3";
+}
+
+.icon-shield:before {
+	content: "\e9b4";
+}
+
+.icon-power:before {
+	content: "\e9b5";
+}
+
+.icon-eye:before {
+	content: "\e9ce";
+}
+
+.icon-star-full:before {
+	content: "\e9d9";
+}
+
+.icon-heart:before {
+	content: "\e9da";
+}
+
+.icon-heart-broken:before {
+	content: "\e9db";
+}
+
+.icon-plus:before {
+	content: "\ea0a";
+}
+
+.icon-cancel-circle:before {
+	content: "\ea0d";
+}
+
+.icon-arrow-right:before {
+	content: "\ea34";
+}
+

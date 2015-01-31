@@ -3,22 +3,49 @@ var gameApp = angular.module('gameApp');
 gameApp.service('cardExecutionService', function(gameService, targetingService, deckService, userInterface) {
 	
 	this.card = null;
-	this.pendingEffects = 0;
 	
-	this.applyEffect = function(effect, targetPlayer, modifierCard) {
-		switch (effect.effect) {
-			case 'damage':
-				gameService.damagePlayer(targetPlayer, effect.magnitude, modifierCard);
-				break;
-			default:
-				console.log('ERROR: effect ' + effect.effect + ' is not defined.');
-				break;
-		}
+	this.applyEffect = function(effects, index, targetOrTargets, modifierCard, service, disposeAfterwards) {
 		
-		this.pendingEffects--;
-		if (this.pendingEffects == 0) {
-			this.disposeCard();
+		if (Array.isArray(targetOrTargets)) {
+			for (var i = 0; i < targetOrTargets.length; i++) {
+				service.applyEffect(effects, index, targetOrTargets[i], modifierCard, service, false);
+			}
+			if (disposeAfterwards) {			
+				if (index == effects.length - 1) {
+					this.disposeCard();
+				}
+				else {
+					this.targetAndAffect(effects, index + 1, modifierCard, service);
+				}		
+			}
 		}
+		else {			
+			var effect = effects[index];				
+			switch (effect.effect) {
+				case 'damage':
+					gameService.damagePlayer(targetOrTargets, effect.magnitude, modifierCard);
+					break;
+				default:
+					console.log('ERROR: effect ' + effect.effect + ' is not defined.');
+					break;
+			}
+			
+			if (disposeAfterwards) {			
+				if (index == effects.length - 1) {
+					this.disposeCard();
+				}
+				else {
+					this.targetAndAffect(effects, index + 1, modifierCard, service);
+				}		
+			}
+		}
+	}
+	
+	this.targetAndAffect = function(effects, index, modifierCard, service) {
+		targetingService.getTargetPlayers(effects[index].target, function(target) 
+		{ 
+			service.applyEffect(effects, index, target, modifierCard, service, true); 
+		});
 	}
 	
 	this.disposeCard = function() {
@@ -38,10 +65,7 @@ gameApp.service('cardExecutionService', function(gameService, targetingService, 
 			var service = this;
 			
 			if (card.effects) {
-				this.pendingEffects = card.effects.length;
-				card.effects.forEach(function(effect, cardExecutionService) {
-					var targets = targetingService.getTargetPlayers(effect.target, function(target) { service.applyEffect(effect, target, modifierCard); });
-				});
+				this.targetAndAffect(card.effects, 0, modifierCard, service);
 			}
 			
 		}

@@ -76,8 +76,10 @@ gameApp.service('gameService', function(deckRepository, deckService, gameData, p
 		var repulsedCardsInHand = [];
 		for (var i = 0; i < player.hand.length; i++) {
 			var card = player.hand[i];
-			if (card.repulsed) {
-				repulsedCardsInHand.push(card);
+			if (card) {
+				if (card.repulsed) {
+					repulsedCardsInHand.push(card);
+				}
 			}
 		}
 		if (repulsedCardsInHand.length > 0) {

@@ -76,6 +76,12 @@
 					<div class="text">
 						{{card.title}}
 						<div class="description">{{card.description}}</div>
+						<div class="effects">
+							<div ng-repeat="effect in card.effects">
+								<span ng-class="'icon-' + effect.effect"></span>
+								<span>x {{effect.magnitude}}</span>
+							</div>
+						</div>
 					</div>
 					<div class="backOfCard">
 						{{gameData[theNameOfTheGame].name}}

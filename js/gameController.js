@@ -215,7 +215,7 @@ gameApp.controller('gameController',
 	}
 	
 	$scope.startNewGame = function() {
-		$scope.theNameOfTheGame = 'generic'; //'nice';
+		$scope.theNameOfTheGame = 'nice';
 		if ($scope.theNameOfTheGame) {
 			gameService.startNewGame($scope.theNameOfTheGame);	
 		}

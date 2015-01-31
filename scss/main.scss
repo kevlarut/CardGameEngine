@@ -1,6 +1,8 @@
 $cardWidth: 125px;
 $cardHeight: $cardWidth * 1.4;
 
+@import 'fonts';
+
 * {
 	font-family: 'helvetica neue', helvetica, arial, sans-serif;
 }
@@ -118,7 +120,12 @@ button {
 		
 		.text {
 			display: none;
+			font-family: Arial, sans-serif;
 		}
+	}
+	
+	.effects {
+		font-size: 0.75em;
 	}
 }
 
