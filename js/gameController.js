@@ -102,18 +102,21 @@ gameApp.controller('gameController',
 					var attackCallback = function(target) {
 						attackService.attack(card, target, player, modifierCard);
 					};
-					if (card.target == 'single') {					
-						userInterface.instructions ='Click on a player to target.';
-						targetingService.getTargetPlayer(attackCallback);
-					}
-					else if (card.target == 'all-save-self') {
-						targetingService.applyCardToAllPlayersExceptActivePlayer(attackCallback);
-					}
-					else if (card.target == 'adjacent') {
-						targetingService.applyCardToAdjacentPlayers(attackCallback);
-					}
-					else {
-						console.log('Target type "' + card.target + '" is not implemented.');
+					
+					switch (card.target) {					
+						case 'single':
+							userInterface.instructions ='Click on a player to target.';
+							targetingService.getTargetPlayer(attackCallback);
+							break;
+						case 'all-save-self':
+							targetingService.applyCardToAllPlayersExceptActivePlayer(attackCallback);
+							break;
+						case 'adjacent':
+							targetingService.applyCardToAdjacentPlayers(attackCallback);
+							break;
+						default:
+							console.log('Target type "' + card.target + '" is not implemented.');
+							break;
 					}
 					break;
 				case 'defend':

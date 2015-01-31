@@ -84,7 +84,7 @@ gameApp.service('gameData', function() {
 					description: 'You are immune from attacks this round, unless they are Unblockable.',
 					effect: 'block',
 					duration: 1,
-					quantity: 10
+					quantity: 5
 				},
 				{
 					type: 'draw',
@@ -113,7 +113,7 @@ gameApp.service('gameData', function() {
 					description: 'Everyone gets a card.  Choose yours, then rotate leftward.  +1 Action',
 					magnitude: 1,
 					target: 'everyone',
-					quantity: 50,
+					quantity: 5,
 					actions: 1
 				}
 			]
