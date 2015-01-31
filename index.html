@@ -51,8 +51,8 @@
 					{{cardExecutionService.card.title}}
 					<div class="description">{{cardExecutionService.card.description}}</div>
 				</div>
-				<button ng-click="cancelActiveCard()">Cancel</button>
-				<button ng-click="discardActiveCard()" ng-show="cardExecutionService.card.type != 'oldmaid'">Discard</button>
+				<button ng-click="cancelActiveCard()" ng-show="cardExecutionService.cancellable">Cancel</button>
+				<button ng-click="discardActiveCard()" ng-show="cardExecutionService.card.type != 'oldmaid' && cardExecutionService.cancellable">Discard</button>
 				<div class="clear"></div>
 			</div>
 			
@@ -79,7 +79,7 @@
 						<div class="effects">
 							<div ng-repeat="effect in card.effects">
 								<span ng-class="'icon-' + effect.effect"></span>
-								<span>x {{effect.magnitude}}</span>
+								<span>x {{effect.magnitude}} vs. {{effect.target}}</span>
 							</div>
 						</div>
 					</div>

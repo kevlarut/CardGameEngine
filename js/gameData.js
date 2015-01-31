@@ -376,6 +376,26 @@ gameApp.service('gameData', function() {
 						magnitude: 1
 					}],
 					quantity: 2
+				},
+				{
+					type: 'attack',
+					title: 'Triple Attack',
+					effects: [{
+						target: 'any',
+						effect: 'damage',
+						magnitude: 1
+					},
+					{
+						target: 'any',
+						effect: 'damage',
+						magnitude: 1
+					},
+					{
+						target: 'self',
+						effect: 'damage',
+						magnitude: 1
+					}],
+					quantity: 1
 				},	
 			]
 		}]		

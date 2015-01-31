@@ -120,7 +120,7 @@ gameApp.controller('gameController',
 								targetingService.applyCardToAdjacentPlayers(attackCallback);
 								break;
 							default:
-								console.log('Target type "' + card.target + '" is not implemented.');
+								console.log('ERROR: Target type "' + card.target + '" is not implemented.');
 								break;
 						}
 						break;
@@ -150,7 +150,7 @@ gameApp.controller('gameController',
 						$scope.playVictoryCard(card, modifierCard, player);
 						break;
 					default:
-						console.log('Card type "' + card.type + '" is not implemented.');
+						console.log('ERROR: Card type "' + card.type + '" is not implemented.');
 						break;
 				}
 			}
@@ -199,7 +199,6 @@ gameApp.controller('gameController',
 			magnitude *= modifierCard.magnitude;
 		}
 	
-		console.log(player.name + ' has healed ' + card.damage + ' poitns of damage using the card ' + card.title + '.');	
 		player.hitPoints += magnitude;
 		deckService.discard(card);
 		$scope.clearActiveCard();
@@ -210,7 +209,6 @@ gameApp.controller('gameController',
 		if (callbacks.clickPlayerCallback != null) {
 			userInterface.instructions = null;
 			callbacks.clickPlayerCallback(player);
-			callbacks.clickPlayerCallback = null;
 		}
 	}
 	

@@ -1,6 +1,6 @@
 var gameApp = angular.module('gameApp');
 
-gameApp.service('targetingService', function(callbacks, playerData) {
+gameApp.service('targetingService', function(callbacks, playerData, userInterface) {
 	
 	this.getTargetPlayers = function(targetType, callback) {
 		switch (targetType) {
@@ -24,6 +24,7 @@ gameApp.service('targetingService', function(callbacks, playerData) {
 	}
 		
 	this.getTargetPlayer = function(callback) {
+		userInterface.instructions = 'Click on a player to target.';
 		callbacks.clickPlayerCallback = callback;
 	}
 	
