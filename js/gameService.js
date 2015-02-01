@@ -16,6 +16,14 @@ gameApp.service('gameService', function(deckRepository, deckService, gameData, p
 		}
 	}
 	
+	this.getGameNames = function() {
+		var names = [];
+		for (var i = 0; i < gameData.games.length; i++) {
+			names.push(gameData.games[i].name);
+		}
+		return names;
+	}
+	
 	this.isHandRecyclingAllowed = function() {
 		return this.game.allowHandRecycling && this.actions == 2;
 	}
@@ -65,6 +73,8 @@ gameApp.service('gameService', function(deckRepository, deckService, gameData, p
 					break;
 			}
 		}
+		
+		return true;
 	}
 	
 	this.damagePlayer = function(player, damage, modifierCard) {
@@ -75,10 +85,10 @@ gameApp.service('gameService', function(deckRepository, deckService, gameData, p
 					var effect = modifierCard.modifierEffects[i];
 					if (this.isModifierEffectApplicableToPlayer(effect, player)) {
 						switch(effect.effect) {
-							case 'add':
+							case '+':
 								damage += effect.magnitude;
 								break;
-							case 'multiply':				
+							case 'x':				
 								damage *= effect.magnitude;
 								break;
 							default:
@@ -90,10 +100,10 @@ gameApp.service('gameService', function(deckRepository, deckService, gameData, p
 			}
 			else if (modifierCard.effect) {
 				switch(modifierCard.effect) {
-					case 'add':				
+					case '+':				
 						damage += modifierCard.magnitude;
 						break;
-					case 'multiply':				
+					case 'x':				
 						damage *= modifierCard.magnitude;
 						break;
 					default:
@@ -227,22 +237,37 @@ gameApp.service('gameService', function(deckRepository, deckService, gameData, p
 		this.nextTurn();
 	}
 	
-	this.startNewGame = function(gameKey) {		
+	this.getGameDefinitionByGameName = function(name) {
+		for (var i = 0; i < gameData.games.length; i++) {
+			var game = gameData.games[i];
+			if (game.name == name) {
+				return game;
+			}
+		}
+		return null;
+	}
 	
-		this.game = gameData[gameKey];
-		var game = this.game;
-		
-		for (var i = 0; i < game.decks.length; i++) {
-			var deck = deckService.createDeck(game.decks[i]);
-			deckService.shuffle(deck);
-			deckRepository.decks[deck.id] = deck;
+	this.startNewGame = function(name) {		
+	
+		if (name) {
+			this.game = this.getGameDefinitionByGameName(name);
+			var game = this.game;
+			
+			for (var i = 0; i < game.decks.length; i++) {
+				var deck = deckService.createDeck(game.decks[i]);
+				deckService.shuffle(deck);
+				deckRepository.decks[deck.id] = deck;
+			}
+			playerData.players = playerService.loadPlayers(game);
+			for (var i = 0; i < playerData.players.length; i++) {
+				var player = playerData.players[i];
+				player.hand = this.makeInitialDraw();
+			}
+			this.beginNewTurn();
 		}
-		playerData.players = playerService.loadPlayers(game);
-		for (var i = 0; i < playerData.players.length; i++) {
-			var player = playerData.players[i];
-			player.hand = this.makeInitialDraw();
+		else {
+			this.game = null;
 		}
-		this.beginNewTurn();
 	}
 	
 });

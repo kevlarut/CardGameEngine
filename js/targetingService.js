@@ -15,7 +15,7 @@ gameApp.service('targetingService', function(callbacks, playerData, userInterfac
 				break;
 			case 'self':
 				callback(playerData.players[0]);
-				break;
+				break;			
 			default:
 				console.log('ERROR: targetType ' + targetType + ' is not defined.');
 				break;

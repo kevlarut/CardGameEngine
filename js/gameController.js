@@ -23,11 +23,11 @@ gameApp.controller('gameController',
 	}
 		
 	$scope.enableManaPoints = function() {
-		return gameData[$scope.theNameOfTheGame].enableManaPoints;
+		return gameService.game.enableManaPoints;
 	}	
 	
 	$scope.enableVictoryPoints = function() {
-		return gameData[$scope.theNameOfTheGame].enableVictoryPoints;
+		return gameService.game.enableVictoryPoints;
 	}
 		
 	$scope.cancelActiveCard = function() {
@@ -63,7 +63,7 @@ gameApp.controller('gameController',
 	
 		var manaEarned = card.magnitude;
 		
-		if (modifierCard && modifierCard.effect == 'multiply') {
+		if (modifierCard && modifierCard.effect == 'x') {
 			manaEarned *= modifierCard.magnitude;
 		}
 		
@@ -75,7 +75,7 @@ gameApp.controller('gameController',
 	
 		var cardsToDraw = card.magnitude;
 		
-		if (modifierCard && modifierCard.effect == 'multiply') {
+		if (modifierCard && modifierCard.effect == 'x') {
 			cardsToDraw *= modifierCard.magnitude;
 		}
 		
@@ -175,7 +175,7 @@ gameApp.controller('gameController',
 	$scope.playVictoryCard = function(card, modifierCard, player) {
 		
 		var magnitude = card.magnitude;
-		if (modifierCard && modifierCard.effect == 'multiply') {
+		if (modifierCard && modifierCard.effect == 'x') {
 			magnitude *= modifierCard.magnitude;
 		}
 		
@@ -213,7 +213,7 @@ gameApp.controller('gameController',
 	}
 	
 	$scope.startNewGame = function() {
-		$scope.theNameOfTheGame = 'nice';
+		//$scope.theNameOfTheGame = 'nice';
 		if ($scope.theNameOfTheGame) {
 			gameService.startNewGame($scope.theNameOfTheGame);	
 		}

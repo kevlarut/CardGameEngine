@@ -29,7 +29,8 @@ gameApp.service('playerService', function(deckService, playerData) {
 
 	this.loadPlayers = function(game) {
 	
-		var names = ['Johnny Come Lately', 'Marathon Mary', 'Tenacious Terry', 'Edna Endurance', 'Lackadaisical Lacie', 'Brisk Brittany', 'Hurried Harry'];
+		var names = game.playerNames || ['Johnny Come Lately', 'Marathon Mary', 'Tenacious Terry', 'Edna Endurance', 'Lackadaisical Lacie', 'Brisk Brittany', 'Hurried Harry'];
+				
 		var players = [];
 		for (var i = 1; i <= playerData.numberOfPlayers; i++) {
 			var player = {};

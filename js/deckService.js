@@ -8,13 +8,23 @@ gameApp.service('deckService', function(deckRepository) {
 		deck.discardPile.push(card);
 	}
 	
-	this.addCardsToDeck = function(deck, card) {
-		var quantity = card.quantity;
-		delete card.quantity;
+	this.clone = function(source) {
+		return JSON.parse(JSON.stringify(source));
+	}
+	
+	this.addCardsToDeck = function(deck, cardDefinition) {	
 		
-		card.deckId = deck.id;
-		
+		var quantity = cardDefinition.quantity;				
 		for (var i = 0; i < quantity; i++) {
+			var card = this.clone(cardDefinition);	
+			card.deckId = deck.id;
+			delete card.flavors;
+			delete card.quantity;
+			
+			if (cardDefinition.flavors && cardDefinition.flavors.length > i) {
+				card.title = cardDefinition.flavors[i];
+			}
+			
 			deck.cards.push(card);
 		}
 	}

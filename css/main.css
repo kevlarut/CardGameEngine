@@ -37,7 +37,7 @@
 .icon-diamonds:before {
   content: "\e919"; }
 
-.icon-stack:before {
+.icon-deck:before {
   content: "\e92e"; }
 
 .icon-coin-dollar:before {
@@ -91,10 +91,10 @@
 .icon-plus:before {
   content: "\ea0a"; }
 
-.icon-cancel-circle:before {
+.icon-block:before {
   content: "\ea0d"; }
 
-.icon-arrow-right:before {
+.icon-deflect:before {
   content: "\ea34"; }
 
 * {

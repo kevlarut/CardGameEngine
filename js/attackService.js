@@ -15,10 +15,10 @@ gameApp.service('attackService', function(callbacks, deckService, gameService, p
 		
 			if (!modifierCard || modifierCard.effect != 'unblockable')
 			{
-				var attackWasBlockedByTarget = this.spendCardToBlockAttackIfPossible(target);	
+				var attackWasBlockedByTarget = this.spendCardToBlockAttackIfPossible(target).blocked;	
 				
 				if (typeof card.attackerDamage != 'undefined' && !attackWasBlockedByAttacker) {
-					var attackWasBlockedByAttacker = this.spendCardToBlockAttackIfPossible(attacker);	
+					var attackWasBlockedByAttacker = this.spendCardToBlockAttackIfPossible(attacker).blocked;
 				}		
 			}
 
@@ -83,10 +83,12 @@ gameApp.service('attackService', function(callbacks, deckService, gameService, p
 	}
 	
 	this.playAllApplicableTrapCards = function(defender, attacker) {
+	
+		console.log('defender = ' + defender + '; defender.equippedCards = ' + defender.equippedCards);
+	
 		var applicableTrapCards = defender.equippedCards.filter(function(card) {
 			return card.type === 'trap';
 		});
-		console.log('applicableTrapCards.length = ' + applicableTrapCards.length);
 		applicableTrapCards.forEach(function(card) {
 			switch (card.effect) {
 				case 'damage':
@@ -115,11 +117,15 @@ gameApp.service('attackService', function(callbacks, deckService, gameService, p
 	this.spendCardToBlockAttackIfPossible = function(target) {
 	
 		var blocked = false;
+		var deflected = false;
 	
 		for (var i = 0; i < target.equippedCards.length; i++) {
 			var card = target.equippedCards[0];
 			if (card.effect == 'vulnerability') {
-				return false;
+				return {
+					blocked: false,
+					deflected: false
+				};
 			}
 		}
 	
@@ -132,8 +138,7 @@ gameApp.service('attackService', function(callbacks, deckService, gameService, p
 					target.equippedCards.splice(i, 1);
 				}
 				
-				console.log('ERROR: Deflection is not yet implemented.  Prompt the reacting player to choose whom to deflect the damage to.');
-					
+				deflected = true;
 				blocked = true;
 				break;
 			}
@@ -165,7 +170,11 @@ gameApp.service('attackService', function(callbacks, deckService, gameService, p
 			}
 		}
 		
-		return blocked;
+		var result = {
+			blocked: blocked,
+			deflected: deflected
+		};
+		return result;
 	}
 	
 });

@@ -28,8 +28,11 @@ gameApp.service('cardExecutionService', function(attackService, gameService, hea
 				break;
 			case 'damage':
 				var isBlocked = false;
+				var isDeflected = false;
 				if (!modifierCard || modifierCard.effect != 'unblockable') {
-					var isBlocked = attackService.spendCardToBlockAttackIfPossible(target);
+					var result = attackService.spendCardToBlockAttackIfPossible(target);
+					isBlocked = result.blocked;
+					isDeflected = result.deflected;
 				}				
 				if (!isBlocked) {
 					gameService.damagePlayer(target, effect.magnitude, modifierCard);
@@ -51,6 +54,11 @@ gameApp.service('cardExecutionService', function(attackService, gameService, hea
 				this.targetAndExecute(effects, index + 1, modifierCard, service, disposeAfterwards);
 			}		
 		}
+				
+		if (isDeflected) {
+			userInterface.instructions = 'Choose a player to deflect to.';
+			this.targetAndExecute(effects, index, modifierCard, service, disposeAfterwards);
+		}
 		
 	}
 	
@@ -69,11 +77,13 @@ gameApp.service('cardExecutionService', function(attackService, gameService, hea
 	}
 	
 	this.disposeCard = function() {
-		deckService.discard(this.card);
-		this.card = null;
-		userInterface.instructions = null;
-		this.clearCallbacks();
-		this.cancellable = true;
+		if (this.card) {
+			deckService.discard(this.card);
+			this.card = null;
+			userInterface.instructions = null;
+			this.clearCallbacks();
+			this.cancellable = true;
+		}
 	}
 	
 	this.playCard = function(card, player, modifierCard) {
