@@ -432,6 +432,33 @@ gameApp.service('gameData', function() {
 					}],
 					quantity: 1
 				},
+				{
+					type: 'keep',
+					title: 'Cannot Block',
+					description: 'You cannot block any attacks this turn.',
+					effect: 'vulnerability',
+					target: 'any',
+					duration: 1,
+					quantity: 1,
+				},
+				{
+					type: 'keep',
+					title: 'Immunity',
+					description: 'You are immune from attacks this round, unless they are Unblockable.',
+					effect: 'block',
+					duration: 1,
+					quantity: 1
+				},
+				{
+					type: 'keep',
+					title: 'Damage Magnet',
+					description: 'You take a damage whenever someone else takes damage.',
+					effect: 'magnet',
+					magnitude: 1,
+					target: 'any',
+					duration: 2,
+					quantity: 1,
+				},
 			]
 		}]		
 	}	

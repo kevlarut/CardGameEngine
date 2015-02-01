@@ -20,11 +20,20 @@ gameApp.service('gameService', function(deckRepository, deckService, gameData, p
 		return this.game.allowHandRecycling && this.actions == 2;
 	}
 	
-	this.damagePlayer = function(player, damage, modifierCard) {
-	
-		if (modifierCard && modifierCard.effect == 'multiply') {
-			damage *= modifierCard.magnitude;
+	this.applyMagnetDamageIfApplicable = function() {
+		for (var i = 0; i < playerData.players.length; i++) {
+			var player = playerData.players[i];
+			for (var j = 0; j < player.equippedCards.length; j++) {
+				var card = player.equippedCards[j];
+				console.log(card.effect);
+				if (card.effect == 'magnet') {
+					this.hurtPlayer(player, card.magnitude);
+				}
+			}
 		}
+	}
+	
+	this.hurtPlayer = function(player, damage) {
 	
 		player.hitPoints -= damage;
 		if (player.hitPoints <= 0) {
@@ -39,6 +48,17 @@ gameApp.service('gameService', function(deckRepository, deckService, gameData, p
 				}
 			}
 		}
+		
+	}
+	
+	this.damagePlayer = function(player, damage, modifierCard) {
+	
+		if (modifierCard && modifierCard.effect == 'multiply') {
+			damage *= modifierCard.magnitude;
+		}
+	
+		this.hurtPlayer(player, damage);		
+		this.applyMagnetDamageIfApplicable();
 	}	
 	
 	this.killPlayer = function(player) {

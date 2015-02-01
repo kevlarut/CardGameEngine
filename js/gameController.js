@@ -133,7 +133,14 @@ gameApp.controller('gameController',
 						break;
 					case 'keep':
 					case 'trap':
-						$scope.equipCard(card, player);
+						if (card.target) {
+							targetingService.getTargetPlayer(function(target) {
+								$scope.equipCard(card, target);
+							});
+						}
+						else {
+							$scope.equipCard(card, player);
+						}
 						break;
 					case 'mana':
 						$scope.accumulateMana(card, modifierCard);

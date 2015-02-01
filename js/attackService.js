@@ -118,6 +118,13 @@ gameApp.service('attackService', function(callbacks, deckService, gameService, p
 	
 		for (var i = 0; i < target.equippedCards.length; i++) {
 			var card = target.equippedCards[0];
+			if (card.effect == 'vulnerability') {
+				return false;
+			}
+		}
+	
+		for (var i = 0; i < target.equippedCards.length; i++) {
+			var card = target.equippedCards[0];
 			if (this.doesCardContainEffect(card, 'deflect')) {
 			
 				if (card.type == 'trap') {
