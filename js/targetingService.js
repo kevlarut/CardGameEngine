@@ -4,6 +4,9 @@ gameApp.service('targetingService', function(callbacks, playerData, userInterfac
 	
 	this.getTargetPlayers = function(targetType, callback) {
 		switch (targetType) {
+			case 'adjacent':
+				this.applyCardToAdjacentPlayers(callback);
+				break;
 			case 'all':
 				this.applyCardToAllPlayers(callback);
 				break;
@@ -52,13 +55,14 @@ gameApp.service('targetingService', function(callbacks, playerData, userInterfac
 	
 	this.applyCardToAdjacentPlayers = function(callback) {
 		
+		var targets = [];
 		var appliedPlayerIndex = null;
 		
 		for (var i = 1; i < playerData.players.length; i++) {
 			var player = playerData.players[i];
 			if (!player.isDead) {
 				appliedPlayerIndex = i;
-				callback(player);
+				targets.push(player);
 				break;
 			}
 		}
@@ -70,11 +74,13 @@ gameApp.service('targetingService', function(callbacks, playerData, userInterfac
 					break;
 				}
 				else {
-					callback(player);
+					targets.push(player);
 					break;
 				}
 			}
 		}
+		
+		callback(targets);
 	}
 	
 });

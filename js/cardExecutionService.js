@@ -1,6 +1,6 @@
 var gameApp = angular.module('gameApp');
 
-gameApp.service('cardExecutionService', function(gameService, targetingService, deckService, userInterface, callbacks) {
+gameApp.service('cardExecutionService', function(attackService, gameService, targetingService, deckService, userInterface, callbacks) {
 	
 	this.card = null;
 	this.cancellable = true;
@@ -21,14 +21,21 @@ gameApp.service('cardExecutionService', function(gameService, targetingService, 
 	
 	this.applyEffectOnSingleTarget = function(effects, index, target, modifierCard, service, disposeAfterwards) {
 	
-		var effect = effects[index];
-		switch (effect.effect) {
-			case 'damage':
-				gameService.damagePlayer(target, effect.magnitude, modifierCard);
-				break;
-			default:
-				console.log('ERROR: effect ' + effect.effect + ' is not defined.');
-				break;
+		var isBlocked = false;
+		if (!modifierCard || modifierCard.effect != 'unblockable') {
+			var isBlocked = attackService.spendCardToBlockAttackIfPossible(target);
+		}	
+		
+		if (!isBlocked) {
+			var effect = effects[index];
+			switch (effect.effect) {
+				case 'damage':
+					gameService.damagePlayer(target, effect.magnitude, modifierCard);
+					break;
+				default:
+					console.log('ERROR: effect ' + effect.effect + ' is not defined.');
+					break;
+			}
 		}
 		
 		if (disposeAfterwards) {

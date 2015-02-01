@@ -101,13 +101,46 @@ gameApp.service('attackService', function(callbacks, deckService, gameService, p
 		});
 	}
 	
+	this.doesCardContainEffect = function(card, effect) {
+		if (card.reactionEffects) {
+			for (var i = 0; i < card.reactionEffects.length; i++) {
+				if (card.reactionEffects[i].effect == effect) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
 	this.spendCardToBlockAttackIfPossible = function(target) {
 	
 		var blocked = false;
 	
 		for (var i = 0; i < target.equippedCards.length; i++) {
 			var card = target.equippedCards[0];
-			if (card.effect == 'block') {
+			if (this.doesCardContainEffect(card, 'deflect')) {
+			
+				if (card.type == 'trap') {
+					deckService.discard(card);
+					target.equippedCards.splice(i, 1);
+				}
+				
+				console.log('ERROR: Deflection is not yet implemented.  Prompt the reacting player to choose whom to deflect the damage to.');
+					
+				blocked = true;
+				break;
+			}
+		}
+		
+		for (var i = 0; i < target.equippedCards.length; i++) {
+			var card = target.equippedCards[0];
+			if (card.effect == 'block' || this.doesCardContainEffect(card, 'block')) {
+			
+				if (card.type == 'trap') {
+					deckService.discard(card);
+					target.equippedCards.splice(i, 1);
+				}
+					
 				blocked = true;
 				break;
 			}
@@ -116,7 +149,7 @@ gameApp.service('attackService', function(callbacks, deckService, gameService, p
 		if (!blocked) {
 			for (var i = 0; i < target.hand.length; i++) {				
 				var card = target.hand[i];
-				if ((card.type == 'defend' || card.type == 'block')) {
+				if (card.type == 'defend' || card.type == 'block' || (card.type != 'trap' && this.doesCardContainEffect(card, 'block'))) {
 					deckService.discard(card);
 					target.hand.splice(i, 1);
 					blocked = true;

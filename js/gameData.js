@@ -397,6 +397,41 @@ gameApp.service('gameData', function() {
 					}],
 					quantity: 1
 				},	
+				{
+					type: 'attack',
+					title: 'Proximity Attack',
+					effects: [{
+						target: 'adjacent',
+						effect: 'damage',
+						magnitude: 1
+					}],
+					quantity: 1
+				},
+				{
+					type: 'reaction',
+					title: 'Block',
+					reactionEffects: [{
+						effect: 'block'
+					}],
+					quantity: 7
+				},
+				{
+					type: 'trap',
+					title: 'Block Trap',
+					reactionEffects: [{
+						effect: 'block'
+					}],
+					quantity: 3
+				},
+				{
+					type: 'trap',
+					title: 'Deflect Trap',
+					reactionEffects: [{
+						effect: 'deflect',
+						target: 'any'
+					}],
+					quantity: 1
+				},
 			]
 		}]		
 	}	
