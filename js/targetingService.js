@@ -21,6 +21,11 @@ gameApp.service('targetingService', function(callbacks, playerData, userInterfac
 				break;
 		}
 	}
+	
+	this.guessCardInDeck = function(deck, callback) {
+		console.log('ERROR: guessCardInDeck is not implemented.');
+		callback(null);
+	}
 		
 	this.getTargetCard = function(callback) {
 		callbacks.clickCardCallback = callback;

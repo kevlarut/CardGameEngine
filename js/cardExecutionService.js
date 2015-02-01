@@ -4,7 +4,7 @@ gameApp.service('cardExecutionService', function(attackService, gameService, hea
 	
 	this.card = null;
 	this.cancellable = true;
-	
+		
 	this.applyEffect = function(effects, index, targetOrTargets, modifierCard, service) {
 	
 		this.cancellable = false;
@@ -60,45 +60,22 @@ gameApp.service('cardExecutionService', function(attackService, gameService, hea
 				this.disposeCard();
 			}
 			else {
-				this.targetAndExecute(effects, index + 1, modifierCard, service, disposeAfterwards);
+				targetAndExecute(effects, index + 1, modifierCard, service, disposeAfterwards);
 			}		
 		}
 				
 		if (result.deflected) {
-			this.targetAndExecuteDeflection(effect, modifierCard, service);
+			targetAndExecuteDeflection(effect, modifierCard, service);
 		}
 		
 	}
-	
-	this.clearCallbacks = function() {	
-		callbacks.clickCardCallback = null;
-		callbacks.clickPlayerCallback = null;
-		callbacks.textInputCallback = null;
-	}
-	
-	this.targetAndExecuteDeflection = function(effect, modifierCard, service) {
-		userInterface.instructions = 'Choose a player to deflect to.';
-		this.clearCallbacks();
-		targetingService.getTargetPlayers('any', function(target) 
-		{
-			service.executeSingleEffect(effect, target, modifierCard);
-		});
-	}
-	
-	this.targetAndExecute = function(effects, index, modifierCard, service) {
-		this.clearCallbacks();
-		targetingService.getTargetPlayers(effects[index].target, function(target) 
-		{
-			service.applyEffect(effects, index, target, modifierCard, service, true); 
-		});
-	}
-	
+		
 	this.disposeCard = function() {
 		if (this.card) {
 			deckService.discard(this.card);
 			this.card = null;
 			userInterface.instructions = null;
-			this.clearCallbacks();
+			clearCallbacks();
 			this.cancellable = true;
 		}
 	}
@@ -109,14 +86,11 @@ gameApp.service('cardExecutionService', function(attackService, gameService, hea
 		var index = player.hand.indexOf(card);
 		player.hand.splice(index, 1);
 			
-		if (gameService.actions > 0 && gameService.areManaRequirementsMet(card)) {					
-			
-			var service = this;
-			
+		if (gameService.actions > 0 && gameService.areManaRequirementsMet(card)) {			
+			var service = this;			
 			if (card.effects) {
-				this.targetAndExecute(card.effects, 0, modifierCard, service);
-			}
-			
+				verifyConditionsAndTargetAndExecute(card.effects, 0, modifierCard, service);
+			}			
 		}
 		
 		if (card.actions) {
@@ -125,6 +99,50 @@ gameApp.service('cardExecutionService', function(attackService, gameService, hea
 		
 		if (card.type != 'modifier' && card.type != 'mana') {
 			gameService.actions--;
+		}
+	}	
+	
+	var clearCallbacks = function() {	
+		callbacks.clickCardCallback = null;
+		callbacks.clickPlayerCallback = null;
+		callbacks.textInputCallback = null;
+	}
+	
+	var targetAndExecute = function(effects, index, modifierCard, service) {
+		clearCallbacks();
+		targetingService.getTargetPlayers(effects[index].target, function(target) {
+			service.applyEffect(effects, index, target, modifierCard, service, true); 
+		});
+	}
+	
+	var targetAndExecuteDeflection = function(effect, modifierCard, service) {
+		userInterface.instructions = 'Choose a player to deflect to.';
+		clearCallbacks();
+		targetingService.getTargetPlayers('any', function(target) 
+		{
+			service.executeSingleEffect(effect, target, modifierCard);
+		});
+	}
+	
+	var verifyConditionsAndTargetAndExecute = function(effects, index, modifierCard, service) {
+	
+		if (effects[index].condition) {
+			var condition = effects[index].condition;
+			switch (condition.condition) {
+				case 'guessed-card-exists-in-target-players-hand':					
+					userInterface.instructions = 'Click on the card you want to guess.';
+					targetingService.guessCardInDeck(condition.deck, function(cardName) {
+						console.log('ERROR: The callback for guessCardInDeck needs to compare the cardName to the target player\'s hand, and execute if it exists, or cancel the effect if not.');
+						targetAndExecute(effects, 0, modifierCard, service);
+					});
+					break;
+				default:
+					console.log('ERROR: Condition ' + condition.condition + ' is undefined.');
+					break;
+			}
+		}
+		else {
+			targetAndExecute(effects, 0, modifierCard, service);
 		}
 	}
 	

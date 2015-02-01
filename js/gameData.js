@@ -163,9 +163,15 @@ gameApp.service('gameData', function() {
 						type: 'attack',
 						title: 'Attack Ad',
 						description: 'Guess a scandal.  If target has that scandal in his hand, he takes 1 damage.',
-						target: 'single',
-						condition: 'gofish',
-						targetDamage: 1,
+						effects: [{
+							target: 'any',
+							condition: {
+								condition: 'guessed-card-exists-in-target-players-hand',
+								deck: 'scandals'
+							},
+							effect: 'damage',
+							magnitude: 1							
+						}],
 						quantity: 10
 					},
 					{

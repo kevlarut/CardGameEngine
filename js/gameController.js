@@ -120,9 +120,9 @@ gameApp.controller('gameController',
 			}
 		}
 		else {
-			console.log('ERROR: No way to play this card has been defined.');
+			console.log('ERROR: I do not know how to play this card.');
 		}
-		/*else {
+		/*
 			var index = player.hand.indexOf(card);
 			player.hand.splice(index, 1);
 			gameService.activeCard = card;
@@ -195,7 +195,7 @@ gameApp.controller('gameController',
 			if (card.type != 'modifier' && card.type != 'mana') {
 				gameService.actions--;
 			}
-		}*/		
+		}	*/	
 	}
 	
 	$scope.playVictoryCard = function(card, modifierCard, player) {
