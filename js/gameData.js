@@ -90,7 +90,9 @@ gameApp.service('gameData', function() {
 						type: 'modifier',
 						title: 'Unblockable',
 						description: 'When played with an attack, that attack cannot be blocked.',
-						effect: 'unblockable',
+						modifierEffects: [{
+							effect: 'unblockable'
+						}],
 						quantity: 10
 					},
 					{
@@ -107,6 +109,7 @@ gameApp.service('gameData', function() {
 						description: 'You are immune from attacks this round, unless they are Unblockable.',
 						effect: 'block',
 						duration: 1,
+						equippable: true,
 						quantity: 5
 					},
 					{
@@ -122,12 +125,14 @@ gameApp.service('gameData', function() {
 						description: 'Equip face down.  When you are attacked, the attacker takes 1 damage.',
 						effect: 'damage',
 						magnitude: 1,
+						equippable: true,
 						quantity: 10
 					},
 					{
 						type: 'trap',
 						title: 'Decoy Trap',
 						description: 'Equip face down.  When you are attacked, discard.',
+						equippable: true,
 						quantity: 10
 					},
 					{
@@ -443,6 +448,7 @@ gameApp.service('gameData', function() {
 							effect: 'block'
 						}],
 						flavors: ['My spiritual advisor told me not to eat that.', 'Appetite Suppressant', 'I saw something on Oprah about how that gives you cancer.'],
+						equippable: true,
 						quantity: 3
 					},
 					{
@@ -452,6 +458,7 @@ gameApp.service('gameData', function() {
 							effect: 'deflect',
 							target: 'any'
 						}],
+						equippable: true,
 						quantity: 1
 					},
 					{
@@ -460,6 +467,7 @@ gameApp.service('gameData', function() {
 						description: 'You cannot block any attacks this turn.',
 						effect: 'vulnerability',
 						target: 'any',
+						equippable: true,
 						duration: 1,
 						quantity: 1,
 					},
@@ -469,6 +477,7 @@ gameApp.service('gameData', function() {
 						description: 'You are immune from attacks this round, unless they are Unblockable.',
 						effect: 'block',
 						duration: 1,
+						equippable: true,
 						quantity: 1
 					},
 					{
@@ -478,6 +487,7 @@ gameApp.service('gameData', function() {
 						effect: 'magnet',
 						magnitude: 1,
 						target: 'any',
+						equippable: true,
 						duration: 1,
 						quantity: 1,
 					},
@@ -526,7 +536,9 @@ gameApp.service('gameData', function() {
 						type: 'modifier',
 						title: 'This will go straight to your thighs.',
 						description: 'When played with an attack, that attack cannot be blocked.',
-						effect: 'unblockable',
+						modifierEffects: [{
+							effect: 'unblockable'
+						}],
 						quantity: 1
 					},
 					{

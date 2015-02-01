@@ -33,7 +33,6 @@ gameApp.service('gameService', function(deckRepository, deckService, gameData, p
 			var player = playerData.players[i];
 			for (var j = 0; j < player.equippedCards.length; j++) {
 				var card = player.equippedCards[j];
-				console.log(card.effect);
 				if (card.effect == 'magnet') {
 					this.hurtPlayer(player, card.magnitude);
 				}
@@ -41,8 +40,7 @@ gameApp.service('gameService', function(deckRepository, deckService, gameData, p
 		}
 	}
 	
-	this.hurtPlayer = function(player, damage) {
-	
+	this.hurtPlayer = function(player, damage) {	
 		player.hitPoints -= damage;
 		if (player.hitPoints <= 0) {
 			this.killPlayer(player);			
@@ -52,11 +50,10 @@ gameApp.service('gameService', function(deckRepository, deckService, gameData, p
 			if (draw) {
 				for (var i = 0; i < draw.length; i++) {
 					var directive = draw[i];
-					player.hand = player.hand.concat(deckService.draw(directive.deck, directive.quantity));
+					playerService.draw(player, directive.deck, directive.quantity);
 				}
 			}
-		}
-		
+		}		
 	}
 	
 	this.isModifierEffectApplicableToPlayer = function(effect, player) {
@@ -69,7 +66,7 @@ gameApp.service('gameService', function(deckRepository, deckService, gameData, p
 					return playerService.isThisTheActivePlayer(player);
 					break;
 				default:
-					console.log('Modifier effect target ' + effect.target + ' is not implemented.');
+					console.log('ERROR: Modifier effect target ' + effect.target + ' is not implemented.');
 					break;
 			}
 		}
@@ -191,7 +188,7 @@ gameApp.service('gameService', function(deckRepository, deckService, gameData, p
 		
 		for (var i = 0; i < this.game.drawUponNewTurn.length; i++) {
 			var draw = this.game.drawUponNewTurn[i];
-			player.hand = player.hand.concat(deckService.draw(draw.deck, draw.quantity));	
+			playerService.draw(player, draw.deck, draw.quantity);
 		}
 		
 		this.actions = 2;
@@ -203,7 +200,6 @@ gameApp.service('gameService', function(deckRepository, deckService, gameData, p
 				card.expendedDuration = 0;
 			}
 			card.expendedDuration++;
-			console.log('expended: ' + card.expendedDuration + '; duration = ' + card.duration);
 			if (card.expendedDuration >= card.duration) {
 				deckService.discard(card);
 				player.equippedCards.splice(i, 1);
@@ -212,14 +208,12 @@ gameApp.service('gameService', function(deckRepository, deckService, gameData, p
 		}
 	}
 	
-	this.makeInitialDraw = function() {
-		var cards = [];
+	this.makeInitialDraw = function(player) {
 		var initialDraw = this.game.initialDraw;
 		for (var i = 0; i < initialDraw.length; i++) {
 			var directive = initialDraw[i];
-			cards = cards.concat(deckService.draw(directive.deck, directive.quantity));
+			playerService.draw(player, directive.deck, directive.quantity);
 		}
-		return cards;
 	}
 	
 	this.nextTurn = function() {
@@ -232,8 +226,9 @@ gameApp.service('gameService', function(deckRepository, deckService, gameData, p
 	}
 	
 	this.recycleHand = function() {
-		playerService.discardAllCardsInHand(playerData.players[0]);
-		playerData.players[0].hand = this.makeInitialDraw();
+		var activePlayer = playerData.players[0];
+		playerService.discardAllCardsInHand(activePlayer);
+		this.makeInitialDraw(activePlayer);
 		this.nextTurn();
 	}
 	
@@ -261,7 +256,7 @@ gameApp.service('gameService', function(deckRepository, deckService, gameData, p
 			playerData.players = playerService.loadPlayers(game);
 			for (var i = 0; i < playerData.players.length; i++) {
 				var player = playerData.players[i];
-				player.hand = this.makeInitialDraw();
+				this.makeInitialDraw(player);
 			}
 			this.beginNewTurn();
 		}

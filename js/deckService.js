@@ -4,6 +4,7 @@ gameApp.service('deckService', function(deckRepository) {
 
 	this.discard = function(card) {
 		card.expendedDuration = 0;
+		card.playerId = null;
 		var deck = deckRepository.decks[card.deckId];		
 		deck.discardPile.push(card);
 	}

@@ -1,11 +1,12 @@
 var gameApp = angular.module('gameApp');
 
 gameApp.controller('gameController', 
-	['$scope', '$timeout', 'attackService', 'callbacks', 'cardExecutionService', 'deckService', 'gameData', 'gameService', 'healService', 'inputService', 'playerData', 'playerService', 'targetingService', 'userInterface', 
-	function($scope, $timeout, attackService, callbacks, cardExecutionService, deckService, gameData, gameService, healService, inputService, playerData, playerService, targetingService, userInterface) {
+	['$scope', '$timeout', 'attackService', 'callbacks', 'cardExecutionService', 'cardService', 'deckService', 'gameData', 'gameService', 'healService', 'inputService', 'playerData', 'playerService', 'targetingService', 'userInterface', 
+	function($scope, $timeout, attackService, callbacks, cardExecutionService, cardService, deckService, gameData, gameService, healService, inputService, playerData, playerService, targetingService, userInterface) {
  		
 	$scope.attackService = attackService;
 	$scope.cardExecutionService = cardExecutionService,
+	$scope.cardService = cardService;
 	$scope.gameData = gameData;
 	$scope.gameService = gameService;
 	$scope.inputService = inputService;
@@ -54,8 +55,14 @@ gameApp.controller('gameController',
 		}
 	}
 	
-	$scope.equipCard = function(card, player) {
-		player.equippedCards.push(card);
+	$scope.equipCard = function(card, target) {
+		var actionCost = card.actionCost || 1;	
+		var player = playerService.getPlayerById(card.playerId);
+		
+		var index = player.hand.indexOf(card);
+		player.hand.splice(index, 1);		
+		target.equippedCards.push(card);
+		gameService.actions -= actionCost;
 		$scope.clearActiveCard();
 	}
 	
@@ -81,11 +88,11 @@ gameApp.controller('gameController',
 		
 		if (typeof card.target != 'undefined' && card.target == 'everyone') {
 			playerData.players.forEach(function(player) {
-				player.hand = player.hand.concat(deckService.draw(deckName, cardsToDraw));				
+				playerService.draw(player, deckName, cardsToDraw);
 			});
 		}
 		else {
-			player.hand = player.hand.concat(deckService.draw(deckName, cardsToDraw));
+			playerService.draw(player, deckName, cardsToDraw);
 		}
 		
 		$scope.clearActiveCard();
@@ -96,7 +103,26 @@ gameApp.controller('gameController',
 		if (card.effects) {
 			cardExecutionService.playCard(card, player, modifierCard);	
 		}
+		else if (card.modifierEffects) {
+			userInterface.instructions ='Click on the card you want to modify and play.';
+			targetingService.getTargetCard(function(targetCard) {
+				return $scope.modifyAndPlayCard(targetCard, card, player);
+			});
+		}
+		else if (card.equippable) {		
+			if (card.target) {
+				targetingService.getTargetPlayer(function(target) {
+					$scope.equipCard(card, target);
+				});
+			}
+			else {
+				$scope.equipCard(card, player);
+			}
+		}
 		else {
+			console.log('ERROR: No way to play this card has been defined.');
+		}
+		/*else {
 			var index = player.hand.indexOf(card);
 			player.hand.splice(index, 1);
 			gameService.activeCard = card;
@@ -169,7 +195,7 @@ gameApp.controller('gameController',
 			if (card.type != 'modifier' && card.type != 'mana') {
 				gameService.actions--;
 			}
-		}		
+		}*/		
 	}
 	
 	$scope.playVictoryCard = function(card, modifierCard, player) {

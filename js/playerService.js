@@ -1,7 +1,7 @@
 var gameApp = angular.module('gameApp');
 
 gameApp.service('playerService', function(deckService, playerData) {
-		
+
 	this.discardAllCardsInHand = function(player) {
 		var card = player.hand.pop();
 		while (card) {
@@ -22,6 +22,27 @@ gameApp.service('playerService', function(deckService, playerData) {
 		var index = player.equippedCards.indexOf(card);
 		player.equippedCards.splice(index, 1);
 	}
+
+	this.draw = function(player, deckName, numberOfCardsToDraw) {
+		var cards = deckService.draw(deckName, numberOfCardsToDraw);
+		cards.forEach(function(card) {
+			card.playerId = player.id;
+		});
+		player.hand = player.hand.concat(cards);
+	}
+	
+	this.getActivePlayerId = function() {
+		return playerData.players[0].id;
+	}
+	
+	this.getPlayerById = function(id) {
+		for (var i = 0; i < playerData.players.length; i++) {
+			if (playerData.players[i].id == id) {
+				return playerData.players[i];
+			}
+		}
+		return null;
+	}
 	
 	this.isThisTheActivePlayer = function(player) {
 		return player == playerData.players[0];
@@ -32,11 +53,13 @@ gameApp.service('playerService', function(deckService, playerData) {
 		var names = game.playerNames || ['Johnny Come Lately', 'Marathon Mary', 'Tenacious Terry', 'Edna Endurance', 'Lackadaisical Lacie', 'Brisk Brittany', 'Hurried Harry'];
 				
 		var players = [];
-		for (var i = 1; i <= playerData.numberOfPlayers; i++) {
+		for (var i = 0; i < playerData.numberOfPlayers; i++) {
 			var player = {};
 			player.equippedCards = [];
+			player.hand = [];
 			player.hitPoints = game.initialHitPoints;
-			player.name = names[i-1];
+			player.id = i;
+			player.name = names[i];
 			player.victoryPoints = 0;
 			players.push(player);
 		}
