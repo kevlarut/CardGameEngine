@@ -14,4 +14,16 @@ gameApp.service('cardService', function(playerService) {
 		return false;
 	}
 	
+	this.doesCardContainModifierEffect = function(card, effect) {
+		if (card.modifierEffects) {
+			for (var i = 0; i < card.modifierEffects.length; i++) {
+				if (card.modifierEffects[i].effect == effect) {
+					return true;
+				}
+			}
+		}
+		
+		return false;
+	}
+	
 });

@@ -49,9 +49,8 @@
 				
 			</div>
 			<div class="playArea" ng-show="cardExecutionService.card">
-				<div ng-class="['card', cardExecutionService.card.type]" ng-show="cardExecutionService.card">
-					{{cardExecutionService.card.title}}
-					<div class="description">{{cardExecutionService.card.description}}</div>
+				<div ng-repeat="card in [cardExecutionService.card]" ng-class="['card', card.type]">
+					<div class="slide-animate" ng-include src="'card.html'"></div>
 				</div>
 				<button ng-click="cancelActiveCard()" ng-show="cardExecutionService.cancellable">Cancel</button>
 				<button ng-click="discardActiveCard()" ng-show="cardExecutionService.card.type != 'oldmaid' && cardExecutionService.cancellable">Discard</button>

@@ -88,6 +88,8 @@ gameApp.service('gameService', function(deckRepository, deckService, gameData, p
 							case 'x':				
 								damage *= effect.magnitude;
 								break;
+							case 'unblockable':
+								break;
 							default:
 								console.log('ERROR: Modifier effect ' + effect.effect + ' is not implemented.');
 								break;

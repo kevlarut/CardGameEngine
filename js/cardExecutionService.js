@@ -1,6 +1,6 @@
 var gameApp = angular.module('gameApp');
 
-gameApp.service('cardExecutionService', function(attackService, gameService, healService, targetingService, deckService, userInterface, callbacks) {
+gameApp.service('cardExecutionService', function(attackService, cardService, gameService, healService, targetingService, deckService, userInterface, callbacks) {
 	
 	this.card = null;
 	this.cancellable = true;
@@ -31,7 +31,7 @@ gameApp.service('cardExecutionService', function(attackService, gameService, hea
 				gameService.actions += effect.magnitude;
 				break;
 			case 'damage':
-				if (!modifierCard || modifierCard.effect != 'unblockable') {
+				if (!modifierCard || (!cardService.doesCardContainModifierEffect(modifierCard, 'unblockable') && modifierCard.effect != 'unblockable')) {
 					result = attackService.spendCardToBlockAttackIfPossible(target);					
 				}
 				if (!result.blocked) {
@@ -90,7 +90,7 @@ gameApp.service('cardExecutionService', function(attackService, gameService, hea
 			var service = this;			
 			if (card.effects) {
 				verifyConditionsAndTargetAndExecute(card.effects, 0, modifierCard, service);
-			}			
+			}
 		}
 		
 		if (card.actions) {
@@ -100,7 +100,29 @@ gameApp.service('cardExecutionService', function(attackService, gameService, hea
 		if (card.type != 'modifier' && card.type != 'mana') {
 			gameService.actions--;
 		}
-	}	
+	}
+	
+	this.playModifierCard = function(card, player) {	
+		this.card = card;
+		var index = player.hand.indexOf(card);
+		player.hand.splice(index, 1);
+		
+		userInterface.instructions = 'Click on the card you want to modify and play.';
+		var service = this;
+		targetingService.getTargetCard(function(targetCard) {
+			return modifyAndPlayCard(targetCard, card, player, service);
+		});
+	}
+	
+	var modifyAndPlayCard = function(targetCard, card, player, service) {
+		if (targetCard.type == 'modifier') {
+			return false;
+		}
+		else {
+			service.playCard(targetCard, player, card);
+			return true;
+		}
+	}
 	
 	var clearCallbacks = function() {	
 		callbacks.clickCardCallback = null;

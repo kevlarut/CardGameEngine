@@ -42,17 +42,9 @@ gameApp.controller('gameController',
 	
 	$scope.clearActiveCard = function() {
 		cardExecutionService.card = null;
+		callbacks.clickCardCallback = null;
 		callbacks.clickPlayerCallback = null;
-	}
-		
-	$scope.modifyAndPlayCard = function(targetCard, modifierCard, player) {
-		if (targetCard.type == 'modifier') {
-			return false;
-		}
-		else {
-			$scope.playCard(targetCard, player, modifierCard);
-			return true;
-		}
+		callbacks.textInputCallback = null;
 	}
 	
 	$scope.equipCard = function(card, target) {
@@ -98,16 +90,12 @@ gameApp.controller('gameController',
 		$scope.clearActiveCard();
 	}
 	
-	$scope.playCard = function(card, player, modifierCard) {
-	
+	$scope.playCard = function(card, player, modifierCard) {	
 		if (card.effects) {
 			cardExecutionService.playCard(card, player, modifierCard);	
 		}
 		else if (card.modifierEffects) {
-			userInterface.instructions ='Click on the card you want to modify and play.';
-			targetingService.getTargetCard(function(targetCard) {
-				return $scope.modifyAndPlayCard(targetCard, card, player);
-			});
+			cardExecutionService.playModifierCard(card, player);
 		}
 		else if (card.equippable) {		
 			if (card.target) {
@@ -171,12 +159,6 @@ gameApp.controller('gameController',
 					case 'mana':
 						$scope.accumulateMana(card, modifierCard);
 						break;
-					case 'modifier':				
-						userInterface.instructions ='Click on the card you want to modify and play.';
-						targetingService.getTargetCard(function(targetCard) {
-							return $scope.modifyAndPlayCard(targetCard, card, player);
-						});
-						break;
 					case 'oldmaid':
 						break;
 					case 'victory':
@@ -211,8 +193,7 @@ gameApp.controller('gameController',
 	}
 	
 	$scope.clickCard = function(card, player) {
-	
-		if (playerService.isThisTheActivePlayer(player)) {	
+		if (playerService.isThisTheActivePlayer(player)) {
 			if (callbacks.clickCardCallback) {
 				var result = callbacks.clickCardCallback(card);
 				if (result) {
