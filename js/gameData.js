@@ -353,7 +353,7 @@ gameApp.service('gameData', function() {
 		{
 			name: 'Fat Bridesmaids',
 			allowHandRecycling: false,
-			initialHitPoints: 5,
+			initialHitPoints: 10,
 			initialDraw: [{deck: 'main', quantity: 5}],
 			drawUponNewTurn: [{deck: 'main', quantity: 2}],
 			playerNames: ['Tiny Tina', 'Slender Susan', 'Competitive Cathy', 'Plump Pamela', 'Fat Francine'],
@@ -368,12 +368,12 @@ gameApp.service('gameData', function() {
 							effect: 'damage',
 							magnitude: 1
 						}],
-						flavors: ['Try this Tiramisu', 'Eat this Eclair', 'Consume this Cantaloupe', 'Swallow these Sweets', 'Devour this Devil\'s Cake', 'Inhale this Ice Cream', 'Dine on these Dates', 'Nibble these Nuts', 'Injest this Indian Food'],
+						flavors: ['Try this terrific tiramisu.', 'Eat this excellent eclair.', 'Consume this crazy cantaloupe.', 'Swallow some of this sweet and salty sauce.', 'Devour this delicious devil\'s cake, dear.', 'Inhale this incredible ice cream.', 'Dine on these delectable dates.', 'Nibble these nummy nuts.', 'Here, I made you some cookies since you\'re totes my BFF.'],
 						quantity: 9
 					},			
 					{
 						type: 'attack',
-						title: 'Mutual Attack',
+						title: 'Share Food',
 						effects: [{
 							target: 'any',
 							effect: 'damage',
@@ -384,12 +384,12 @@ gameApp.service('gameData', function() {
 							effect: 'damage',
 							magnitude: 1
 						}],
-						flavors: ['Let\'s Split this Banana Split'],
+						flavors: ['Let\'s split this banana split.', 'This is just too much for me to eat all by myself.', 'Let\'s do a Ladies\' Lunch.', 'We eat everything together, like conjoined twin sisters.', 'Share and Share Alike', 'Will you split this with me?', 'This looks soooo good.  Want to try it with me?', 'I bought us some chocolate and a rom-com DVD.'],
 						quantity: 8
 					},
 					{
 						type: 'attack',
-						title: 'Let Us Eat Cake',
+						title: 'Girl\'s Night Out',
 						effects: [{
 							target: 'all',
 							effect: 'damage',
@@ -399,7 +399,7 @@ gameApp.service('gameData', function() {
 					},
 					{
 						type: 'attack',
-						title: 'Triple Attack',
+						title: 'Triple-Layer Cake',
 						effects: [{
 							target: 'any',
 							effect: 'damage',
@@ -419,7 +419,7 @@ gameApp.service('gameData', function() {
 					},	
 					{
 						type: 'attack',
-						title: 'Proximity Attack',
+						title: 'Side of Beef',
 						effects: [{
 							target: 'adjacent',
 							effect: 'damage',
@@ -429,10 +429,11 @@ gameApp.service('gameData', function() {
 					},
 					{
 						type: 'reaction',
-						title: 'Block',
+						title: 'Refuse Food',
 						reactionEffects: [{
 							effect: 'block'
 						}],
+						flavors: ['My mouth is already full.', 'I literally can\'t even.', 'I gave that up for Lent, even though I\'m not Catholic.', 'I think I\'m allergic to that.', 'Eww.  Is that even gluten free?', 'Yeah, I can\'t eat that, since I\'m a vegan now.', 'I only eat food that doesn\'t have a face.'],
 						quantity: 7
 					},
 					{
@@ -441,20 +442,21 @@ gameApp.service('gameData', function() {
 						reactionEffects: [{
 							effect: 'block'
 						}],
+						flavors: ['My spiritual advisor told me not to eat that.', 'Appetite Suppressant', 'I saw something on Oprah about how that gives you cancer.'],
 						quantity: 3
 					},
 					{
 						type: 'trap',
-						title: 'Deflect Trap',
+						title: 'She wants it more.',
 						reactionEffects: [{
 							effect: 'deflect',
 							target: 'any'
 						}],
-						quantity: 10
+						quantity: 1
 					},
 					{
 						type: 'keep',
-						title: 'Cannot Block',
+						title: 'You are suddently SUPER hungry.',
 						description: 'You cannot block any attacks this turn.',
 						effect: 'vulnerability',
 						target: 'any',
@@ -463,7 +465,7 @@ gameApp.service('gameData', function() {
 					},
 					{
 						type: 'keep',
-						title: 'Immunity',
+						title: 'Diet',
 						description: 'You are immune from attacks this round, unless they are Unblockable.',
 						effect: 'block',
 						duration: 1,
@@ -476,12 +478,12 @@ gameApp.service('gameData', function() {
 						effect: 'magnet',
 						magnitude: 1,
 						target: 'any',
-						duration: 2,
+						duration: 1,
 						quantity: 1,
 					},
 					{
 						type: 'heal',
-						title: 'Mutual Heal',
+						title: 'Let\'s go to the ladies\' room together and purge.',
 						effects: [{
 							target: 'any',
 							effect: 'heal',
@@ -496,17 +498,18 @@ gameApp.service('gameData', function() {
 					},				
 					{
 						type: 'modifier',
-						title: 'More Power',
+						title: 'Hmm.  The label says this is high in carbs.',
 						modifierEffects: [{
 							effect: '+',
 							magnitude: 1
 						}],
 						magnitude: 1,
+						flavors: ['MSG!'],
 						quantity: 2
 					},
 					{
 						type: 'modifier',
-						title: 'Min-Maxer',
+						title: 'I don\'t like the way this tastes, but I\'ll bet you\'d love it.',
 						modifierEffects: [{
 							effect: '+',
 							magnitude: 1,
@@ -521,14 +524,15 @@ gameApp.service('gameData', function() {
 					},				
 					{
 						type: 'modifier',
-						title: 'Unblockable',
+						title: 'This will go straight to your thighs.',
 						description: 'When played with an attack, that attack cannot be blocked.',
 						effect: 'unblockable',
 						quantity: 1
 					},
 					{
 						type: 'misc',
-						title: '+2 Actions',
+						title: 'Feeding Frenzy',
+						description: 'You get +2 actions.',
 						actions: 3,
 						quantity: 1
 					},	
