@@ -73,7 +73,7 @@
 					<div class="clear"></div>
 				</div>
 				
-				<div ng-repeat="card in player.hand track by $index" ng-class="['card', 'clickable', card.type, !$parent.$first ? 'faceDown' : null]" ng-click="clickCard(card, player)">
+				<script type="text/ng-template" id="card.html">
 					<div class="text">
 						{{card.title}}
 						<div class="description">{{card.description}}</div>
@@ -96,17 +96,24 @@
 					<div class="backOfCard">
 						{{gameService.game.name}}
 					</div>
+				</script>
+				<script type="text/ng-template" id="clickable-card.html">
+					<div ng-class="['card', 'clickable', card.type, !$parent.$parent.$first ? 'faceDown' : null]" ng-click="clickCard(card, player)">
+						<div class="slide-animate" ng-include src="'card.html'"></div>
+					</div>
+				</script>
+				<script type="text/ng-template" id="equipped-card.html">
+					<div ng-class="['card', card.type, !$parent.$parent.$first && card.type != 'keep' ? 'faceDown' : null]">
+						<div class="slide-animate" ng-include src="'card.html'"></div>
+					</div>
+				</script>
+				<div ng-repeat="card in player.hand track by $index">
+					<div class="slide-animate" ng-include src="'clickable-card.html'"></div>
 				</div>
 				
 				<div class="equippedCards" ng-show="player.equippedCards.length">
-					<div ng-repeat="card in player.equippedCards track by $index" ng-class="['card', card.type, !$parent.$first && card.type != 'keep' ? 'faceDown' : null]">
-						<div class="text">
-							{{card.title}}
-							<div class="description">{{card.description}}</div>
-						</div>
-						<div class="backOfCard">
-							{{gameService.game.name}}
-						</div>
+					<div ng-repeat="card in player.equippedCards track by $index">					
+						<div class="slide-animate" ng-include src="'equipped-card.html'"></div>
 					</div>
 					<div class="clear"></div>
 				</div>

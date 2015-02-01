@@ -40,6 +40,10 @@ button {
 	height: $cardHeight;
 	text-align: left;
 		
+	> div {
+		height: 100%;
+	}
+		
 	&.clickable:hover {
 		border: 5px solid #fff;
 		margin-bottom: 0;

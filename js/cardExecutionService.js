@@ -19,22 +19,22 @@ gameApp.service('cardExecutionService', function(attackService, gameService, hea
 		}
 	}
 	
-	this.applyEffectOnSingleTarget = function(effects, index, target, modifierCard, service, disposeAfterwards) {
+	this.executeSingleEffect = function(effect, target, modifierCard) {
 	
-		var effect = effects[index];
+		var result = {
+			blocked: false,
+			deflected: false
+		};
+	
 		switch (effect.effect) {
 			case 'actions':
 				gameService.actions += effect.magnitude;
 				break;
 			case 'damage':
-				var isBlocked = false;
-				var isDeflected = false;
 				if (!modifierCard || modifierCard.effect != 'unblockable') {
-					var result = attackService.spendCardToBlockAttackIfPossible(target);
-					isBlocked = result.blocked;
-					isDeflected = result.deflected;
-				}				
-				if (!isBlocked) {
+					result = attackService.spendCardToBlockAttackIfPossible(target);					
+				}
+				if (!result.blocked) {
 					gameService.damagePlayer(target, effect.magnitude, modifierCard);
 				}
 				break;
@@ -46,6 +46,15 @@ gameApp.service('cardExecutionService', function(attackService, gameService, hea
 				break;
 		}
 		
+		return result;
+	}
+	
+	this.applyEffectOnSingleTarget = function(effects, index, target, modifierCard, service, disposeAfterwards) {
+	
+		var effect = effects[index];
+		
+		var result = this.executeSingleEffect(effect, target, modifierCard);
+		
 		if (disposeAfterwards) {
 			if (index == effects.length - 1) {
 				this.disposeCard();
@@ -55,9 +64,8 @@ gameApp.service('cardExecutionService', function(attackService, gameService, hea
 			}		
 		}
 				
-		if (isDeflected) {
-			userInterface.instructions = 'Choose a player to deflect to.';
-			this.targetAndExecute(effects, index, modifierCard, service, disposeAfterwards);
+		if (result.deflected) {
+			this.targetAndExecuteDeflection(effect, modifierCard, service);
 		}
 		
 	}
@@ -68,10 +76,19 @@ gameApp.service('cardExecutionService', function(attackService, gameService, hea
 		callbacks.textInputCallback = null;
 	}
 	
+	this.targetAndExecuteDeflection = function(effect, modifierCard, service) {
+		userInterface.instructions = 'Choose a player to deflect to.';
+		this.clearCallbacks();
+		targetingService.getTargetPlayers('any', function(target) 
+		{
+			service.executeSingleEffect(effect, target, modifierCard);
+		});
+	}
+	
 	this.targetAndExecute = function(effects, index, modifierCard, service) {
 		this.clearCallbacks();
 		targetingService.getTargetPlayers(effects[index].target, function(target) 
-		{ 
+		{
 			service.applyEffect(effects, index, target, modifierCard, service, true); 
 		});
 	}
