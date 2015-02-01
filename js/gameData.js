@@ -28,7 +28,7 @@ gameApp.service('gameData', function() {
 					type: 'heal',
 					title: 'Heal',
 					description: 'Heal 1 damage.',
-					damage: 1,
+					magnitude: 1,
 					quantity: 10
 				},				
 				{
@@ -69,7 +69,7 @@ gameApp.service('gameData', function() {
 				},
 				{
 					type: 'modifier',
-					title: 'Unblock-able',
+					title: 'Unblockable',
 					description: 'When played with an attack, that attack cannot be blocked.',
 					effect: 'unblockable',
 					quantity: 10
@@ -459,6 +459,57 @@ gameApp.service('gameData', function() {
 					duration: 2,
 					quantity: 1,
 				},
+				{
+					type: 'heal',
+					title: 'Mutual Heal',
+					effects: [{
+						target: 'any',
+						effect: 'heal',
+						magnitude: 1
+					},
+					{
+						target: 'self',
+						effect: 'heal',
+						magnitude: 1
+					}],
+					quantity: 1
+				},				
+				{
+					type: 'modifier',
+					title: '+1 Damage',
+					effect: 'add',
+					magnitude: 1,
+					quantity: 2
+				},
+				{
+					type: 'modifier',
+					title: 'Min-Maxer',
+					description: '+1 damage to your opponent, -1 damage to yourself, if you would normally take damage.',
+					modifierEffects: [{
+						effect: 'add',
+						magnitude: 1,
+						target: 'other'
+					},
+					{
+						effect: 'add',
+						magnitude: -1,
+						target: 'self'
+					}],
+					quantity: 1
+				},				
+				{
+					type: 'modifier',
+					title: 'Unblockable',
+					description: 'When played with an attack, that attack cannot be blocked.',
+					effect: 'unblockable',
+					quantity: 1
+				},
+				{
+					type: 'misc',
+					title: '+2 Actions',
+					actions: 3,
+					quantity: 1
+				},	
 			]
 		}]		
 	}	

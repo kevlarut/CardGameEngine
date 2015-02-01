@@ -1,8 +1,8 @@
 var gameApp = angular.module('gameApp');
 
 gameApp.controller('gameController', 
-	['$scope', '$timeout', 'attackService', 'callbacks', 'cardExecutionService', 'deckService', 'gameData', 'gameService', 'inputService', 'playerData', 'playerService', 'targetingService', 'userInterface', 
-	function($scope, $timeout, attackService, callbacks, cardExecutionService, deckService, gameData, gameService, inputService, playerData, playerService, targetingService, userInterface) {
+	['$scope', '$timeout', 'attackService', 'callbacks', 'cardExecutionService', 'deckService', 'gameData', 'gameService', 'healService', 'inputService', 'playerData', 'playerService', 'targetingService', 'userInterface', 
+	function($scope, $timeout, attackService, callbacks, cardExecutionService, deckService, gameData, gameService, healService, inputService, playerData, playerService, targetingService, userInterface) {
  		
 	$scope.attackService = attackService;
 	$scope.cardExecutionService = cardExecutionService,
@@ -200,16 +200,9 @@ gameApp.controller('gameController',
 	}
 	
 	$scope.heal = function(card, player, modifierCard) {
-	
-		var magnitude = card.damage;
-		if (modifierCard && modifierCard.effect == 'multiply') {
-			magnitude *= modifierCard.magnitude;
-		}
-	
-		player.hitPoints += magnitude;
+		healService.heal(card.magnitude, player, modifierCard);
 		deckService.discard(card);
 		$scope.clearActiveCard();
-		userInterface.instructions = null;
 	}
 	
 	$scope.clickPlayer = function(player) {

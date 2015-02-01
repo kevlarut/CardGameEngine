@@ -51,14 +51,65 @@ gameApp.service('gameService', function(deckRepository, deckService, gameData, p
 		
 	}
 	
+	this.isModifierEffectApplicableToPlayer = function(effect, player) {
+		if (effect.target) {
+			switch (effect.target) {
+				case 'other':
+					return !playerService.isThisTheActivePlayer(player);
+					break;
+				case 'self':
+					return playerService.isThisTheActivePlayer(player);
+					break;
+				default:
+					console.log('Modifier effect target ' + effect.target + ' is not implemented.');
+					break;
+			}
+		}
+	}
+	
 	this.damagePlayer = function(player, damage, modifierCard) {
 	
-		if (modifierCard && modifierCard.effect == 'multiply') {
-			damage *= modifierCard.magnitude;
+		if (modifierCard) {
+			if (modifierCard.modifierEffects) {
+				for (var i = 0; i < modifierCard.modifierEffects.length; i++) {
+					var effect = modifierCard.modifierEffects[i];
+					if (this.isModifierEffectApplicableToPlayer(effect, player)) {
+						switch(effect.effect) {
+							case 'add':
+								damage += effect.magnitude;
+								break;
+							case 'multiply':				
+								damage *= effect.magnitude;
+								break;
+							default:
+								console.log('ERROR: Modifier effect ' + effect.effect + ' is not implemented.');
+								break;
+						}
+					}
+				}
+			}
+			else if (modifierCard.effect) {
+				switch(modifierCard.effect) {
+					case 'add':				
+						damage += modifierCard.magnitude;
+						break;
+					case 'multiply':				
+						damage *= modifierCard.magnitude;
+						break;
+					default:
+						console.log('ERROR: Modifier card effect ' + modifierCard.effect + ' is not implemented.');
+						break;
+				}
+			}
+			else {
+				console.log('ERROR: Modifier card has neither effect nor modifierEffects!');
+			}
 		}
 	
-		this.hurtPlayer(player, damage);		
-		this.applyMagnetDamageIfApplicable();
+		if (damage > 0) {
+			this.hurtPlayer(player, damage);		
+			this.applyMagnetDamageIfApplicable();
+		}
 	}	
 	
 	this.killPlayer = function(player) {
