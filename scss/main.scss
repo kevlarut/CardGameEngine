@@ -1,5 +1,12 @@
-$cardWidth: 125px;
+$cardWidth: 165px;
 $cardHeight: $cardWidth * 1.4;
+$cardBorderRadius: 10px;
+$cardFontSize: 20px;
+$cardMargin: 10px;
+$cardPadding: 20px;
+
+$lightGray: #ccc;
+$mediumGray: #888;
 
 @import 'icons';
 
@@ -9,6 +16,7 @@ $cardHeight: $cardWidth * 1.4;
 
 html, body {
 	background: #333;
+	line-height: normal;
 	margin: 0;
 	padding: 0;
 }
@@ -17,6 +25,7 @@ button {
 	background: #fb5;
 	border: none;
 	border-radius: 10px;
+	color: #333;
 	font-weight: bold;
 	padding: 10px;
 	
@@ -26,16 +35,20 @@ button {
 	}
 }
 
+select {
+	color: #000;
+}
+
 .card {
 	background: #fff;
 	box-shadow: 5px 5px 10px 0px rgba(0,0,0,0.5);
 	color: #000;
-	font-size: 20px;
+	font-size: $cardFontSize;
 	font-weight: bold;
-	margin: 10px;
-	padding: 20px;
+	margin: $cardMargin;
+	padding: $cardPadding;
 	width: $cardWidth;
-	border-radius: 10px;
+	border-radius: $cardBorderRadius;
 	float: left;
 	height: $cardHeight;
 	text-align: left;
@@ -46,17 +59,15 @@ button {
 		
 	&.clickable:hover {
 		border: 5px solid #fff;
-		margin-bottom: 0;
-		margin-right: 0;
-		transform: translate(-5px, -5px);
+		padding: 15px;
 	}
 
 	.description {
-		font-size: 15px;
+		font-size: $cardFontSize * 0.75;
 		font-weight: normal;
 		border-top: 2px solid #000;
-		margin-top: 10px;
-		padding-top: 10px;
+		margin-top: $cardMargin;
+		padding-top: $cardMargin;
 	}
 
 	&.attack {
@@ -133,8 +144,38 @@ button {
 	}
 }
 
+.faces {
+	.playerSummary {
+		background: $lightGray;
+		color: #333;
+		border-radius: 20px;
+		margin: 10px;
+		padding: 10px;
+		
+		&.inactivePlayer {
+			background: $mediumGray;
+			color: #fff;
+		}
+		
+		.card {
+			height: $cardHeight / 4;
+			width: $cardWidth / 4;
+			border-radius: $cardBorderRadius / 4;
+			font-size: $cardFontSize / 4;
+			margin: $cardMargin / 4;
+			padding: $cardPadding / 4;
+			
+			.description {
+				font-size: $cardFontSize / 6 * 0.75;
+				margin-top: $cardMargin / 4;
+				padding-top: $cardMargin / 4;
+			}
+		}
+	}
+}
+
 .hand {
-	background: #888;
+	background: $mediumGray;
 	border-radius: 20px;
 	margin: 10px;
 	color: #fff;
@@ -157,7 +198,7 @@ button {
 		background: #333;
 		border-radius: 10px;
 		margin: 10px;
-		min-height: 20px;
+		min-height: 60px;
 		padding: 20px;
 		
 		> div {
@@ -185,10 +226,10 @@ button {
 		.playerSummary {
 			border-radius: 5px;
 			float: left;
-			height: 75px;
+			height: $cardHeight / 2;
 			margin: 5px;
 			padding: 10px;
-			width: 100px;
+			width: $cardWidth;
 			
 			 > div {
 				float: none;
@@ -264,6 +305,7 @@ button {
 	top: 0;
 	right: 0;
 	text-align: center;
+	z-index: 1;
 	
 	.card {
 		float: none;

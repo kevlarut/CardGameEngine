@@ -102,6 +102,7 @@
 
 html, body {
   background: #333;
+  line-height: normal;
   margin: 0;
   padding: 0; }
 
@@ -109,11 +110,15 @@ button {
   background: #fb5;
   border: none;
   border-radius: 10px;
+  color: #333;
   font-weight: bold;
   padding: 10px; }
   button:hover {
     background: #fff;
     cursor: pointer; }
+
+select {
+  color: #000; }
 
 .card {
   background: #fff;
@@ -123,18 +128,16 @@ button {
   font-weight: bold;
   margin: 10px;
   padding: 20px;
-  width: 125px;
+  width: 165px;
   border-radius: 10px;
   float: left;
-  height: 175px;
+  height: 231.0px;
   text-align: left; }
   .card > div {
     height: 100%; }
   .card.clickable:hover {
     border: 5px solid #fff;
-    margin-bottom: 0;
-    margin-right: 0;
-    transform: translate(-5px, -5px); }
+    padding: 15px; }
   .card .description {
     font-size: 15px;
     font-weight: normal;
@@ -183,6 +186,27 @@ button {
   .card .effects {
     font-size: 0.75em; }
 
+.faces .playerSummary {
+  background: #ccc;
+  color: #333;
+  border-radius: 20px;
+  margin: 10px;
+  padding: 10px; }
+  .faces .playerSummary.inactivePlayer {
+    background: #888;
+    color: #fff; }
+  .faces .playerSummary .card {
+    height: 57.75px;
+    width: 41.25px;
+    border-radius: 2.5px;
+    font-size: 5px;
+    margin: 2.5px;
+    padding: 5px; }
+    .faces .playerSummary .card .description {
+      font-size: 2.5px;
+      margin-top: 2.5px;
+      padding-top: 2.5px; }
+
 .hand {
   background: #888;
   border-radius: 20px;
@@ -200,7 +224,7 @@ button {
     background: #333;
     border-radius: 10px;
     margin: 10px;
-    min-height: 20px;
+    min-height: 60px;
     padding: 20px; }
     .hand .playerSummary > div {
       float: left;
@@ -217,10 +241,10 @@ button {
     .hand.inactivePlayer .playerSummary {
       border-radius: 5px;
       float: left;
-      height: 75px;
+      height: 115.5px;
       margin: 5px;
       padding: 10px;
-      width: 100px; }
+      width: 165px; }
       .hand.inactivePlayer .playerSummary > div {
         float: none;
         margin-right: 0; }
@@ -228,10 +252,10 @@ button {
       border-radius: 5px;
       box-shadow: 2.5px 2.5px 5px 0px rgba(0, 0, 0, 0.5);
       font-size: 10px;
-      height: 87.5px;
+      height: 115.5px;
       margin: 5px;
       padding: 10px;
-      width: 62.5px; }
+      width: 82.5px; }
       .hand.inactivePlayer .card.clickable:hover {
         border: 2.5px solid #fff;
         margin-bottom: 0;
@@ -274,7 +298,8 @@ button {
   position: absolute;
   top: 0;
   right: 0;
-  text-align: center; }
+  text-align: center;
+  z-index: 1; }
   .playArea .card {
     float: none; }
 

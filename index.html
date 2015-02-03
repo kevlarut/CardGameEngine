@@ -4,6 +4,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Card Game</title>
 	
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
 	<link rel="stylesheet" type="text/css" href="css/main.css" />
 	
 	<script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
@@ -47,78 +48,102 @@
 					<button ng-click="inputService.handleTextInput(attackService)">Go</button>
 				</div>
 				
-			</div>
-			<div class="playArea" ng-show="cardExecutionService.card">
-				<div ng-repeat="card in [cardExecutionService.card]" ng-class="['card', card.type]">
-					<div class="slide-animate" ng-include src="'card.html'"></div>
-				</div>
-				<button ng-click="cancelActiveCard()" ng-show="cardExecutionService.cancellable">Cancel</button>
-				<button ng-click="discardActiveCard()" ng-show="cardExecutionService.card.type != 'oldmaid' && cardExecutionService.cancellable">Discard</button>
-				<div class="clear"></div>
-			</div>
-			
-			<div ng-repeat="player in playerData.players" ng-class="{hand:true, inactivePlayer:!$first, dead:player.isDead}">
-				<div ng-class="{playerSummary: true, clickable: !$first}" ng-click="clickPlayer(player)">
-					<div><b>{{player.name}}</b></div>
-					<div ng-show="!player.isDead">Hit points: {{player.hitPoints}}</div>
-					<div ng-show="!player.isDead && enableVictoryPoints()">Victory pts.: {{player.victoryPoints}}</div>
-					<div ng-show="$first">Actions remaining: {{gameService.actions < 0 ? 0 : gameService.actions}}</div>
-					<div ng-show="$first && enableManaPoints()">Mana: {{gameService.mana}}</div>
-			
-					<div class="actionButtons" ng-show="$first">
-						<button ng-click="gameService.recycleHand()" ng-show="gameService.isHandRecyclingAllowed()">Recycle hand</button>
-						<button ng-click="gameService.nextTurn()">Next turn</button>
+				<div class="playArea" ng-show="cardExecutionService.card">
+					<div ng-repeat="card in [cardExecutionService.card]" ng-class="['card', card.type]">
+						<div class="slide-animate" ng-include src="'card.html'"></div>
 					</div>
-			
+					<button ng-click="cancelActiveCard()" ng-show="cardExecutionService.cancellable">Cancel</button>
+					<button ng-click="discardActiveCard()" ng-show="cardExecutionService.card.type != 'oldmaid' && cardExecutionService.cancellable">Discard</button>
 					<div class="clear"></div>
 				</div>
 				
-				<script type="text/ng-template" id="card.html">
-					<div class="text">
-						{{card.title}}
-						<div class="description">{{card.description}}</div>
-						<div class="effects">
-							<div ng-repeat="effect in card.effects">
-								<span ng-class="'icon-' + effect.effect"></span>
-								<span>x {{effect.magnitude}} vs. {{effect.target}}</span>
+			</div>
+			
+			<div class="row">
+				<div class="col-md-2 faces">
+				
+					<div ng-repeat="player in playerData.players" ng-class="{inactivePlayer:!$first, dead:player.isDead, playerSummary: true, clickable: true}" ng-click="clickPlayer(player)">
+						<div><b>{{player.name}}</b></div>
+						<div ng-show="!player.isDead">Hit points: {{player.hitPoints}}</div>
+						<div ng-show="!player.isDead && enableVictoryPoints()">Victory pts.: {{player.victoryPoints}}</div>
+												
+						<div class="equippedCards" ng-show="player.equippedCards.length">
+							<div ng-repeat="card in player.equippedCards track by $index">					
+								<div class="slide-animate" ng-include src="'equipped-card.html'"></div>
 							</div>
-							<div ng-repeat="effect in card.modifierEffects">
-								<span ng-class="'icon-power'"></span>
-								<span>{{effect.effect}} {{effect.magnitude}}</span>
-								<span ng-show="effect.target">to {{effect.target}}</span>
-							</div>
-							<div ng-repeat="effect in card.reactionEffects">
-								<span>Reaction:</span>
-								<span ng-class="'icon-' + effect.effect"></span>
-							</div>
+							<div class="clear"></div>
 						</div>
+						
 					</div>
-					<div class="backOfCard">
-						{{gameService.game.name}}
-					</div>
-				</script>
-				<script type="text/ng-template" id="clickable-card.html">
-					<div ng-class="['card', cardService.canClickCard(card) ? 'clickable' : null, card.type, !$parent.$parent.$first ? 'faceDown' : null]" ng-click="cardService.canClickCard(card) ? clickCard(card, player) : null">
-						<div class="slide-animate" ng-include src="'card.html'"></div>
-					</div>
-				</script>
-				<script type="text/ng-template" id="equipped-card.html">
-					<div ng-class="['card', card.type, !$parent.$parent.$first && card.type != 'keep' ? 'faceDown' : null]">
-						<div class="slide-animate" ng-include src="'card.html'"></div>
-					</div>
-				</script>
-				<div ng-repeat="card in player.hand track by $index">
-					<div class="slide-animate" ng-include src="'clickable-card.html'"></div>
+					
 				</div>
-				
-				<div class="equippedCards" ng-show="player.equippedCards.length">
-					<div ng-repeat="card in player.equippedCards track by $index">					
-						<div class="slide-animate" ng-include src="'equipped-card.html'"></div>
+				<div class="col-md-10">
+					
+					<div ng-repeat="player in playerData.players" ng-class="{hand:true, inactivePlayer:!$first, dead:player.isDead}">
+						<div ng-class="{playerSummary: true, clickable: !$first}" ng-click="clickPlayer(player)">
+							<div><b>{{player.name}}</b></div>
+							<div ng-show="!player.isDead">Hit points: {{player.hitPoints}}</div>
+							<div ng-show="!player.isDead && enableVictoryPoints()">Victory pts.: {{player.victoryPoints}}</div>
+							<div ng-show="$first">Actions remaining: {{gameService.actions < 0 ? 0 : gameService.actions}}</div>
+							<div ng-show="$first && enableManaPoints()">Mana: {{gameService.mana}}</div>
+					
+							<div class="actionButtons" ng-show="$first">
+								<button ng-click="gameService.recycleHand()" ng-show="gameService.isHandRecyclingAllowed()">Recycle hand</button>
+								<button ng-click="gameService.nextTurn()">Next turn</button>
+							</div>
+					
+							<div class="clear"></div>
+						</div>
+						
+						<script type="text/ng-template" id="card.html">
+							<div class="text">
+								{{card.title}}
+								<div class="description">{{card.description}}</div>
+								<div class="effects">
+									<div ng-repeat="effect in card.effects">
+										<span ng-class="'icon-' + effect.effect"></span>
+										<span>x {{effect.magnitude}} vs. {{effect.target}}</span>
+									</div>
+									<div ng-repeat="effect in card.modifierEffects">
+										<span ng-class="'icon-power'"></span>
+										<span>{{effect.effect}} {{effect.magnitude}}</span>
+										<span ng-show="effect.target">to {{effect.target}}</span>
+									</div>
+									<div ng-repeat="effect in card.reactionEffects">
+										<span>Reaction:</span>
+										<span ng-class="'icon-' + effect.effect"></span>
+									</div>
+								</div>
+							</div>
+							<div class="backOfCard">
+								{{gameService.game.name}}
+							</div>
+						</script>
+						<script type="text/ng-template" id="clickable-card.html">
+							<div ng-class="['card', cardService.canClickCard(card) ? 'clickable' : null, card.type, !$parent.$parent.$first ? 'faceDown' : null]" ng-click="cardService.canClickCard(card) ? clickCard(card, player) : null">
+								<div class="slide-animate" ng-include src="'card.html'"></div>
+							</div>
+						</script>
+						<script type="text/ng-template" id="equipped-card.html">
+							<div ng-class="['card', card.type, !$parent.$parent.$first && card.type != 'keep' ? 'faceDown' : null]">
+								<div class="slide-animate" ng-include src="'card.html'"></div>
+							</div>
+						</script>
+						<div ng-repeat="card in player.hand track by $index">
+							<div class="slide-animate" ng-include src="'clickable-card.html'"></div>
+						</div>
+						
+						<div class="equippedCards" ng-show="player.equippedCards.length">
+							<div ng-repeat="card in player.equippedCards track by $index">					
+								<div class="slide-animate" ng-include src="'equipped-card.html'"></div>
+							</div>
+							<div class="clear"></div>
+						</div>
+						
+						<div class="clear"></div>
 					</div>
-					<div class="clear"></div>
-				</div>
 				
-				<div class="clear"></div>
+				</div>
 			</div>
 		
 		</div>
