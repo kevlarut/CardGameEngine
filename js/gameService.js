@@ -74,47 +74,7 @@ gameApp.service('gameService', function(deckRepository, deckService, gameData, p
 		return true;
 	}
 	
-	this.damagePlayer = function(player, damage, modifierCard) {
-	
-		if (modifierCard) {
-			if (modifierCard.modifierEffects) {
-				for (var i = 0; i < modifierCard.modifierEffects.length; i++) {
-					var effect = modifierCard.modifierEffects[i];
-					if (this.isModifierEffectApplicableToPlayer(effect, player)) {
-						switch(effect.effect) {
-							case '+':
-								damage += effect.magnitude;
-								break;
-							case 'x':				
-								damage *= effect.magnitude;
-								break;
-							case 'unblockable':
-								break;
-							default:
-								console.log('ERROR: Modifier effect ' + effect.effect + ' is not implemented.');
-								break;
-						}
-					}
-				}
-			}
-			else if (modifierCard.effect) {
-				switch(modifierCard.effect) {
-					case '+':				
-						damage += modifierCard.magnitude;
-						break;
-					case 'x':				
-						damage *= modifierCard.magnitude;
-						break;
-					default:
-						console.log('ERROR: Modifier card effect ' + modifierCard.effect + ' is not implemented.');
-						break;
-				}
-			}
-			else {
-				console.log('ERROR: Modifier card has neither effect nor modifierEffects!');
-			}
-		}
-	
+	this.damagePlayer = function(player, damage) {		
 		if (damage > 0) {
 			this.hurtPlayer(player, damage);		
 			this.applyMagnetDamageIfApplicable();

@@ -37,7 +37,8 @@
 .icon-diamonds:before {
   content: "\e919"; }
 
-.icon-deck:before {
+.icon-deck:before,
+.icon-draw:before {
   content: "\e92e"; }
 
 .icon-coin-dollar:before {
@@ -70,7 +71,7 @@
 .icon-target:before {
   content: "\e9b3"; }
 
-.icon-shield:before {
+.icon-block:before {
   content: "\e9b4"; }
 
 .icon-power:before {
@@ -91,7 +92,7 @@
 .icon-plus:before {
   content: "\ea0a"; }
 
-.icon-block:before {
+.icon-cancel:before {
   content: "\ea0d"; }
 
 .icon-deflect:before {

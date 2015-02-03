@@ -396,7 +396,7 @@ gameApp.service('gameData', function() {
 							magnitude: 1
 						}],
 						flavors: ['Let\'s split this banana split.', 'This is just too much for me to eat all by myself.', 'Let\'s do a Ladies\' Lunch.', 'We eat everything together, like conjoined twin sisters.', 'Share and Share Alike', 'Will you split this with me?', 'This looks soooo good.  Want to try it with me?', 'I bought us some chocolate and a rom-com DVD.'],
-						quantity: 8
+						quantity: 5
 					},
 					{
 						type: 'attack',
@@ -552,6 +552,29 @@ gameApp.service('gameData', function() {
 						title: 'Feeding Frenzy',
 						description: 'You get +2 actions.',
 						actions: 3,
+						quantity: 1
+					},	
+					{
+						type: 'draw',
+						title: 'Draw 3',
+						description: 'Draw 3 cards.',
+						effects: [{
+							effect: 'draw',
+							target: 'self',
+							magnitude: 3
+						}],
+						actions: 1,
+						flavors: ['All you can eat buffet', 'Smorgasbord', 'Cafeteria'],
+						quantity: 10 //2
+					},
+					{
+						type: 'heal',
+						title: 'Vomit',
+						effects: [{
+							effect: 'heal',
+							target: 'self',
+							magnitude: 1
+						}],
 						quantity: 1
 					},	
 				]

@@ -1,8 +1,13 @@
 var gameApp = angular.module('gameApp');
 
-gameApp.service('cardService', function(playerService) {
+gameApp.service('cardService', function(gameService, playerService) {
 
-	this.canClickCard = function(card) {		
+	this.canClickCard = function(card) {
+	
+		if (gameService.actions == 0) {
+			return false;
+		}
+	
 		var activePlayerId = playerService.getActivePlayerId();
 		if (card.playerId != activePlayerId) {
 			return false;

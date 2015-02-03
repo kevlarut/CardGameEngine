@@ -1,51 +1,21 @@
 var gameApp = angular.module('gameApp');
 
 gameApp.service('attackService', function(callbacks, deckService, gameService, playerService, userInterface) {
-		
-	this.attack = function(card, target, attacker, modifierCard) {		
-		
-		var attackWasBlockedByAttacker = false;
-		var attackWasBlockedByTarget = false;
 			
-		this.playAllApplicableTrapCards(target, attacker);
-	
-		if (!modifierCard || modifierCard.effect != 'unblockable')
-		{
-			var attackWasBlockedByTarget = this.spendCardToBlockAttackIfPossible(target).blocked;	
-			
-			if (typeof card.attackerDamage != 'undefined' && !attackWasBlockedByAttacker) {
-				var attackWasBlockedByAttacker = this.spendCardToBlockAttackIfPossible(attacker).blocked;
-			}		
-		}
-
-		if (!attackWasBlockedByTarget) {			
-			gameService.damagePlayer(target, card.targetDamage, modifierCard);
-		}
-		
-		if (typeof card.attackerDamage != 'undefined' && !attackWasBlockedByAttacker) {
-			gameService.damagePlayer(attacker, card.attackerDamage, modifierCard);
-		}
-		
-		this.endAttack(card);
-	}
-	
 	this.endAttack = function(card) {
 		deckService.discard(card);
 		gameService.activeCard = null;
 		userInterface.instructions = null;
 	}
 		
-	this.playAllApplicableTrapCards = function(defender, attacker) {
-	
-		console.log('defender = ' + defender + '; defender.equippedCards = ' + defender.equippedCards);
-	
+	this.playAllApplicableTrapCards = function(defender, attacker) {	
 		var applicableTrapCards = defender.equippedCards.filter(function(card) {
 			return card.type === 'trap';
 		});
 		applicableTrapCards.forEach(function(card) {
 			switch (card.effect) {
 				case 'damage':
-					gameService.damagePlayer(attacker, card.magnitude, null);
+					gameService.damagePlayer(attacker, card.magnitude);
 					break;
 				default:
 					console.log('ERROR: Effect type "' + card.effect + '" is not implemented for trap cards.');

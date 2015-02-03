@@ -90,94 +90,28 @@ gameApp.controller('gameController',
 		$scope.clearActiveCard();
 	}
 	
-	$scope.playCard = function(card, player, modifierCard) {	
-		if (card.effects) {
-			cardExecutionService.playCard(card, player, modifierCard);	
-		}
-		else if (card.modifierEffects) {
-			cardExecutionService.playModifierCard(card, player);
-		}
-		else if (card.equippable) {		
-			if (card.target) {
-				targetingService.getTargetPlayer(function(target) {
-					$scope.equipCard(card, target);
-				});
+	$scope.playCard = function(card, player, modifierCard) {
+		if (gameService.actions > 0) {
+			if (card.effects) {
+				cardExecutionService.playCard(card, player, modifierCard);	
 			}
-			else {
-				$scope.equipCard(card, player);
+			else if (card.modifierEffects) {
+				cardExecutionService.playModifierCard(card, player);
 			}
-		}
-		else {
-			console.log('ERROR: I do not know how to play this card.');
-		}
-		/*
-			var index = player.hand.indexOf(card);
-			player.hand.splice(index, 1);
-			gameService.activeCard = card;
-				
-			if (gameService.actions > 0 && gameService.areManaRequirementsMet(card)) {						
-				switch (card.type) {
-					case 'attack':
-						var attackCallback = function(target) {
-							attackService.attack(card, target, player, modifierCard);
-						};
-						
-						switch (card.target) {					
-							case 'single':
-								userInterface.instructions ='Click on a player to target.';
-								targetingService.getTargetPlayer(attackCallback);
-								break;
-							case 'all-save-self':
-								targetingService.applyCardToAllPlayersExceptActivePlayer(attackCallback);
-								break;
-							case 'adjacent':
-								targetingService.applyCardToAdjacentPlayers(attackCallback);
-								break;
-							default:
-								console.log('ERROR: Target type "' + card.target + '" is not implemented.');
-								break;
-						}
-						break;
-					case 'defend':
-					case 'heal':
-						$scope.heal(card, player, modifierCard);
-						break;
-					case 'draw':
-						$scope.draw(card, player, modifierCard, 'main');
-						break;
-					case 'keep':
-					case 'trap':
-						if (card.target) {
-							targetingService.getTargetPlayer(function(target) {
-								$scope.equipCard(card, target);
-							});
-						}
-						else {
-							$scope.equipCard(card, player);
-						}
-						break;
-					case 'mana':
-						$scope.accumulateMana(card, modifierCard);
-						break;
-					case 'oldmaid':
-						break;
-					case 'victory':
-						$scope.playVictoryCard(card, modifierCard, player);
-						break;
-					default:
-						console.log('ERROR: Card type "' + card.type + '" is not implemented.');
-						break;
+			else if (card.equippable) {		
+				if (card.target) {
+					targetingService.getTargetPlayer(function(target) {
+						$scope.equipCard(card, target);
+					});
+				}
+				else {
+					$scope.equipCard(card, player);
 				}
 			}
-			
-			if (card.actions) {
-				gameService.actions += card.actions;
+			else {
+				console.log('ERROR: I do not know how to play this card.');
 			}
-			
-			if (card.type != 'modifier' && card.type != 'mana') {
-				gameService.actions--;
-			}
-		}	*/	
+		}
 	}
 	
 	$scope.playVictoryCard = function(card, modifierCard, player) {
@@ -204,12 +138,6 @@ gameApp.controller('gameController',
 				$scope.playCard(card, player);
 			}
 		}
-	}
-	
-	$scope.heal = function(card, player, modifierCard) {
-		healService.heal(card.magnitude, player, modifierCard);
-		deckService.discard(card);
-		$scope.clearActiveCard();
 	}
 	
 	$scope.clickPlayer = function(player) {
