@@ -1,6 +1,6 @@
 var gameApp = angular.module('gameApp');
 
-gameApp.service('gameService', function(deckRepository, deckService, gameData, playerData, playerService, userInterface) {
+gameApp.service('gameService', function(deckRepository, deckService, drawService, gameData, playerData, playerService, userInterface) {
 	
 	this.actions = 0;
 	this.game = null;
@@ -50,7 +50,7 @@ gameApp.service('gameService', function(deckRepository, deckService, gameData, p
 			if (draw) {
 				for (var i = 0; i < draw.length; i++) {
 					var directive = draw[i];
-					playerService.draw(player, directive.deck, directive.quantity);
+					drawService.draw(player, directive.deck, directive.quantity);
 				}
 			}
 		}		
@@ -150,7 +150,7 @@ gameApp.service('gameService', function(deckRepository, deckService, gameData, p
 		
 		for (var i = 0; i < this.game.drawUponNewTurn.length; i++) {
 			var draw = this.game.drawUponNewTurn[i];
-			playerService.draw(player, draw.deck, draw.quantity);
+			drawService.draw(player, draw.deck, draw.quantity);
 		}
 		
 		this.actions = 2;
@@ -174,7 +174,7 @@ gameApp.service('gameService', function(deckRepository, deckService, gameData, p
 		var initialDraw = this.game.initialDraw;
 		for (var i = 0; i < initialDraw.length; i++) {
 			var directive = initialDraw[i];
-			playerService.draw(player, directive.deck, directive.quantity);
+			drawService.draw(player, directive.deck, directive.quantity);
 		}
 	}
 	

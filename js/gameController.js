@@ -1,8 +1,8 @@
 var gameApp = angular.module('gameApp');
 
 gameApp.controller('gameController', 
-	['$scope', '$timeout', 'attackService', 'callbacks', 'cardExecutionService', 'cardService', 'deckService', 'gameData', 'gameService', 'healService', 'inputService', 'playerData', 'playerService', 'targetingService', 'userInterface', 
-	function($scope, $timeout, attackService, callbacks, cardExecutionService, cardService, deckService, gameData, gameService, healService, inputService, playerData, playerService, targetingService, userInterface) {
+	['$scope', '$timeout', 'attackService', 'callbacks', 'cardExecutionService', 'cardService', 'deckService', 'drawService', 'gameData', 'gameService', 'healService', 'inputService', 'playerData', 'playerService', 'targetingService', 'userInterface', 
+	function($scope, $timeout, attackService, callbacks, cardExecutionService, cardService, deckService, drawService, gameData, gameService, healService, inputService, playerData, playerService, targetingService, userInterface) {
  		
 	$scope.attackService = attackService;
 	$scope.cardExecutionService = cardExecutionService,
@@ -80,11 +80,11 @@ gameApp.controller('gameController',
 		
 		if (typeof card.target != 'undefined' && card.target == 'everyone') {
 			playerData.players.forEach(function(player) {
-				playerService.draw(player, deckName, cardsToDraw);
+				drawService.draw(player, deckName, cardsToDraw);
 			});
 		}
 		else {
-			playerService.draw(player, deckName, cardsToDraw);
+			drawService.draw(player, deckName, cardsToDraw);
 		}
 		
 		$scope.clearActiveCard();

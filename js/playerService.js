@@ -22,14 +22,6 @@ gameApp.service('playerService', function(deckService, playerData) {
 		var index = player.equippedCards.indexOf(card);
 		player.equippedCards.splice(index, 1);
 	}
-
-	this.draw = function(player, deckName, numberOfCardsToDraw) {
-		var cards = deckService.draw(deckName, numberOfCardsToDraw);
-		cards.forEach(function(card) {
-			card.playerId = player.id;
-		});
-		player.hand = player.hand.concat(cards);
-	}
 	
 	this.getActivePlayerId = function() {
 		return playerData.players[0].id;

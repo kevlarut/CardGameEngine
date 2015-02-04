@@ -565,7 +565,7 @@ gameApp.service('gameData', function() {
 						}],
 						actions: 1,
 						flavors: ['All you can eat buffet', 'Smorgasbord', 'Cafeteria'],
-						quantity: 10 //2
+						quantity: 2
 					},
 					{
 						type: 'heal',
