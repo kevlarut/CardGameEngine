@@ -5,32 +5,35 @@ gameApp.service('cardExecutionService', function(attackService, cardService, dra
 	this.card = null;
 	this.cancellable = true;
 			
+	var self = this;
+			
 	this.applyEffect = function(effects, index, targetOrTargets, modifierCard, service) {
 	
-		this.cancellable = false;
+		var disposalCallback = function() {
+			self.disposeCard();
+		};
+	
+		self.cancellable = false;
 		if (Array.isArray(targetOrTargets)) {
-			for (var i = 0; i < targetOrTargets.length; i++) {
-				var dispose = (i == targetOrTargets.length - 1);
-				service.applyEffectOnSingleTarget(effects, index, targetOrTargets[i], modifierCard, service, dispose);
-			}
+			applyEffectsOnMultipleTargets(targetOrTargets, disposalCallback, effects, index, modifierCard, service);
 		}
 		else {
-			service.applyEffectOnSingleTarget(effects, index, targetOrTargets, modifierCard, service, true);
+			service.applyEffectsOnSingleTarget(effects, index, targetOrTargets, modifierCard, service, disposalCallback);
 		}
 	}
 	
-	this.applyEffectOnSingleTarget = function(effects, index, target, modifierCard, service, disposeAfterwards) {
+	this.applyEffectsOnSingleTarget = function(effects, index, target, modifierCard, service, disposalCallback) {
 	
 		var effect = effects[index];
 		
 		var result = effectService.executeSingleEffect(effect, target, modifierCard);
 		
-		if (disposeAfterwards) {
+		if (disposalCallback) {
 			if (index == effects.length - 1) {
-				this.disposeCard();
+				disposalCallback();
 			}
 			else {
-				targetAndExecute(effects, index + 1, modifierCard, service, disposeAfterwards);
+				targetAndExecute(effects, index + 1, modifierCard, service);
 			}		
 		}
 				
@@ -43,18 +46,18 @@ gameApp.service('cardExecutionService', function(attackService, cardService, dra
 	}
 		
 	this.disposeCard = function() {
-		if (this.card) {
-			deckService.discard(this.card);
-			this.card = null;
+		if (self.card) {
+			deckService.discard(self.card);
+			self.card = null;
 			userInterface.instructions = null;
 			clearCallbacks();
-			this.cancellable = true;
+			self.cancellable = true;
 		}
 	}
 		
 	this.playCard = function(card, player, modifierCard) {
 		
-		this.card = card;
+		self.card = card;
 		targetingService.prohibitedTargetPlayerIds = [];
 		var index = player.hand.indexOf(card);
 		player.hand.splice(index, 1);
@@ -77,7 +80,7 @@ gameApp.service('cardExecutionService', function(attackService, cardService, dra
 	}
 	
 	this.playModifierCard = function(card, player) {	
-		this.card = card;
+		self.card = card;
 		var index = player.hand.indexOf(card);
 		player.hand.splice(index, 1);
 		
@@ -86,6 +89,13 @@ gameApp.service('cardExecutionService', function(attackService, cardService, dra
 		targetingService.getTargetCard(function(targetCard) {
 			return modifyAndPlayCard(targetCard, card, player, service);
 		});
+	}
+	
+	var applyEffectsOnMultipleTargets = function(targets, disposalCallback, effects, index, modifierCard, service) {
+		for (var i = 0; i < targets.length; i++) {
+			var dispose = (i == targets.length - 1) ? disposalCallback : null;
+			service.applyEffectsOnSingleTarget(effects, index, targets[i], modifierCard, service, dispose);
+		}
 	}
 	
 	var modifyAndPlayCard = function(targetCard, card, player, service) {
