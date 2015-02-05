@@ -569,7 +569,7 @@ gameApp.service('gameData', function() {
 					},
 					{
 						type: 'heal',
-						title: 'Vomit',
+						title: 'Lose weight from catching the flu.',
 						effects: [{
 							effect: 'heal',
 							target: 'self',

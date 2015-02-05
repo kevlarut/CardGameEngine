@@ -2,16 +2,25 @@ var gameApp = angular.module('gameApp');
 
 gameApp.service('targetingService', function(callbacks, playerData, userInterface) {
 	
+	this.prohibitedTargetPlayerIds = [];
+		
+	var self = this;
+	
+	this.getTargetPlayer = function(callback) {
+		userInterface.instructions = 'Click on a player to target.';
+		callbacks.clickPlayerCallback = callback;
+	}
+	
 	this.getTargetPlayers = function(targetType, callback) {
 		switch (targetType) {
 			case 'adjacent':
-				this.applyCardToAdjacentPlayers(callback);
+				applyCardToAdjacentPlayers(callback);
 				break;
 			case 'all':
-				this.applyCardToAllPlayers(callback);
+				applyCardToAllPlayers(callback);
 				break;
 			case 'any':
-				this.getTargetPlayer(callback);
+				self.getTargetPlayer(callback);
 				break;
 			case 'self':
 				callback(playerData.players[0]);
@@ -22,50 +31,61 @@ gameApp.service('targetingService', function(callbacks, playerData, userInterfac
 		}
 	}
 	
-	this.guessCardInDeck = function(deck, callback) {
+	this.isPlayerDeadOrProhibited = function(player) {
+		
+		if (player.isDead) {
+			return true;
+		}
+		
+		for (var i = 0; i < self.prohibitedTargetPlayerIds; i++) {
+			var prohibitedTargetPlayerId = self.prohibitedTargetPlayerIds[i];
+			if (prohibitedTargetPlayerId == player.id) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	var guessCardInDeck = function(deck, callback) {
 		console.log('ERROR: guessCardInDeck is not implemented.');
 		callback(null);
 	}
-		
-	this.getTargetCard = function(callback) {
+
+	var getTargetCard = function(callback) {
 		callbacks.clickCardCallback = callback;
 	}
-		
-	this.getTargetPlayer = function(callback) {
-		userInterface.instructions = 'Click on a player to target.';
-		callbacks.clickPlayerCallback = callback;
-	}
 	
-	this.applyCardToAllPlayers = function(callback) {
+	var applyCardToAllPlayers = function(callback) {
 		var targets = [];
 		for (var i = 0; i < playerData.players.length; i++) {
 			var player = playerData.players[i];
-			if (!player.isDead) {
+			if (!self.isPlayerDeadOrProhibited(player)) {
 				targets.push(player);
 			}
 		}
 		callback(targets);
 	}
 	
-	this.applyCardToAllPlayersExceptActivePlayer = function(callback) {
+	var applyCardToAllPlayersExceptActivePlayer = function(callback) {
 		var targets = [];
 		for (var i = 1; i < playerData.players.length; i++) {
 			var player = playerData.players[i];
-			if (!player.isDead) {
+			if (!self.isPlayerDeadOrProhibited(player)) {
 				targets.push(player);
 			}
 		}
 		callback(targets);
 	}
 	
-	this.applyCardToAdjacentPlayers = function(callback) {
+	var applyCardToAdjacentPlayers = function(callback) {
 		
 		var targets = [];
 		var appliedPlayerIndex = null;
 		
 		for (var i = 1; i < playerData.players.length; i++) {
 			var player = playerData.players[i];
-			if (!player.isDead) {
+			if (!self.isPlayerDeadOrProhibited(player)) {
 				appliedPlayerIndex = i;
 				targets.push(player);
 				break;
@@ -74,7 +94,7 @@ gameApp.service('targetingService', function(callbacks, playerData, userInterfac
 		
 		for (var i = playerData.players.length - 1; i > 0; i--) {
 			var player = playerData.players[i];
-			if (!player.isDead) {
+			if (!self.isPlayerDeadOrProhibited(player)) {
 				if (i == appliedPlayerIndex) {
 					break;
 				}

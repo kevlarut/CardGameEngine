@@ -1,3 +1,21 @@
+@-webkit-keyframes clickMeBabyAnimation {
+  0% {
+    background: #fb5; }
+  50% {
+    background: #ff9; }
+  100% {
+    background: #fb5; } }
+@keyframes clickMeBabyAnimation {
+  0% {
+    background: #fb5; }
+  50% {
+    background: #ff9; }
+  100% {
+    background: #fb5; } }
+.clickMeBaby {
+  -webkit-animation: clickMeBabyAnimation 1s;
+  animation: clickMeBabyAnimation 1s; }
+
 @font-face {
   font-family: 'icomoon';
   src: url("../fonts/icon.eot?-bik6n8");

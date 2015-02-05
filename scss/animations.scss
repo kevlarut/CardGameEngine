@@ -1,0 +1,16 @@
+@-webkit-keyframes clickMeBabyAnimation {
+    0%   {background: $orange;}
+    50% {background: $lightOrange;}
+    100%   {background: $orange;}
+}
+
+@keyframes clickMeBabyAnimation {
+    0%   {background: $orange;}
+    50% {background: $lightOrange;}
+    100%   {background: $orange;}
+}
+
+.clickMeBaby {
+	-webkit-animation: clickMeBabyAnimation 1s;
+    animation: clickMeBabyAnimation 1s;
+}

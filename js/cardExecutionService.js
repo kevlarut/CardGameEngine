@@ -4,7 +4,7 @@ gameApp.service('cardExecutionService', function(attackService, cardService, dra
 	
 	this.card = null;
 	this.cancellable = true;
-		
+			
 	this.applyEffect = function(effects, index, targetOrTargets, modifierCard, service) {
 	
 		this.cancellable = false;
@@ -32,7 +32,7 @@ gameApp.service('cardExecutionService', function(attackService, cardService, dra
 			case 'actions':
 				gameService.actions += magnitude;
 				break;
-			case 'damage':
+			case 'damage':			
 				if (!modifierCard || (!cardService.doesCardContainModifierEffect(modifierCard, 'unblockable') && modifierCard.effect != 'unblockable')) {
 					result = attackService.spendCardToBlockAttackIfPossible(target);					
 				}
@@ -74,6 +74,8 @@ gameApp.service('cardExecutionService', function(attackService, cardService, dra
 			targetAndExecuteDeflection(effect, modifierCard, service);
 		}
 		
+		targetingService.prohibitedTargetPlayerIds.push(target.id);
+		
 	}
 		
 	this.disposeCard = function() {
@@ -89,6 +91,7 @@ gameApp.service('cardExecutionService', function(attackService, cardService, dra
 	this.playCard = function(card, player, modifierCard) {
 		
 		this.card = card;
+		targetingService.prohibitedTargetPlayerIds = [];
 		var index = player.hand.indexOf(card);
 		player.hand.splice(index, 1);
 			

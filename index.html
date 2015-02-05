@@ -90,7 +90,7 @@
 					
 							<div class="actionButtons" ng-show="$first">
 								<button ng-click="gameService.recycleHand()" ng-show="gameService.isHandRecyclingAllowed()">Recycle hand</button>
-								<button ng-click="gameService.nextTurn()">Next turn</button>
+								<button ng-class="{clickMeBaby: gameService.actions == 0}" ng-click="gameService.nextTurn()">Next turn</button>
 							</div>
 					
 							<div class="clear"></div>

@@ -7,7 +7,10 @@ $cardPadding: 20px;
 
 $lightGray: #ccc;
 $mediumGray: #888;
+$lightOrange: #ff9;
+$orange: #fb5;
 
+@import 'animations';
 @import 'icons';
 
 * {
@@ -22,7 +25,7 @@ html, body {
 }
 
 button {
-	background: #fb5;
+	background: $orange;
 	border: none;
 	border-radius: 10px;
 	color: #333;

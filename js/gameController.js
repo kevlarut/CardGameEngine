@@ -141,7 +141,7 @@ gameApp.controller('gameController',
 	}
 	
 	$scope.clickPlayer = function(player) {
-		if (callbacks.clickPlayerCallback != null) {
+		if (callbacks.clickPlayerCallback != null && !targetingService.isPlayerDeadOrProhibited(player)) {
 			userInterface.instructions = null;
 			callbacks.clickPlayerCallback(player);
 		}
