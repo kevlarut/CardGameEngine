@@ -5,6 +5,7 @@ gameApp.controller('gameController',
 	function($scope, $timeout, attackService, callbacks, cardExecutionService, cardService, deckService, drawService, gameData, gameService, healService, inputService, playerData, playerService, targetingService, userInterface) {
  		
 	$scope.attackService = attackService;
+	$scope.callbacks = callbacks,
 	$scope.cardExecutionService = cardExecutionService,
 	$scope.cardService = cardService;
 	$scope.gameData = gameData;
@@ -42,9 +43,7 @@ gameApp.controller('gameController',
 	
 	$scope.clearActiveCard = function() {
 		cardExecutionService.card = null;
-		callbacks.clickCardCallback = null;
-		callbacks.clickPlayerCallback = null;
-		callbacks.textInputCallback = null;
+		callbacks.clearCallbacks();
 	}
 	
 	$scope.equipCard = function(card, target) {
@@ -128,10 +127,12 @@ gameApp.controller('gameController',
 	
 	$scope.clickCard = function(card, player) {
 		if (playerService.isThisTheActivePlayer(player)) {
-			if (callbacks.clickCardCallback) {
-				var result = callbacks.clickCardCallback(card);
+			var callback = callbacks.getCallback('clickCard');
+			if (callback) {
+				var result = callback.func(card);
+				console.log('That action is not valid.  Click on a different card.');
 				if (result) {
-					callbacks.clickCardCallback = null;
+					callbacks.clearCallback('clickCard');
 				}
 			}
 			else if (!cardExecutionService.card) {
@@ -141,14 +142,16 @@ gameApp.controller('gameController',
 	}
 	
 	$scope.clickPlayer = function(player) {
-		if (callbacks.clickPlayerCallback != null && !targetingService.isPlayerDeadOrProhibited(player)) {
-			userInterface.instructions = null;
-			callbacks.clickPlayerCallback(player);
+	
+		var callback = callbacks.getCallback('clickPlayer');
+	
+		if (callback != null && !targetingService.isPlayerDeadOrProhibited(player)) {
+			callback.func(player);
+			callbacks.clearCallback('clickPlayer');
 		}
 	}
 	
 	$scope.startNewGame = function() {
-		//$scope.theNameOfTheGame = 'nice';
 		if ($scope.theNameOfTheGame) {
 			gameService.startNewGame($scope.theNameOfTheGame);	
 		}

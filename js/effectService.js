@@ -82,11 +82,10 @@ gameApp.service('effectService', function(callbacks, cardService, drawService, g
 	}
 	
 	this.targetAndExecuteDeflection = function(effect, modifierCard) {
-		userInterface.instructions = 'Choose a player to deflect to.';
-		callbacks.clearCallbacks();
+		userInterface.instructions = 'Your attack has been deflected.';
 		targetingService.getTargetPlayers('any', function(target) 
 		{
-			callbacks.clearCallbacks();
+			userInterface.instructions = null;
 			self.executeSingleEffect(effect, target, modifierCard);
 		});
 	}

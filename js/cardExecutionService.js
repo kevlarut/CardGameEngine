@@ -50,7 +50,6 @@ gameApp.service('cardExecutionService', function(attackService, cardService, dra
 		var index = player.hand.indexOf(card);
 		player.hand.splice(index, 1);
 		
-		userInterface.instructions = 'Click on the card you want to modify and play.';
 		targetingService.getTargetCard(function(targetCard) {
 			return self.modifyAndPlayCard(targetCard, card, player);
 		});

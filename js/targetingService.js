@@ -6,13 +6,13 @@ gameApp.service('targetingService', function(callbacks, playerData, userInterfac
 		
 	var self = this;
 	
-	this.getTargetCard = function(callback) {
-		callbacks.clickCardCallback = callback;
+	this.getTargetCard = function(callback) {	
+		callbacks.setCallback('clickCard', callback, 'Click on the card you want to modify and play.');
 	}
 	
 	this.getTargetPlayer = function(callback) {
-		userInterface.instructions = 'Click on a player to target.';
-		callbacks.clickPlayerCallback = callback;
+		var message = 'Click on a player to target.';
+		callbacks.setCallback('clickPlayer', callback, message);
 	}
 	
 	this.getTargetPlayers = function(targetType, callback) {

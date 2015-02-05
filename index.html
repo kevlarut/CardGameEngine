@@ -43,8 +43,9 @@
 		
 		<div class="game" ng-show="gameService.game">
 			
-			<div class="instructions" ng-show="userInterface.instructions">
+			<div class="instructions" ng-show="userInterface.instructions || callbacks.getInstructions()">
 				{{userInterface.instructions}}
+				{{callbacks.getInstructions()}}
 				
 				<div ng-show="userInterface.shouldShowTextInput" class="inputContainer">
 					<input ng-model="inputService.textInput" />
