@@ -80,6 +80,45 @@ gameApp.service('effectService', function(attackService, callbacks, drawService,
 		});
 	}
 	
+	this.targetAndExecuteDeflection = function(effect, modifierCard) {
+		userInterface.instructions = 'Choose a player to deflect to.';
+		callbacks.clearCallbacks();
+		targetingService.getTargetPlayers('any', function(target) 
+		{
+			callbacks.clearCallbacks();
+			self.executeSingleEffect(effect, target, modifierCard);
+		});
+	}
+	
+	this.verifyConditionsAndTargetAndExecute = function(effect, conditionMetCallback) {
+					
+		if (effect.condition) {
+			var condition = effect.condition;
+			switch (condition.condition) {
+				case 'guessed-card-exists-in-target-players-hand':					
+					userInterface.instructions = 'Click on the card you want to guess.';
+					targetingService.guessCardInDeck(condition.deck, function(cardName) {
+						console.log('ERROR: The callback for guessCardInDeck needs to compare the cardName to the target player\'s hand, and execute if it exists, or cancel the effect if not.');
+						conditionMetCallback();
+					});
+					break;
+				default:
+					console.log('ERROR: Condition ' + condition.condition + ' is undefined.');
+					break;
+			}
+		}
+		else {
+			conditionMetCallback();
+		}
+	}
+	
+	var applyEffectsOnMultipleTargets = function(targets, disposalCallback, effects, index, modifierCard, targetAcquiredCallback) {
+		for (var i = 0; i < targets.length; i++) {
+			var dispose = (i == targets.length - 1) ? disposalCallback : null;
+			self.applyEffectsOnSingleTarget(effects, index, targets[i], modifierCard, dispose, targetAcquiredCallback);
+		}
+	}
+	
 	var modifyMagnitude = function(effect, modifierCard, player) {
 	
 		var magnitude = effect.magnitude;
@@ -119,22 +158,5 @@ gameApp.service('effectService', function(attackService, callbacks, drawService,
 		}
 		
 		return magnitude;
-	}
-
-	this.targetAndExecuteDeflection = function(effect, modifierCard) {
-		userInterface.instructions = 'Choose a player to deflect to.';
-		callbacks.clearCallbacks();
-		targetingService.getTargetPlayers('any', function(target) 
-		{
-			callbacks.clearCallbacks();
-			self.executeSingleEffect(effect, target, modifierCard);
-		});
-	}
-	
-	var applyEffectsOnMultipleTargets = function(targets, disposalCallback, effects, index, modifierCard, targetAcquiredCallback) {
-		for (var i = 0; i < targets.length; i++) {
-			var dispose = (i == targets.length - 1) ? disposalCallback : null;
-			self.applyEffectsOnSingleTarget(effects, index, targets[i], modifierCard, dispose, targetAcquiredCallback);
-		}
 	}
 });

@@ -26,7 +26,12 @@ gameApp.service('cardExecutionService', function(attackService, cardService, dra
 			
 		if (gameService.actions > 0 && gameService.areManaRequirementsMet(card)) {	
 			if (card.effects) {
-				verifyConditionsAndTargetAndExecute(card.effects, 0, modifierCard);
+			
+				var conditionMetCallback = function() {
+					effectService.targetAndExecute(card.effects, 0, modifierCard, targetAcquiredCallback);
+				}
+			
+				effectService.verifyConditionsAndTargetAndExecute(card.effects[0], conditionMetCallback);
 			}
 		}
 		
@@ -67,28 +72,6 @@ gameApp.service('cardExecutionService', function(attackService, cardService, dra
 		};		
 		self.cancellable = false;			
 		effectService.applyEffect(effects, index, target, modifierCard, disposalCallback, targetAcquiredCallback);
-	}
-	
-	var verifyConditionsAndTargetAndExecute = function(effects, index, modifierCard) {
-					
-		if (effects[index].condition) {
-			var condition = effects[index].condition;
-			switch (condition.condition) {
-				case 'guessed-card-exists-in-target-players-hand':					
-					userInterface.instructions = 'Click on the card you want to guess.';
-					targetingService.guessCardInDeck(condition.deck, function(cardName) {
-						console.log('ERROR: The callback for guessCardInDeck needs to compare the cardName to the target player\'s hand, and execute if it exists, or cancel the effect if not.');
-						effectService.targetAndExecute(effects, 0, modifierCard, targetAcquiredCallback);
-					});
-					break;
-				default:
-					console.log('ERROR: Condition ' + condition.condition + ' is undefined.');
-					break;
-			}
-		}
-		else {
-			effectService.targetAndExecute(effects, 0, modifierCard, targetAcquiredCallback);
-		}
 	}
 	
 });
