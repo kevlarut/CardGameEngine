@@ -6,44 +6,6 @@ gameApp.service('cardExecutionService', function(attackService, cardService, dra
 	this.cancellable = true;
 			
 	var self = this;
-				
-	this.applyEffect = function(effects, index, targetOrTargets, modifierCard) {
-	
-		var disposalCallback = function() {
-			self.disposeCard();
-		};
-	
-		self.cancellable = false;
-		if (Array.isArray(targetOrTargets)) {
-			applyEffectsOnMultipleTargets(targetOrTargets, disposalCallback, effects, index, modifierCard, self);
-		}
-		else {
-			self.applyEffectsOnSingleTarget(effects, index, targetOrTargets, modifierCard, disposalCallback);
-		}
-	}
-	
-	this.applyEffectsOnSingleTarget = function(effects, index, target, modifierCard, disposalCallback) {
-	
-		var effect = effects[index];
-		
-		var result = effectService.executeSingleEffect(effect, target, modifierCard);
-		
-		if (disposalCallback) {
-			if (index == effects.length - 1) {
-				disposalCallback();
-			}
-			else {
-				targetAndExecute(effects, index + 1, modifierCard);
-			}		
-		}
-				
-		if (result.deflected) {
-			effectService.targetAndExecuteDeflection(effect, modifierCard);
-		}
-		
-		targetingService.prohibitedTargetPlayerIds.push(target.id);
-		
-	}
 		
 	this.disposeCard = function() {
 		if (self.card) {
@@ -89,13 +51,6 @@ gameApp.service('cardExecutionService', function(attackService, cardService, dra
 		});
 	}	
 	
-	var applyEffectsOnMultipleTargets = function(targets, disposalCallback, effects, index, modifierCard) {
-		for (var i = 0; i < targets.length; i++) {
-			var dispose = (i == targets.length - 1) ? disposalCallback : null;
-			self.applyEffectsOnSingleTarget(effects, index, targets[i], modifierCard, dispose);
-		}
-	}
-	
 	var modifyAndPlayCard = function(targetCard, card, player) {
 		if (targetCard.type == 'modifier') {
 			return false;
@@ -106,15 +61,16 @@ gameApp.service('cardExecutionService', function(attackService, cardService, dra
 		}
 	}
 		
-	var targetAndExecute = function(effects, index, modifierCard) {
-		callbacks.clearCallbacks();
-		targetingService.getTargetPlayers(effects[index].target, function(target) {
-			self.applyEffect(effects, index, target, modifierCard, true);
-		});
+	var targetAcquiredCallback = function(effects, index, target, modifierCard) {	
+		var disposalCallback = function() {
+			self.disposeCard();
+		};		
+		self.cancellable = false;			
+		effectService.applyEffect(effects, index, target, modifierCard, disposalCallback, targetAcquiredCallback);
 	}
 	
 	var verifyConditionsAndTargetAndExecute = function(effects, index, modifierCard) {
-	
+					
 		if (effects[index].condition) {
 			var condition = effects[index].condition;
 			switch (condition.condition) {
@@ -122,7 +78,7 @@ gameApp.service('cardExecutionService', function(attackService, cardService, dra
 					userInterface.instructions = 'Click on the card you want to guess.';
 					targetingService.guessCardInDeck(condition.deck, function(cardName) {
 						console.log('ERROR: The callback for guessCardInDeck needs to compare the cardName to the target player\'s hand, and execute if it exists, or cancel the effect if not.');
-						targetAndExecute(effects, 0, modifierCard);
+						effectService.targetAndExecute(effects, 0, modifierCard, targetAcquiredCallback);
 					});
 					break;
 				default:
@@ -131,7 +87,7 @@ gameApp.service('cardExecutionService', function(attackService, cardService, dra
 			}
 		}
 		else {
-			targetAndExecute(effects, 0, modifierCard);
+			effectService.targetAndExecute(effects, 0, modifierCard, targetAcquiredCallback);
 		}
 	}
 	

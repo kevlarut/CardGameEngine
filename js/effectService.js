@@ -3,7 +3,39 @@ var gameApp = angular.module('gameApp');
 gameApp.service('effectService', function(attackService, callbacks, drawService, gameService, healService, targetingService, userInterface) {
 
 	var self = this;
+						
+	this.applyEffect = function(effects, index, targetOrTargets, modifierCard, disposalCallback, targetAcquiredCallback) {	
+		if (Array.isArray(targetOrTargets)) {
+			applyEffectsOnMultipleTargets(targetOrTargets, disposalCallback, effects, index, modifierCard, targetAcquiredCallback);
+		}
+		else {
+			self.applyEffectsOnSingleTarget(effects, index, targetOrTargets, modifierCard, disposalCallback, targetAcquiredCallback);
+		}
+	}
+	
+	this.applyEffectsOnSingleTarget = function(effects, index, target, modifierCard, disposalCallback, targetAcquiredCallback) {
+	
+		var effect = effects[index];
 		
+		var result = self.executeSingleEffect(effect, target, modifierCard);
+		
+		if (disposalCallback) {
+			if (index == effects.length - 1) {
+				disposalCallback();
+			}
+			else {
+				self.targetAndExecute(effects, index + 1, modifierCard, targetAcquiredCallback);
+			}		
+		}
+				
+		if (result.deflected) {
+			self.targetAndExecuteDeflection(effect, modifierCard);
+		}
+		
+		targetingService.prohibitedTargetPlayerIds.push(target.id);
+		
+	}
+	
 	this.executeSingleEffect = function(effect, target, modifierCard) {
 	
 		var result = {
@@ -38,6 +70,14 @@ gameApp.service('effectService', function(attackService, callbacks, drawService,
 		}
 		
 		return result;
+	}
+	
+	this.targetAndExecute = function(effects, index, modifierCard, targetAcquiredCallback) {
+		callbacks.clearCallbacks();
+		
+		targetingService.getTargetPlayers(effects[index].target, function(target) {
+			targetAcquiredCallback(effects, index, target, modifierCard);
+		});
 	}
 	
 	var modifyMagnitude = function(effect, modifierCard, player) {
@@ -86,7 +126,15 @@ gameApp.service('effectService', function(attackService, callbacks, drawService,
 		callbacks.clearCallbacks();
 		targetingService.getTargetPlayers('any', function(target) 
 		{
+			callbacks.clearCallbacks();
 			self.executeSingleEffect(effect, target, modifierCard);
 		});
+	}
+	
+	var applyEffectsOnMultipleTargets = function(targets, disposalCallback, effects, index, modifierCard, targetAcquiredCallback) {
+		for (var i = 0; i < targets.length; i++) {
+			var dispose = (i == targets.length - 1) ? disposalCallback : null;
+			self.applyEffectsOnSingleTarget(effects, index, targets[i], modifierCard, dispose, targetAcquiredCallback);
+		}
 	}
 });
