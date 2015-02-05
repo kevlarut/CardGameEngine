@@ -18,6 +18,17 @@ gameApp.service('cardService', function(gameService, playerService) {
 		
 		return false;
 	}
+		
+	this.doesCardContainEffect = function(card, effect) {
+		if (card.reactionEffects) {
+			for (var i = 0; i < card.reactionEffects.length; i++) {
+				if (card.reactionEffects[i].effect == effect) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 	
 	this.doesCardContainModifierEffect = function(card, effect) {
 		if (card.modifierEffects) {

@@ -1,6 +1,6 @@
 var gameApp = angular.module('gameApp');
 
-gameApp.service('effectService', function(attackService, callbacks, drawService, gameService, healService, targetingService, userInterface) {
+gameApp.service('effectService', function(callbacks, cardService, drawService, gameService, healService, reactionService, targetingService, userInterface) {
 
 	var self = this;
 						
@@ -51,7 +51,7 @@ gameApp.service('effectService', function(attackService, callbacks, drawService,
 				break;
 			case 'damage':			
 				if (!modifierCard || (!cardService.doesCardContainModifierEffect(modifierCard, 'unblockable') && modifierCard.effect != 'unblockable')) {
-					result = attackService.spendCardToBlockAttackIfPossible(target);					
+					result = reactionService.spendCardToBlockAttackIfPossible(target);					
 				}
 				if (!result.blocked) {
 					gameService.damagePlayer(target, magnitude);
@@ -69,6 +69,7 @@ gameApp.service('effectService', function(attackService, callbacks, drawService,
 				break;
 		}
 		
+		userInterface.instructions = null;
 		return result;
 	}
 	

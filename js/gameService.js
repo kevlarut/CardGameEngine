@@ -1,11 +1,13 @@
 var gameApp = angular.module('gameApp');
 
-gameApp.service('gameService', function(deckRepository, deckService, drawService, gameData, playerData, playerService, userInterface) {
+gameApp.service('gameService', function(deckRepository, deckService, drawService, gameData, healService, playerData, playerService, userInterface) {
 	
 	this.actions = 0;
 	this.game = null;
 	this.mana = 0;
 	this.handLimit = 8;	
+	
+	var self = this;
 	
 	this.areManaRequirementsMet = function(card) {
 		if (card.cost) {
@@ -148,13 +150,17 @@ gameApp.service('gameService', function(deckRepository, deckService, drawService
 	
 		var player = playerData.players[0];
 		
-		for (var i = 0; i < this.game.drawUponNewTurn.length; i++) {
-			var draw = this.game.drawUponNewTurn[i];
+		if (self.game.addHitPointsPerTurn) {
+			healService.heal(self.game.addHitPointsPerTurn, player);
+		}
+		
+		for (var i = 0; i < self.game.drawUponNewTurn.length; i++) {
+			var draw = self.game.drawUponNewTurn[i];
 			drawService.draw(player, draw.deck, draw.quantity);
 		}
 		
-		this.actions = 2;
-		this.mana = 0;
+		self.actions = 2;
+		self.mana = 0;
 		
 		for (var i = 0; i < player.equippedCards.length; i++) {
 			var card = player.equippedCards[0];
@@ -226,5 +232,9 @@ gameApp.service('gameService', function(deckRepository, deckService, drawService
 			this.game = null;
 		}
 	}
+	
+	// var targetAcquiredCallback = function(effects, index, target, modifierCard) {	
+		// effectService.applyEffect(effects, index, target, modifierCard, null, targetAcquiredCallback);
+	// }
 	
 });

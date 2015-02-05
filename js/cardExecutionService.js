@@ -52,11 +52,11 @@ gameApp.service('cardExecutionService', function(attackService, cardService, dra
 		
 		userInterface.instructions = 'Click on the card you want to modify and play.';
 		targetingService.getTargetCard(function(targetCard) {
-			return modifyAndPlayCard(targetCard, card, player);
+			return self.modifyAndPlayCard(targetCard, card, player);
 		});
 	}	
 	
-	var modifyAndPlayCard = function(targetCard, card, player) {
+	this.modifyAndPlayCard = function(targetCard, card, player) {
 		if (targetCard.type == 'modifier') {
 			return false;
 		}

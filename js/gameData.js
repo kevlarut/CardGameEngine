@@ -364,8 +364,9 @@ gameApp.service('gameData', function() {
 		{
 			name: 'Fat Bridesmaids',
 			allowHandRecycling: false,
-			initialHitPoints: 10,
+			initialHitPoints: 5,
 			initialDraw: [{deck: 'main', quantity: 5}],
+			addHitPointsPerTurn: 1,
 			drawUponNewTurn: [{deck: 'main', quantity: 2}],
 			playerNames: ['Tiny Tina', 'Slender Susan', 'Competitive Cathy', 'Plump Pamela', 'Fat Francine'],
 			decks: [{

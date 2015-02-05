@@ -1,9 +1,15 @@
 var gameApp = angular.module('gameApp');
 
-gameApp.service('healService', function(userInterface) {
+gameApp.service('healService', function() {
 
 	this.heal = function(magnitude, player) {
-		player.hitPoints += magnitude;
-		userInterface.instructions = null;
+	
+		var maximumHitPoints = 10;
+		var newHitPoints = player.hitPoints + magnitude;
+		if (newHitPoints > maximumHitPoints) {
+			newHitPoints = maximumHitPoints;
+		}
+	
+		player.hitPoints = newHitPoints;
 	}
 });

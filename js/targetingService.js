@@ -6,6 +6,10 @@ gameApp.service('targetingService', function(callbacks, playerData, userInterfac
 		
 	var self = this;
 	
+	this.getTargetCard = function(callback) {
+		callbacks.clickCardCallback = callback;
+	}
+	
 	this.getTargetPlayer = function(callback) {
 		userInterface.instructions = 'Click on a player to target.';
 		callbacks.clickPlayerCallback = callback;
@@ -50,10 +54,6 @@ gameApp.service('targetingService', function(callbacks, playerData, userInterfac
 	var guessCardInDeck = function(deck, callback) {
 		console.log('ERROR: guessCardInDeck is not implemented.');
 		callback(null);
-	}
-
-	var getTargetCard = function(callback) {
-		callbacks.clickCardCallback = callback;
 	}
 	
 	var applyCardToAllPlayers = function(callback) {
