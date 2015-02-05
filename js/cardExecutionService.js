@@ -38,7 +38,7 @@ gameApp.service('cardExecutionService', function(attackService, cardService, dra
 		}
 				
 		if (result.deflected) {
-			targetAndExecuteDeflection(effect, modifierCard);
+			effectService.targetAndExecuteDeflection(effect, modifierCard);
 		}
 		
 		targetingService.prohibitedTargetPlayerIds.push(target.id);
@@ -50,7 +50,7 @@ gameApp.service('cardExecutionService', function(attackService, cardService, dra
 			deckService.discard(self.card);
 			self.card = null;
 			userInterface.instructions = null;
-			clearCallbacks();
+			callbacks.clearCallbacks();
 			self.cancellable = true;
 		}
 	}
@@ -105,26 +105,11 @@ gameApp.service('cardExecutionService', function(attackService, cardService, dra
 			return true;
 		}
 	}
-	
-	var clearCallbacks = function() {	
-		callbacks.clickCardCallback = null;
-		callbacks.clickPlayerCallback = null;
-		callbacks.textInputCallback = null;
-	}
 		
 	var targetAndExecute = function(effects, index, modifierCard) {
-		clearCallbacks();
+		callbacks.clearCallbacks();
 		targetingService.getTargetPlayers(effects[index].target, function(target) {
 			self.applyEffect(effects, index, target, modifierCard, true);
-		});
-	}
-	
-	var targetAndExecuteDeflection = function(effect, modifierCard) {
-		userInterface.instructions = 'Choose a player to deflect to.';
-		clearCallbacks();
-		targetingService.getTargetPlayers('any', function(target) 
-		{
-			effectService.executeSingleEffect(effect, target, modifierCard);
 		});
 	}
 	

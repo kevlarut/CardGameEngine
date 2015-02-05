@@ -1,6 +1,6 @@
 var gameApp = angular.module('gameApp');
 
-gameApp.service('effectService', function(attackService, drawService, gameService, healService) {
+gameApp.service('effectService', function(attackService, callbacks, drawService, gameService, healService, targetingService, userInterface) {
 
 	var self = this;
 		
@@ -79,5 +79,14 @@ gameApp.service('effectService', function(attackService, drawService, gameServic
 		}
 		
 		return magnitude;
+	}
+
+	this.targetAndExecuteDeflection = function(effect, modifierCard) {
+		userInterface.instructions = 'Choose a player to deflect to.';
+		callbacks.clearCallbacks();
+		targetingService.getTargetPlayers('any', function(target) 
+		{
+			self.executeSingleEffect(effect, target, modifierCard);
+		});
 	}
 });
