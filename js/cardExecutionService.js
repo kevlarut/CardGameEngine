@@ -6,8 +6,8 @@ gameApp.service('cardExecutionService', function(attackService, cardService, dra
 	this.cancellable = true;
 			
 	var self = this;
-			
-	this.applyEffect = function(effects, index, targetOrTargets, modifierCard, service) {
+				
+	this.applyEffect = function(effects, index, targetOrTargets, modifierCard) {
 	
 		var disposalCallback = function() {
 			self.disposeCard();
@@ -15,14 +15,14 @@ gameApp.service('cardExecutionService', function(attackService, cardService, dra
 	
 		self.cancellable = false;
 		if (Array.isArray(targetOrTargets)) {
-			applyEffectsOnMultipleTargets(targetOrTargets, disposalCallback, effects, index, modifierCard, service);
+			applyEffectsOnMultipleTargets(targetOrTargets, disposalCallback, effects, index, modifierCard, self);
 		}
 		else {
-			service.applyEffectsOnSingleTarget(effects, index, targetOrTargets, modifierCard, service, disposalCallback);
+			self.applyEffectsOnSingleTarget(effects, index, targetOrTargets, modifierCard, disposalCallback);
 		}
 	}
 	
-	this.applyEffectsOnSingleTarget = function(effects, index, target, modifierCard, service, disposalCallback) {
+	this.applyEffectsOnSingleTarget = function(effects, index, target, modifierCard, disposalCallback) {
 	
 		var effect = effects[index];
 		
@@ -33,7 +33,7 @@ gameApp.service('cardExecutionService', function(attackService, cardService, dra
 				disposalCallback();
 			}
 			else {
-				targetAndExecute(effects, index + 1, modifierCard, service);
+				targetAndExecute(effects, index + 1, modifierCard);
 			}		
 		}
 				
@@ -62,10 +62,9 @@ gameApp.service('cardExecutionService', function(attackService, cardService, dra
 		var index = player.hand.indexOf(card);
 		player.hand.splice(index, 1);
 			
-		if (gameService.actions > 0 && gameService.areManaRequirementsMet(card)) {			
-			var service = this;			
+		if (gameService.actions > 0 && gameService.areManaRequirementsMet(card)) {	
 			if (card.effects) {
-				verifyConditionsAndTargetAndExecute(card.effects, 0, modifierCard, service);
+				verifyConditionsAndTargetAndExecute(card.effects, 0, modifierCard);
 			}
 		}
 		
@@ -85,25 +84,24 @@ gameApp.service('cardExecutionService', function(attackService, cardService, dra
 		player.hand.splice(index, 1);
 		
 		userInterface.instructions = 'Click on the card you want to modify and play.';
-		var service = this;
 		targetingService.getTargetCard(function(targetCard) {
-			return modifyAndPlayCard(targetCard, card, player, service);
+			return modifyAndPlayCard(targetCard, card, player);
 		});
-	}
+	}	
 	
-	var applyEffectsOnMultipleTargets = function(targets, disposalCallback, effects, index, modifierCard, service) {
+	var applyEffectsOnMultipleTargets = function(targets, disposalCallback, effects, index, modifierCard) {
 		for (var i = 0; i < targets.length; i++) {
 			var dispose = (i == targets.length - 1) ? disposalCallback : null;
-			service.applyEffectsOnSingleTarget(effects, index, targets[i], modifierCard, service, dispose);
+			self.applyEffectsOnSingleTarget(effects, index, targets[i], modifierCard, dispose);
 		}
 	}
 	
-	var modifyAndPlayCard = function(targetCard, card, player, service) {
+	var modifyAndPlayCard = function(targetCard, card, player) {
 		if (targetCard.type == 'modifier') {
 			return false;
 		}
 		else {
-			service.playCard(targetCard, player, card);
+			self.playCard(targetCard, player, card);
 			return true;
 		}
 	}
@@ -114,10 +112,10 @@ gameApp.service('cardExecutionService', function(attackService, cardService, dra
 		callbacks.textInputCallback = null;
 	}
 		
-	var targetAndExecute = function(effects, index, modifierCard, service) {
+	var targetAndExecute = function(effects, index, modifierCard) {
 		clearCallbacks();
 		targetingService.getTargetPlayers(effects[index].target, function(target) {
-			service.applyEffect(effects, index, target, modifierCard, service, true); 
+			self.applyEffect(effects, index, target, modifierCard, true);
 		});
 	}
 	
@@ -130,7 +128,7 @@ gameApp.service('cardExecutionService', function(attackService, cardService, dra
 		});
 	}
 	
-	var verifyConditionsAndTargetAndExecute = function(effects, index, modifierCard, service) {
+	var verifyConditionsAndTargetAndExecute = function(effects, index, modifierCard) {
 	
 		if (effects[index].condition) {
 			var condition = effects[index].condition;
@@ -139,7 +137,7 @@ gameApp.service('cardExecutionService', function(attackService, cardService, dra
 					userInterface.instructions = 'Click on the card you want to guess.';
 					targetingService.guessCardInDeck(condition.deck, function(cardName) {
 						console.log('ERROR: The callback for guessCardInDeck needs to compare the cardName to the target player\'s hand, and execute if it exists, or cancel the effect if not.');
-						targetAndExecute(effects, 0, modifierCard, service);
+						targetAndExecute(effects, 0, modifierCard);
 					});
 					break;
 				default:
@@ -148,7 +146,7 @@ gameApp.service('cardExecutionService', function(attackService, cardService, dra
 			}
 		}
 		else {
-			targetAndExecute(effects, 0, modifierCard, service);
+			targetAndExecute(effects, 0, modifierCard);
 		}
 	}
 	
