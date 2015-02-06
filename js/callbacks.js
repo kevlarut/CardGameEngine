@@ -83,8 +83,8 @@ gameApp.service('callbacks', function() {
 	}
 	
 	this.clearCallbacks = function() {	
-		self.clickCardCallback = null;
-		self.clickPlayerCallback = null;
-		self.textInputCallback = null;
+		clickCardCallback = null;
+		clickPlayerCallback = null;
+		textInputCallback = null;
 	}
 });

@@ -1,8 +1,9 @@
 var gameApp = angular.module('gameApp');
 
-gameApp.service('cardExecutionService', function(attackService, cardService, drawService, effectService, gameService, healService, targetingService, deckService, userInterface, callbacks) {
+gameApp.service('cardExecutionService', function(attackService, cardService, drawService, effectService, gameService, healService, targetingService, deckService, callbacks) {
 	
 	this.card = null;
+	this.modifierCard = null;
 	this.cancellable = true;
 			
 	var self = this;
@@ -11,14 +12,18 @@ gameApp.service('cardExecutionService', function(attackService, cardService, dra
 		if (self.card) {
 			deckService.discard(self.card);
 			self.card = null;
-			userInterface.instructions = null;
-			callbacks.clearCallbacks();
-			self.cancellable = true;
 		}
+		if (self.modifierCard) {
+			deckService.discard(self.modifierCard);
+			self.modifierCard = null;
+		}
+		callbacks.clearCallbacks();
+		self.cancellable = true;
 	}
+	
+	this.playCard = function(card, player) {
 		
-	this.playCard = function(card, player, modifierCard) {
-		
+		var modifierCard = self.modifierCard;
 		self.card = card;
 		targetingService.prohibitedTargetPlayerIds = [];
 		var index = player.hand.indexOf(card);
@@ -46,21 +51,21 @@ gameApp.service('cardExecutionService', function(attackService, cardService, dra
 	}
 	
 	this.playModifierCard = function(card, player) {	
-		self.card = card;
+		self.modifierCard = card;
 		var index = player.hand.indexOf(card);
 		player.hand.splice(index, 1);
 		
 		targetingService.getTargetCard(function(targetCard) {
-			return self.modifyAndPlayCard(targetCard, card, player);
+			return modifyAndPlayCard(targetCard, player);
 		});
 	}	
 	
-	this.modifyAndPlayCard = function(targetCard, card, player) {
+	var modifyAndPlayCard = function(targetCard, player) {
 		if (targetCard.type == 'modifier') {
 			return false;
 		}
 		else {
-			self.playCard(targetCard, player, card);
+			self.playCard(targetCard, player);
 			return true;
 		}
 	}

@@ -33,16 +33,19 @@ gameApp.controller('gameController',
 	}
 		
 	$scope.cancelActiveCard = function() {
-		if (cardExecutionService.card.type != 'modifier') {
-			gameService.actions++;
+		if (cardExecutionService.card) {
+			playerData.players[0].hand.push(cardExecutionService.card);
+			gameService.actions += cardExecutionService.card.actionCost || 1;
 		}
-		playerData.players[0].hand.push(cardExecutionService.card);
-		$scope.clearActiveCard();
-		userInterface.instructions = null;
+		if (cardExecutionService.modifierCard) {
+			playerData.players[0].hand.push(cardExecutionService.modifierCard);
+		}
+		$scope.clearActiveCards();
 	}
 	
-	$scope.clearActiveCard = function() {
+	$scope.clearActiveCards = function() {
 		cardExecutionService.card = null;
+		cardExecutionService.modifierCard = null;
 		callbacks.clearCallbacks();
 	}
 	
@@ -54,7 +57,7 @@ gameApp.controller('gameController',
 		player.hand.splice(index, 1);		
 		target.equippedCards.push(card);
 		gameService.actions -= actionCost;
-		$scope.clearActiveCard();
+		$scope.clearActiveCards();
 	}
 	
 	$scope.accumulateMana = function(card, modifierCard) {
@@ -66,7 +69,7 @@ gameApp.controller('gameController',
 		}
 		
 		gameService.mana += manaEarned;
-		$scope.clearActiveCard();
+		$scope.clearActiveCards();
 	}
 	
 	$scope.draw = function(card, player, modifierCard, deckName) {
@@ -86,13 +89,13 @@ gameApp.controller('gameController',
 			drawService.draw(player, deckName, cardsToDraw);
 		}
 		
-		$scope.clearActiveCard();
+		$scope.clearActiveCards();
 	}
 	
-	$scope.playCard = function(card, player, modifierCard) {
+	$scope.playCard = function(card, player) {
 		if (gameService.actions > 0) {
 			if (card.effects) {
-				cardExecutionService.playCard(card, player, modifierCard);	
+				cardExecutionService.playCard(card, player);	
 			}
 			else if (card.modifierEffects) {
 				cardExecutionService.playModifierCard(card, player);
@@ -121,7 +124,7 @@ gameApp.controller('gameController',
 		}
 		
 		player.victoryPoints += magnitude;
-		$scope.clearActiveCard();
+		$scope.clearActiveCards();
 				
 	}
 	

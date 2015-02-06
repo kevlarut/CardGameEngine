@@ -332,6 +332,25 @@ select {
 	text-align: center;
 	z-index: 1;
 	
+	.cards {
+	
+		&.bothCardAndModifierCardArePresent {	
+		
+			> :first-of-type {
+				margin-bottom: 0 - $cardHeight * .8;
+				-ms-transform: rotate(-1deg) translate(-10px,0px);
+				-webkit-transform: rotate(-1deg) translate(-10px,0px);
+				transform: rotate(-1deg) translate(-10px,0px);
+			}
+			
+			> :last-of-type {
+				-ms-transform: rotate(1deg) translate(10px,0px);
+				-webkit-transform: rotate(1deg) translate(10px,0px);
+				transform: rotate(1deg) translate(10px,0px);
+			}
+		}
+	}
+	
 	.card {
 		float: none;
 	}

@@ -52,9 +52,14 @@
 					<button ng-click="inputService.handleTextInput(attackService)">Go</button>
 				</div>
 				
-				<div class="playArea" ng-show="cardExecutionService.card">
-					<div ng-repeat="card in [cardExecutionService.card]" ng-class="['card', card.type]">
-						<div class="slide-animate" ng-include src="'card.html'"></div>
+				<div class="playArea" ng-show="cardExecutionService.card || cardExecutionService.modifierCard">
+					<div ng-class="{cards:true,bothCardAndModifierCardArePresent:cardExecutionService.card && cardExecutionService.modifierCard}">
+						<div ng-repeat="card in [cardExecutionService.modifierCard]" ng-class="['card', card.type]" ng-show="cardExecutionService.modifierCard">
+							<div class="slide-animate" ng-include src="'card.html'"></div>
+						</div>
+						<div ng-repeat="card in [cardExecutionService.card]" ng-class="['card', card.type]" ng-show="cardExecutionService.card">
+							<div class="slide-animate" ng-include src="'card.html'"></div>
+						</div>
 					</div>
 					<button ng-click="cancelActiveCard()" ng-show="cardExecutionService.cancellable">Cancel</button>
 					<button ng-click="discardActiveCard()" ng-show="cardExecutionService.card.type != 'oldmaid' && cardExecutionService.cancellable">Discard</button>

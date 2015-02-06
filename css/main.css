@@ -360,6 +360,15 @@ select {
   right: 0;
   text-align: center;
   z-index: 1; }
+  .playArea .cards.bothCardAndModifierCardArePresent > :first-of-type {
+    margin-bottom: -184.8px;
+    -ms-transform: rotate(-1deg) translate(-10px, 0px);
+    -webkit-transform: rotate(-1deg) translate(-10px, 0px);
+    transform: rotate(-1deg) translate(-10px, 0px); }
+  .playArea .cards.bothCardAndModifierCardArePresent > :last-of-type {
+    -ms-transform: rotate(1deg) translate(10px, 0px);
+    -webkit-transform: rotate(1deg) translate(10px, 0px);
+    transform: rotate(1deg) translate(10px, 0px); }
   .playArea .card {
     float: none; }
 
