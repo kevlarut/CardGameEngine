@@ -14,3 +14,53 @@
 	-webkit-animation: clickMeBabyAnimation 1s;
     animation: clickMeBabyAnimation 1s;
 }
+
+@-webkit-keyframes contractCardMargin {
+    0% 
+	{ 
+		margin-left: $cardMargin + $cardWidth / 8;
+		margin-right: $cardMargin + $cardWidth / 8;
+	}
+	100%
+	{
+		margin-left: (0 - ($cardWidth / 8));
+		margin-right: (0 - ($cardWidth / 8));
+	}
+}
+@keyframes contractCardMargin {
+    0% 
+	{ 
+		margin-left: $cardMargin + $cardWidth / 8;
+		margin-right: $cardMargin + $cardWidth / 8;
+	}
+	100%
+	{
+		margin-left: (0 - ($cardWidth / 8));
+		margin-right: (0 - ($cardWidth / 8));
+	}
+}
+
+@-webkit-keyframes expandCardMargin {
+	0%
+	{
+		margin-left: (0 - ($cardWidth / 8));
+		margin-right: (0 - ($cardWidth / 8));
+	}
+    100% 
+	{ 
+		margin-left: $cardMargin + $cardWidth / 8;
+		margin-right: $cardMargin + $cardWidth / 8;
+	}
+}
+@keyframes expandCardMargin {
+	0%
+	{
+		margin-left: (0 - ($cardWidth / 8));
+		margin-right: (0 - ($cardWidth / 8));
+	}
+    100% 
+	{ 
+		margin-left: $cardMargin + $cardWidth / 8;
+		margin-right: $cardMargin + $cardWidth / 8;
+	}
+}

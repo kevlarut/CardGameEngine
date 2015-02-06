@@ -83,7 +83,7 @@
 				</div>
 				<div class="col-md-10">
 					
-					<div ng-repeat="player in playerData.players" ng-class="{hand:true, inactivePlayer:!$first, dead:player.isDead}">
+					<div ng-repeat="player in playerData.players" ng-class="{activePlayer:$first, hand:true, inactivePlayer:!$first, dead:player.isDead}">
 						<div ng-class="{playerSummary: true, clickable: !$first}" ng-click="clickPlayer(player)">
 							<div><b>{{player.name}}</b></div>
 							<div ng-show="!player.isDead">Hit points: {{player.hitPoints}}</div>
@@ -133,8 +133,11 @@
 								<div class="slide-animate" ng-include src="'card.html'"></div>
 							</div>
 						</script>
-						<div ng-repeat="card in player.hand track by $index">
-							<div class="slide-animate" ng-include src="'clickable-card.html'"></div>
+						
+						<div class="cards">
+							<div ng-repeat="card in player.hand track by $index" class="cardContainer">
+								<div class="slide-animate" ng-include src="'clickable-card.html'"></div>
+							</div>
 						</div>
 						
 						<div class="equippedCards" ng-show="player.equippedCards.length">

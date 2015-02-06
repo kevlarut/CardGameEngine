@@ -16,6 +16,34 @@
   -webkit-animation: clickMeBabyAnimation 1s;
   animation: clickMeBabyAnimation 1s; }
 
+@-webkit-keyframes contractCardMargin {
+  0% {
+    margin-left: 30.625px;
+    margin-right: 30.625px; }
+  100% {
+    margin-left: -20.625px;
+    margin-right: -20.625px; } }
+@keyframes contractCardMargin {
+  0% {
+    margin-left: 30.625px;
+    margin-right: 30.625px; }
+  100% {
+    margin-left: -20.625px;
+    margin-right: -20.625px; } }
+@-webkit-keyframes expandCardMargin {
+  0% {
+    margin-left: -20.625px;
+    margin-right: -20.625px; }
+  100% {
+    margin-left: 30.625px;
+    margin-right: 30.625px; } }
+@keyframes expandCardMargin {
+  0% {
+    margin-left: -20.625px;
+    margin-right: -20.625px; }
+  100% {
+    margin-left: 30.625px;
+    margin-right: 30.625px; } }
 @font-face {
   font-family: 'icomoon';
   src: url("../fonts/icon.eot?-bik6n8");
@@ -141,7 +169,7 @@ select {
 
 .card {
   background: #fff;
-  box-shadow: 5px 5px 10px 0px rgba(0, 0, 0, 0.5);
+  box-shadow: -5px 5px 10px 0px rgba(0, 0, 0, 0.5);
   color: #000;
   font-size: 20px;
   font-weight: bold;
@@ -204,6 +232,19 @@ select {
       font-family: Arial, sans-serif; }
   .card .effects {
     font-size: 0.75em; }
+
+.activePlayer .card {
+  margin-left: -20.625px;
+  margin-right: -20.625px;
+  animation: v 0.25s;
+  -webkit-animation: contractCardMargin 0.25s; }
+  .activePlayer .card:hover {
+    margin-left: 30.625px;
+    margin-right: 30.625px;
+    -webkit-animation: expandCardMargin 0.25s;
+    animation: expandCardMargin 0.25s; }
+.activePlayer .cardContainer {
+  margin-left: 30.625px; }
 
 .faces .playerSummary {
   background: #ccc;

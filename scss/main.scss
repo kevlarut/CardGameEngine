@@ -44,7 +44,7 @@ select {
 
 .card {
 	background: #fff;
-	box-shadow: 5px 5px 10px 0px rgba(0,0,0,0.5);
+	box-shadow: -5px 5px 10px 0px rgba(0,0,0,0.5);
 	color: #000;
 	font-size: $cardFontSize;
 	font-weight: bold;
@@ -144,6 +144,28 @@ select {
 	
 	.effects {
 		font-size: 0.75em;
+	}
+}
+
+.activePlayer {
+	.card {	
+		margin-left: (0 - ($cardWidth / 8));
+		margin-right: (0 - ($cardWidth / 8));		
+		
+		animation: v 0.25s;
+		-webkit-animation: contractCardMargin 0.25s;
+		
+		&:hover {
+			margin-left: $cardMargin + $cardWidth / 8;
+			margin-right: $cardMargin + $cardWidth / 8;
+			
+			-webkit-animation: expandCardMargin 0.25s;
+			animation: expandCardMargin 0.25s;
+		}
+	}
+	
+	.cardContainer {
+		margin-left: 10 + ($cardWidth / 8);
 	}
 }
 
