@@ -17,11 +17,20 @@ gameApp.controller('gameController',
 	$scope.theNameOfTheGame = null;
 		
 	$scope.discardActiveCard = function() {
-		var card = cardExecutionService.card;
-		if (card.type != 'oldmaid') {
-			deckService.discard(card);
-			cardExecutionService.card = null;
+		if (cardExecutionService.card) {
+			if (cardExecutionService.card.type != 'oldmaid') {
+				gameService.actions += cardExecutionService.card.actionCost || 1;
+				deckService.discard(cardExecutionService.card);
+				cardExecutionService.card = null;
+			}
 		}
+		if (cardExecutionService.modifierCard) {
+			if (cardExecutionService.modifierCard.type != 'oldmaid') {
+				deckService.discard(cardExecutionService.modifierCard);
+				cardExecutionService.modifierCard = null;
+			}
+		}
+		callbacks.clearCallbacks();
 	}
 		
 	$scope.enableManaPoints = function() {
