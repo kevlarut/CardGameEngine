@@ -38,7 +38,7 @@ gameApp.controller('gameController',
 	}	
 	
 	$scope.enableVictoryPoints = function() {
-		return gameService.game.enableVictoryPoints;
+		return gameService.game ? gameService.game.enableVictoryPoints : false;
 	}
 		
 	$scope.cancelActiveCard = function() {

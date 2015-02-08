@@ -182,9 +182,6 @@ select {
   text-align: left; }
   .card > div {
     height: 100%; }
-  .card.clickable:hover {
-    border: 5px solid #fff;
-    padding: 15px; }
   .card .description {
     font-size: 15px;
     font-weight: normal;
@@ -222,29 +219,19 @@ select {
       left: 50%;
       top: 50%;
       text-align: center;
-      -ms-transform: translateX(-50%) translateY(-50%) rotate(-45deg);
+      -ms-transform: translateX(-50%) translateY(-50%) rotate(-90deg);
       /* IE 9 */
-      -webkit-transform: translateX(-50%) translateY(-50%) rotate(-45deg);
+      -webkit-transform: translateX(-50%) translateY(-50%) rotate(-90deg);
       /* Chrome, Safari, Opera */
-      transform: translateX(-50%) translateY(-50%) rotate(-45deg); }
+      transform: translateX(-50%) translateY(-50%) rotate(-90deg); }
     .card.faceDown .text {
       display: none;
       font-family: Arial, sans-serif; }
   .card .effects {
     font-size: 0.75em; }
 
-.activePlayer .card {
-  margin-left: -20.625px;
-  margin-right: -20.625px;
-  animation: v 0.25s;
-  -webkit-animation: contractCardMargin 0.25s; }
-  .activePlayer .card:hover {
-    margin-left: 30.625px;
-    margin-right: 30.625px;
-    -webkit-animation: expandCardMargin 0.25s;
-    animation: expandCardMargin 0.25s; }
-.activePlayer .cardContainer {
-  margin-left: 30.625px; }
+.activePlayer .card:hover {
+  transform: translateX(5px) translateY(-5px); }
 
 .faces .playerSummary {
   background: #ccc;
@@ -261,11 +248,16 @@ select {
     border-radius: 2.5px;
     font-size: 5px;
     margin: 2.5px;
-    padding: 5px; }
+    padding: 5px;
+    margin-left: -5.15625px;
+    margin-right: -5.15625px; }
     .faces .playerSummary .card .description {
       font-size: 2.5px;
       margin-top: 2.5px;
       padding-top: 2.5px; }
+    .faces .playerSummary .card.faceDown {
+      border: 1px solid #000;
+      padding: 0.5px; }
 
 .hand {
   background: #888;
@@ -276,9 +268,11 @@ select {
   .hand a {
     color: #ffc; }
   .hand .equippedCards {
-    float: right; }
+    float: right;
+    margin-bottom: 30px; }
     .hand .equippedCards .card {
       border: 5px solid #fff;
+      margin: 0;
       padding: 15px; }
   .hand .playerSummary {
     background: #333;

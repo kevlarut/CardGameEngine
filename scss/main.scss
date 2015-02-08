@@ -59,11 +59,6 @@ select {
 	> div {
 		height: 100%;
 	}
-		
-	&.clickable:hover {
-		border: 5px solid #fff;
-		padding: 15px;
-	}
 
 	.description {
 		font-size: $cardFontSize * 0.75;
@@ -123,17 +118,16 @@ select {
 		border: 5px solid #000;
 		padding: 15px;
 		
-		.backOfCard {
-			
+		.backOfCard {			
 			display: block;
 			position: relative;
 			left: 50%;
 			top: 50%;
 			text-align: center;
 			
-			-ms-transform: translateX(-50%) translateY(-50%) rotate(-45deg); /* IE 9 */
-			-webkit-transform: translateX(-50%) translateY(-50%) rotate(-45deg); /* Chrome, Safari, Opera */
-			transform: translateX(-50%) translateY(-50%) rotate(-45deg);
+			-ms-transform: translateX(-50%) translateY(-50%) rotate(-90deg); /* IE 9 */
+			-webkit-transform: translateX(-50%) translateY(-50%) rotate(-90deg); /* Chrome, Safari, Opera */
+			transform: translateX(-50%) translateY(-50%) rotate(-90deg);
 		}
 		
 		.text {
@@ -149,23 +143,9 @@ select {
 
 .activePlayer {
 	.card {	
-		margin-left: (0 - ($cardWidth / 8));
-		margin-right: (0 - ($cardWidth / 8));		
-		
-		animation: v 0.25s;
-		-webkit-animation: contractCardMargin 0.25s;
-		
 		&:hover {
-			margin-left: $cardMargin + $cardWidth / 8;
-			margin-right: $cardMargin + $cardWidth / 8;
-			
-			-webkit-animation: expandCardMargin 0.25s;
-			animation: expandCardMargin 0.25s;
+			transform: translateX(5px) translateY(-5px);
 		}
-	}
-	
-	.cardContainer {
-		margin-left: 10 + ($cardWidth / 8);
 	}
 }
 
@@ -190,11 +170,19 @@ select {
 			margin: $cardMargin / 4;
 			padding: $cardPadding / 4;
 			
+			margin-left: (0 - ($cardWidth / 4 / 8));
+			margin-right: (0 - ($cardWidth / 4 / 8));		
+		
 			.description {
 				font-size: $cardFontSize / 6 * 0.75;
 				margin-top: $cardMargin / 4;
 				padding-top: $cardMargin / 4;
 			}
+			
+			&.faceDown {
+				border: 1px solid #000;
+				padding: ($cardMargin / 4) - 2;
+			}	
 		}
 	}
 }
@@ -212,9 +200,11 @@ select {
 	
 	.equippedCards {
 		float: right;
+		margin-bottom: 30px;
 		
 		.card {
 			border: 5px solid #fff;
+			margin: 0;
 			padding: 15px;
 		}
 	}

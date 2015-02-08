@@ -363,7 +363,7 @@ gameApp.service('gameData', function() {
 		},
 		{
 			name: 'Fat Bridesmaids',
-			allowHandRecycling: false,
+			allowHandRecycling: true,
 			initialHitPoints: 5,
 			initialDraw: [{deck: 'main', quantity: 5}],
 			addHitPointsPerTurn: 1,
@@ -380,7 +380,7 @@ gameApp.service('gameData', function() {
 							effect: 'damage',
 							magnitude: 1
 						}],
-						flavors: ['Try this terrific tiramisu.', 'Eat this excellent eclair.', 'Consume this crazy cantaloupe.', 'Swallow some of this sweet and salty sauce.', 'Devour this delicious devil\'s cake, dear.', 'Inhale this incredible ice cream.', 'Dine on these delectable dates.', 'Nibble these nummy nuts.', 'Here, I made you some cookies since you\'re totes my BFF.'],
+						flavors: ['Try this terrific tiramisu.', 'Eat this excellent éclair.', 'Consume this crazy cantaloupe.', 'Swallow some of this sweet and salty sauce.', 'Devour this delicious devil\'s cake, dear.', 'Inhale this incredible ice cream.', 'Dine on these delectable dates.', 'Nibble these nummy nuts.', 'Here, I made you some cookies since you\'re totes my BFF.'],
 						quantity: 9
 					},			
 					{
@@ -470,7 +470,7 @@ gameApp.service('gameData', function() {
 					},
 					{
 						type: 'keep',
-						title: 'You are suddently SUPER hungry.',
+						title: 'You are suddenly SUPER hungry.',
 						description: 'You cannot block any attacks this turn.',
 						effect: 'vulnerability',
 						target: 'any',
@@ -565,7 +565,7 @@ gameApp.service('gameData', function() {
 							magnitude: 3
 						}],
 						actions: 1,
-						flavors: ['All you can eat buffet', 'Smorgasbord', 'Cafeteria'],
+						flavors: ['All you can eat buffet', 'Smörgåsbord', 'Cafeteria'],
 						quantity: 2
 					},
 					{

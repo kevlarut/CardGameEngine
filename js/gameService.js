@@ -27,7 +27,7 @@ gameApp.service('gameService', function(deckRepository, deckService, drawService
 	}
 	
 	this.isHandRecyclingAllowed = function() {
-		return this.game.allowHandRecycling && this.actions == 2;
+		return this.game ? this.game.allowHandRecycling && this.actions == 2 : false;
 	}
 	
 	this.applyMagnetDamageIfApplicable = function() {
