@@ -11,7 +11,7 @@ gameApp.service('gameService', function(deckRepository, deckService, drawService
 	
 	this.areManaRequirementsMet = function(card) {
 		if (card.cost) {
-			return this.mana >= card.cost;
+			return self.mana >= card.cost;
 		}
 		else {
 			return true;
@@ -27,35 +27,7 @@ gameApp.service('gameService', function(deckRepository, deckService, drawService
 	}
 	
 	this.isHandRecyclingAllowed = function() {
-		return this.game ? this.game.allowHandRecycling && this.actions == 2 : false;
-	}
-	
-	this.applyMagnetDamageIfApplicable = function() {
-		for (var i = 0; i < playerData.players.length; i++) {
-			var player = playerData.players[i];
-			for (var j = 0; j < player.equippedCards.length; j++) {
-				var card = player.equippedCards[j];
-				if (card.effect == 'magnet') {
-					this.hurtPlayer(player, card.magnitude);
-				}
-			}
-		}
-	}
-	
-	this.hurtPlayer = function(player, damage) {	
-		player.hitPoints -= damage;
-		if (player.hitPoints <= 0) {
-			this.killPlayer(player);			
-		}
-		else {
-			var draw = this.game.drawUponTakingDamage;
-			if (draw) {
-				for (var i = 0; i < draw.length; i++) {
-					var directive = draw[i];
-					drawService.draw(player, directive.deck, directive.quantity);
-				}
-			}
-		}		
+		return self.game ? self.game.allowHandRecycling && self.actions == 2 : false;
 	}
 	
 	this.isModifierEffectApplicableToPlayer = function(effect, player) {
@@ -78,40 +50,95 @@ gameApp.service('gameService', function(deckRepository, deckService, drawService
 	
 	this.damagePlayer = function(player, damage) {		
 		if (damage > 0) {
-			this.hurtPlayer(player, damage);		
-			this.applyMagnetDamageIfApplicable();
-		}
-	}	
-	
-	this.killPlayer = function(player) {
-		player.isDead = true;
-		playerService.discardAllCardsInHand(player);
-		playerService.discardAllEquippedCards(player);
-		
-		var alivePlayers = 0;
-		var alivePlayerName = 'Nobody';
-		for (var i = 0; i < playerData.players.length; i++) {
-			if (!playerData.players[i].isDead) {
-				alivePlayers++;
-				alivePlayerName = playerData.players[i].name;
-			}
-		}
-		
-		if (alivePlayers < 2) {
-			alert('Game over! ' + alivePlayerName + ' wins.');
-			this.startNewGame();
-		}
-		else if (player == playerData.players[0]) {
-			this.nextTurn();
+			hurtPlayer(player, damage);		
+			applyMagnetDamageIfApplicable();
 		}
 	}
 	
-	this.endTurn = function() {
+	this.nextTurn = function() {	
+		if (!endTurn()) {
+			return;
+		}
+		
+		beginNewTurn();
+	}
 	
+	this.recycleHand = function() {
+		var activePlayer = playerData.players[0];
+		playerService.discardAllCardsInHand(activePlayer);
+		makeInitialDraw(activePlayer);
+		self.nextTurn();
+	}
+	
+	this.startNewGame = function(name) {		
+	
+		if (name) {
+			self.game = getGameDefinitionByGameName(name);
+			var game = self.game;
+			
+			for (var i = 0; i < game.decks.length; i++) {
+				var deck = deckService.createDeck(game.decks[i]);
+				deckService.shuffle(deck);
+				deckRepository.decks[deck.id] = deck;
+			}
+			playerData.players = playerService.loadPlayers(game);
+			for (var i = 0; i < playerData.players.length; i++) {
+				var player = playerData.players[i];
+				makeInitialDraw(player);
+			}
+			beginNewTurn();
+		}
+		else {
+			self.game = null;
+		}
+	}
+	
+	var applyMagnetDamageIfApplicable = function() {
+		for (var i = 0; i < playerData.players.length; i++) {
+			var player = playerData.players[i];
+			for (var j = 0; j < player.equippedCards.length; j++) {
+				var card = player.equippedCards[j];
+				if (card.effect == 'magnet') {
+					hurtPlayer(player, card.magnitude);
+				}
+			}
+		}
+	}
+		
+	var beginNewTurn = function() {	
+		var player = playerData.players[0];
+		
+		if (self.game.addHitPointsPerTurn) {
+			healService.heal(self.game.addHitPointsPerTurn, player);
+		}
+		
+		for (var i = 0; i < self.game.drawUponNewTurn.length; i++) {
+			var draw = self.game.drawUponNewTurn[i];
+			drawService.draw(player, draw.deck, draw.quantity);
+		}
+		
+		self.actions = 2;
+		self.mana = 0;
+		
+		for (var i = 0; i < player.equippedCards.length; i++) {
+			var card = player.equippedCards[0];
+			if (isNaN(card.expendedDuration)) {
+				card.expendedDuration = 0;
+			}
+			card.expendedDuration++;
+			if (card.expendedDuration >= card.duration) {
+				deckService.discard(card);
+				player.equippedCards.splice(i, 1);
+				i--;
+			}
+		}
+	}
+	
+	var endTurn = function() {	
 		var player = playerData.players[0];
 	
-		if (player.hand.length > this.handLimit) {
-			userInterface.instructions = 'You must discard down to ' + this.handLimit + ' cards.  Click on a card to use or discard it.';
+		if (player.hand.length > self.handLimit) {
+			userInterface.instructions = 'You must discard down to ' + self.handLimit + ' cards.  Click on a card to use or discard it.';
 			return false;
 		}
 		
@@ -146,61 +173,7 @@ gameApp.service('gameService', function(deckRepository, deckService, drawService
 		return true;
 	}
 	
-	this.beginNewTurn = function() {
-	
-		var player = playerData.players[0];
-		
-		if (self.game.addHitPointsPerTurn) {
-			healService.heal(self.game.addHitPointsPerTurn, player);
-		}
-		
-		for (var i = 0; i < self.game.drawUponNewTurn.length; i++) {
-			var draw = self.game.drawUponNewTurn[i];
-			drawService.draw(player, draw.deck, draw.quantity);
-		}
-		
-		self.actions = 2;
-		self.mana = 0;
-		
-		for (var i = 0; i < player.equippedCards.length; i++) {
-			var card = player.equippedCards[0];
-			if (isNaN(card.expendedDuration)) {
-				card.expendedDuration = 0;
-			}
-			card.expendedDuration++;
-			if (card.expendedDuration >= card.duration) {
-				deckService.discard(card);
-				player.equippedCards.splice(i, 1);
-				i--;
-			}
-		}
-	}
-	
-	this.makeInitialDraw = function(player) {
-		var initialDraw = this.game.initialDraw;
-		for (var i = 0; i < initialDraw.length; i++) {
-			var directive = initialDraw[i];
-			drawService.draw(player, directive.deck, directive.quantity);
-		}
-	}
-	
-	this.nextTurn = function() {
-	
-		if (!this.endTurn()) {
-			return;
-		}
-		
-		this.beginNewTurn();
-	}
-	
-	this.recycleHand = function() {
-		var activePlayer = playerData.players[0];
-		playerService.discardAllCardsInHand(activePlayer);
-		this.makeInitialDraw(activePlayer);
-		this.nextTurn();
-	}
-	
-	this.getGameDefinitionByGameName = function(name) {
+	var getGameDefinitionByGameName = function(name) {
 		for (var i = 0; i < gameData.games.length; i++) {
 			var game = gameData.games[i];
 			if (game.name == name) {
@@ -210,31 +183,51 @@ gameApp.service('gameService', function(deckRepository, deckService, drawService
 		return null;
 	}
 	
-	this.startNewGame = function(name) {		
-	
-		if (name) {
-			this.game = this.getGameDefinitionByGameName(name);
-			var game = this.game;
-			
-			for (var i = 0; i < game.decks.length; i++) {
-				var deck = deckService.createDeck(game.decks[i]);
-				deckService.shuffle(deck);
-				deckRepository.decks[deck.id] = deck;
-			}
-			playerData.players = playerService.loadPlayers(game);
-			for (var i = 0; i < playerData.players.length; i++) {
-				var player = playerData.players[i];
-				this.makeInitialDraw(player);
-			}
-			this.beginNewTurn();
+	var hurtPlayer = function(player, damage) {	
+		player.hitPoints -= damage;
+		if (player.hitPoints <= 0) {
+			killPlayer(player);			
 		}
 		else {
-			this.game = null;
+			var draw = self.game.drawUponTakingDamage;
+			if (draw) {
+				for (var i = 0; i < draw.length; i++) {
+					var directive = draw[i];
+					drawService.draw(player, directive.deck, directive.quantity);
+				}
+			}
+		}		
+	}
+	
+	var killPlayer = function(player) {
+		player.isDead = true;
+		playerService.discardAllCardsInHand(player);
+		playerService.discardAllEquippedCards(player);
+		
+		var alivePlayers = 0;
+		var alivePlayerName = 'Nobody';
+		for (var i = 0; i < playerData.players.length; i++) {
+			if (!playerData.players[i].isDead) {
+				alivePlayers++;
+				alivePlayerName = playerData.players[i].name;
+			}
+		}
+		
+		if (alivePlayers < 2) {
+			alert('Game over! ' + alivePlayerName + ' wins.');
+			self.startNewGame();
+		}
+		else if (player == playerData.players[0]) {
+			self.nextTurn();
 		}
 	}
 	
-	// var targetAcquiredCallback = function(effects, index, target, modifierCard) {	
-		// effectService.applyEffect(effects, index, target, modifierCard, null, targetAcquiredCallback);
-	// }
+	var makeInitialDraw = function(player) {
+		var initialDraw = self.game.initialDraw;
+		for (var i = 0; i < initialDraw.length; i++) {
+			var directive = initialDraw[i];
+			drawService.draw(player, directive.deck, directive.quantity);
+		}
+	}
 	
 });
