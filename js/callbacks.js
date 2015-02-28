@@ -29,13 +29,13 @@ gameApp.service('callbacks', function() {
 	this.getInstructions = function() {
 		var instructions = '';
 		if (clickCardCallback) {
-			instructions += 'Click card: ' + clickCardCallback.instructions;
+			instructions += clickCardCallback.instructions;
 		}
 		if (clickPlayerCallback) {
-			instructions += 'Click player: ' + clickPlayerCallback.instructions;
+			instructions += clickPlayerCallback.instructions;
 		}
 		if (textInputCallback) {
-			instructions += 'Text input: ' + textInputCallback.instructions;
+			instructions += textInputCallback.instructions;
 		}
 		return instructions;
 	}

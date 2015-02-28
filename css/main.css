@@ -160,6 +160,7 @@
 html, body {
   background: #0e2d43;
   color: #efefef;
+  height: 100%;
   line-height: normal;
   margin: 0;
   padding: 0; }
@@ -179,9 +180,9 @@ select {
   color: #000; }
 
 .card {
-  background: #fff;
+  background: #f7ead6;
   box-shadow: -5px 5px 10px 0px rgba(0, 0, 0, 0.5);
-  border: 5px solid #455865;
+  border: 5px solid #fff;
   color: #455865;
   font-size: 20px;
   font-weight: bold;
@@ -274,8 +275,12 @@ select {
       border: 1px solid #000;
       padding: 0.5px; }
 
+.game {
+  height: 100%;
+  position: relative; }
+
 .hand {
-  background: #efefef;
+  background: #455865;
   border-radius: 20px;
   margin: 10px;
   color: #fff;
@@ -290,7 +295,6 @@ select {
       margin: 0;
       padding: 15px; }
   .hand .playerSummary {
-    background: #455865;
     border-radius: 10px;
     margin: 10px;
     min-height: 60px;
@@ -348,39 +352,48 @@ select {
       width: 200px; }
 
 .instructions {
-  background: #455865;
-  border-radius: 20px;
-  color: #fff;
-  margin: 10px;
-  padding: 20px; }
+  font-weight: bold;
+  text-align: left; }
   .instructions .inputContainer {
     margin-top: 10px; }
     .instructions .inputContainer input {
       font-size: 1.1em;
       padding: 5px; }
 
-.playArea {
-  background: #455865;
+.modalOverlay {
+  background: rgba(0, 0, 0, 0.5);
+  height: 100%;
+  position: absolute;
+  width: 100%;
+  z-index: 1; }
+
+.playAreaModal {
+  background: #f7ead6;
   border-radius: 20px;
-  color: #fff;
-  margin: 10px;
+  color: #455865;
+  width: 400px;
+  height: 350px;
+  margin: -175px 0 0 -200px;
   padding: 20px;
   position: absolute;
-  top: 0;
-  right: 0;
+  top: 50%;
+  left: 50%;
   text-align: center;
   z-index: 1; }
-  .playArea .cards.bothCardAndModifierCardArePresent > :first-of-type {
+  .playAreaModal .cards.bothCardAndModifierCardArePresent > :first-of-type {
     margin-bottom: -196px;
     -ms-transform: rotate(-1deg) translate(-10px, 0px);
     -webkit-transform: rotate(-1deg) translate(-10px, 0px);
     transform: rotate(-1deg) translate(-10px, 0px); }
-  .playArea .cards.bothCardAndModifierCardArePresent > :last-of-type {
+  .playAreaModal .cards.bothCardAndModifierCardArePresent > :last-of-type {
     -ms-transform: rotate(1deg) translate(10px, 0px);
     -webkit-transform: rotate(1deg) translate(10px, 0px);
     transform: rotate(1deg) translate(10px, 0px); }
-  .playArea .card {
+  .playAreaModal .card {
     float: none; }
+  .playAreaModal .faces {
+    float: right;
+    width: 47%; }
 
 .clear {
   clear: both; }

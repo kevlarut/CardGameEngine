@@ -27,6 +27,16 @@ gameApp.service('playerService', function(deckService, playerData) {
 		return playerData.players[0].id;
 	}
 	
+	this.getTargetablePlayers = function() {
+		var players = [];
+		for (var i = 1; i < playerData.players.length; i++) {
+			if (!playerData.players[i].isDead) {
+				players.push(playerData.players[i]);
+			}
+		}
+		return players;
+	}
+	
 	this.getPlayerById = function(id) {
 		for (var i = 0; i < playerData.players.length; i++) {
 			if (playerData.players[i].id == id) {
