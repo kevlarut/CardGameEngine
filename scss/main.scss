@@ -1,14 +1,22 @@
-$cardWidth: 165px;
+$cardWidth: 175px;
 $cardHeight: $cardWidth * 1.4;
 $cardBorderRadius: 10px;
 $cardFontSize: 20px;
 $cardMargin: 10px;
 $cardPadding: 20px;
 
-$lightGray: #ccc;
-$mediumGray: #888;
+$cream: #f7ead6;
+$gray: #455865;
 $lightOrange: #ff9;
-$orange: #fb5;
+$orange: #fea66c;
+$blue: #7cbcc6;
+$lightGray: #efefef;
+$green: #2bac74;
+$navy: #0e2d43;
+$purple: #ad527e;
+$red: #e94e60;
+$yellow: #fece6c;
+$white: #fff;
 
 @import 'animations';
 @import 'icons';
@@ -18,22 +26,23 @@ $orange: #fb5;
 }
 
 html, body {
-	background: #333;
+	background: $navy;
+	color: $lightGray;
 	line-height: normal;
 	margin: 0;
 	padding: 0;
 }
 
 button {
-	background: $orange;
+	background: $cream;
 	border: none;
 	border-radius: 10px;
-	color: #333;
+	color: $gray;
 	font-weight: bold;
 	padding: 10px;
 	
 	&:hover {
-		background: #fff;
+		background: $white;
 		cursor: pointer;
 	}
 }
@@ -43,9 +52,10 @@ select {
 }
 
 .card {
-	background: #fff;
+	background: $white;
 	box-shadow: -5px 5px 10px 0px rgba(0,0,0,0.5);
-	color: #000;
+	border: 5px solid $gray;
+	color: $gray;
 	font-size: $cardFontSize;
 	font-weight: bold;
 	margin: $cardMargin;
@@ -69,11 +79,11 @@ select {
 	}
 
 	&.attack {
-		background: #c33;
+		background: $red;
 	}
 	
 	&.draw {
-		background: #ff6;
+		background: $yellow;
 	}
 
 	&.oldmaid {
@@ -81,26 +91,29 @@ select {
 	}
 	
 	&.keep {
-		background: #336;
+		background: $blue;
 	}
 	
 	&.mana {
-		background: #636;
+		background: $purple;
 	}
 	
 	&.modifier {
-		background: #3c3;
+		background: $green;
 	}
 	
 	&.trap {
-		background: #f90;		
+		background: $orange;		
 	}
 	
 	&.attack,
+	&.draw,
 	&.keep,
 	&.mana,
 	&.modifier,
-	&.oldmaid {
+	&.oldmaid,
+	&.trap	{
+		border-color: $white;
 		color: #fff;
 		
 		.description {
@@ -143,8 +156,10 @@ select {
 
 .activePlayer {
 	.card {	
-		&:hover {
-			transform: translateX(5px) translateY(-5px);
+		&:hover {			
+			-webkit-animation: enlargeCard 0.25s;
+			animation: enlargeCard 0.25s;
+			transform: scale(1.1, 1.1);
 		}
 	}
 }
@@ -152,13 +167,13 @@ select {
 .faces {
 	.playerSummary {
 		background: $lightGray;
-		color: #333;
+		color: $gray;
 		border-radius: 20px;
 		margin: 10px;
 		padding: 10px;
 		
 		&.inactivePlayer {
-			background: $mediumGray;
+			background: $gray;
 			color: #fff;
 		}
 		
@@ -188,14 +203,14 @@ select {
 }
 
 .hand {
-	background: $mediumGray;
+	background: $lightGray;
 	border-radius: 20px;
 	margin: 10px;
 	color: #fff;
 	padding: 10px;
 
 	a {
-		color: #ffc;
+		color: $cream;
 	}
 	
 	.equippedCards {
@@ -210,7 +225,7 @@ select {
 	}
 	
 	.playerSummary {
-		background: #333;
+		background: $gray;
 		border-radius: 10px;
 		margin: 10px;
 		min-height: 60px;
@@ -295,9 +310,9 @@ select {
 }
 
 .instructions {
-	background: #ff0;
+	background: $gray;
 	border-radius: 20px;
-	color: #000;
+	color: $white;
 	margin: 10px;
 	padding: 20px;
 	
@@ -312,8 +327,9 @@ select {
 }
 
 .playArea {
-	background: #ff0;
+	background: $gray;
 	border-radius: 20px;
+	color: $white;
 	margin: 10px;
 	padding: 20px;
 	position: absolute;
@@ -355,12 +371,11 @@ select {
 }
 
 .playerSummary.clickable:hover {
-	background: #ffc;
-	color: #333;
+	background: $lightGray;
+	color: $gray;
 }
 
 .selectGame {
-	color: #fff;
 	font-size: 50px;
 	text-align: center;
 }

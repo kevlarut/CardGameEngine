@@ -64,3 +64,24 @@
 		margin-right: $cardMargin + $cardWidth / 8;
 	}
 }
+
+@-webkit-keyframes enlargeCard {
+	0%
+	{
+		transform: scale(1, 1);
+	}
+    100% 
+	{ 
+		transform: scale(1.1, 1.1);
+	}
+}
+@keyframes enlargeCard {
+	0%
+	{
+		transform: scale(1, 1);
+	}
+    100% 
+	{ 
+		transform: scale(1.1, 1.1);
+	}
+}

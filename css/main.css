@@ -1,49 +1,59 @@
 @-webkit-keyframes clickMeBabyAnimation {
   0% {
-    background: #fb5; }
+    background: #fea66c; }
   50% {
     background: #ff9; }
   100% {
-    background: #fb5; } }
+    background: #fea66c; } }
 @keyframes clickMeBabyAnimation {
   0% {
-    background: #fb5; }
+    background: #fea66c; }
   50% {
     background: #ff9; }
   100% {
-    background: #fb5; } }
+    background: #fea66c; } }
 .clickMeBaby {
   -webkit-animation: clickMeBabyAnimation 1s;
   animation: clickMeBabyAnimation 1s; }
 
 @-webkit-keyframes contractCardMargin {
   0% {
-    margin-left: 30.625px;
-    margin-right: 30.625px; }
+    margin-left: 31.875px;
+    margin-right: 31.875px; }
   100% {
-    margin-left: -20.625px;
-    margin-right: -20.625px; } }
+    margin-left: -21.875px;
+    margin-right: -21.875px; } }
 @keyframes contractCardMargin {
   0% {
-    margin-left: 30.625px;
-    margin-right: 30.625px; }
+    margin-left: 31.875px;
+    margin-right: 31.875px; }
   100% {
-    margin-left: -20.625px;
-    margin-right: -20.625px; } }
+    margin-left: -21.875px;
+    margin-right: -21.875px; } }
 @-webkit-keyframes expandCardMargin {
   0% {
-    margin-left: -20.625px;
-    margin-right: -20.625px; }
+    margin-left: -21.875px;
+    margin-right: -21.875px; }
   100% {
-    margin-left: 30.625px;
-    margin-right: 30.625px; } }
+    margin-left: 31.875px;
+    margin-right: 31.875px; } }
 @keyframes expandCardMargin {
   0% {
-    margin-left: -20.625px;
-    margin-right: -20.625px; }
+    margin-left: -21.875px;
+    margin-right: -21.875px; }
   100% {
-    margin-left: 30.625px;
-    margin-right: 30.625px; } }
+    margin-left: 31.875px;
+    margin-right: 31.875px; } }
+@-webkit-keyframes enlargeCard {
+  0% {
+    transform: scale(1, 1); }
+  100% {
+    transform: scale(1.1, 1.1); } }
+@keyframes enlargeCard {
+  0% {
+    transform: scale(1, 1); }
+  100% {
+    transform: scale(1.1, 1.1); } }
 @font-face {
   font-family: 'icomoon';
   src: url("../fonts/icon.eot?-bik6n8");
@@ -148,16 +158,17 @@
   font-family: 'helvetica neue', helvetica, arial, sans-serif; }
 
 html, body {
-  background: #333;
+  background: #0e2d43;
+  color: #efefef;
   line-height: normal;
   margin: 0;
   padding: 0; }
 
 button {
-  background: #fb5;
+  background: #f7ead6;
   border: none;
   border-radius: 10px;
-  color: #333;
+  color: #455865;
   font-weight: bold;
   padding: 10px; }
   button:hover {
@@ -170,15 +181,16 @@ select {
 .card {
   background: #fff;
   box-shadow: -5px 5px 10px 0px rgba(0, 0, 0, 0.5);
-  color: #000;
+  border: 5px solid #455865;
+  color: #455865;
   font-size: 20px;
   font-weight: bold;
   margin: 10px;
   padding: 20px;
-  width: 165px;
+  width: 175px;
   border-radius: 10px;
   float: left;
-  height: 231.0px;
+  height: 245.0px;
   text-align: left; }
   .card > div {
     height: 100%; }
@@ -189,22 +201,23 @@ select {
     margin-top: 10px;
     padding-top: 10px; }
   .card.attack {
-    background: #c33; }
+    background: #e94e60; }
   .card.draw {
-    background: #ff6; }
+    background: #fece6c; }
   .card.oldmaid {
     background: #333; }
   .card.keep {
-    background: #336; }
+    background: #7cbcc6; }
   .card.mana {
-    background: #636; }
+    background: #ad527e; }
   .card.modifier {
-    background: #3c3; }
+    background: #2bac74; }
   .card.trap {
-    background: #f90; }
-  .card.attack, .card.keep, .card.mana, .card.modifier, .card.oldmaid {
+    background: #fea66c; }
+  .card.attack, .card.draw, .card.keep, .card.mana, .card.modifier, .card.oldmaid, .card.trap {
+    border-color: #fff;
     color: #fff; }
-    .card.attack .description, .card.keep .description, .card.mana .description, .card.modifier .description, .card.oldmaid .description {
+    .card.attack .description, .card.draw .description, .card.keep .description, .card.mana .description, .card.modifier .description, .card.oldmaid .description, .card.trap .description {
       border-color: #fff; }
   .card .backOfCard {
     display: none; }
@@ -231,26 +244,28 @@ select {
     font-size: 0.75em; }
 
 .activePlayer .card:hover {
-  transform: translateX(5px) translateY(-5px); }
+  -webkit-animation: enlargeCard 0.25s;
+  animation: enlargeCard 0.25s;
+  transform: scale(1.1, 1.1); }
 
 .faces .playerSummary {
-  background: #ccc;
-  color: #333;
+  background: #efefef;
+  color: #455865;
   border-radius: 20px;
   margin: 10px;
   padding: 10px; }
   .faces .playerSummary.inactivePlayer {
-    background: #888;
+    background: #455865;
     color: #fff; }
   .faces .playerSummary .card {
-    height: 57.75px;
-    width: 41.25px;
+    height: 61.25px;
+    width: 43.75px;
     border-radius: 2.5px;
     font-size: 5px;
     margin: 2.5px;
     padding: 5px;
-    margin-left: -5.15625px;
-    margin-right: -5.15625px; }
+    margin-left: -5.46875px;
+    margin-right: -5.46875px; }
     .faces .playerSummary .card .description {
       font-size: 2.5px;
       margin-top: 2.5px;
@@ -260,13 +275,13 @@ select {
       padding: 0.5px; }
 
 .hand {
-  background: #888;
+  background: #efefef;
   border-radius: 20px;
   margin: 10px;
   color: #fff;
   padding: 10px; }
   .hand a {
-    color: #ffc; }
+    color: #f7ead6; }
   .hand .equippedCards {
     float: right;
     margin-bottom: 30px; }
@@ -275,7 +290,7 @@ select {
       margin: 0;
       padding: 15px; }
   .hand .playerSummary {
-    background: #333;
+    background: #455865;
     border-radius: 10px;
     margin: 10px;
     min-height: 60px;
@@ -295,10 +310,10 @@ select {
     .hand.inactivePlayer .playerSummary {
       border-radius: 5px;
       float: left;
-      height: 115.5px;
+      height: 122.5px;
       margin: 5px;
       padding: 10px;
-      width: 165px; }
+      width: 175px; }
       .hand.inactivePlayer .playerSummary > div {
         float: none;
         margin-right: 0; }
@@ -306,10 +321,10 @@ select {
       border-radius: 5px;
       box-shadow: 2.5px 2.5px 5px 0px rgba(0, 0, 0, 0.5);
       font-size: 10px;
-      height: 115.5px;
+      height: 122.5px;
       margin: 5px;
       padding: 10px;
-      width: 82.5px; }
+      width: 87.5px; }
       .hand.inactivePlayer .card.clickable:hover {
         border: 2.5px solid #fff;
         margin-bottom: 0;
@@ -333,9 +348,9 @@ select {
       width: 200px; }
 
 .instructions {
-  background: #ff0;
+  background: #455865;
   border-radius: 20px;
-  color: #000;
+  color: #fff;
   margin: 10px;
   padding: 20px; }
   .instructions .inputContainer {
@@ -345,8 +360,9 @@ select {
       padding: 5px; }
 
 .playArea {
-  background: #ff0;
+  background: #455865;
   border-radius: 20px;
+  color: #fff;
   margin: 10px;
   padding: 20px;
   position: absolute;
@@ -355,7 +371,7 @@ select {
   text-align: center;
   z-index: 1; }
   .playArea .cards.bothCardAndModifierCardArePresent > :first-of-type {
-    margin-bottom: -184.8px;
+    margin-bottom: -196px;
     -ms-transform: rotate(-1deg) translate(-10px, 0px);
     -webkit-transform: rotate(-1deg) translate(-10px, 0px);
     transform: rotate(-1deg) translate(-10px, 0px); }
@@ -373,11 +389,10 @@ select {
   cursor: pointer; }
 
 .playerSummary.clickable:hover {
-  background: #ffc;
-  color: #333; }
+  background: #efefef;
+  color: #455865; }
 
 .selectGame {
-  color: #fff;
   font-size: 50px;
   text-align: center; }
 
